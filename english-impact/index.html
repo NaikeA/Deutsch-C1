@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="A private C1+ English communication trainer for clarity, authority, warmth and persuasive impact.">
   <title>English with Impact</title>
-  <link rel="stylesheet" href="styles.css?v=1">
+  <link rel="stylesheet" href="styles.css?v=2">
 </head>
 <body>
   <header class="topbar"><a class="brand" href="#">English <span>with Impact</span></a><p id="today"></p></header>
@@ -17,6 +17,7 @@
       <button class="tab" data-view="meetings">Meetings</button>
       <button class="tab" data-view="stories">Storytelling</button>
       <button class="tab" data-view="speaking">Speaking</button>
+      <button class="tab examiner-tab" data-view="examiner">AI Examiner</button>
       <button class="tab" data-view="journal">Journal</button>
       <button class="tab" data-view="notes">Notes</button>
     </nav>
@@ -38,32 +39,34 @@
     </section>
 
     <section class="overview map">
-      <div class="section-head"><div><p class="eyebrow">TRAINING MAP</p><h2>Eight focused workspaces</h2></div><p>Choose a card to begin.</p></div>
+      <div class="section-head"><div><p class="eyebrow">TRAINING MAP</p><h2>Nine focused workspaces</h2></div><p>Choose a card to begin.</p></div>
+      <div class="content-counts" aria-label="Exercise counts"><div><strong>350</strong><span>clarity exercises</span><small>5 each day</small></div><div><strong>350</strong><span>authority exercises</span><small>3 each day</small></div><div><strong>350</strong><span>meeting scenarios</span><small>3 each day</small></div><div><strong>1,050</strong><span>core exercises</span><small>plus writing practice</small></div></div>
       <div class="map-grid">
         <button data-go="clarity"><span>01</span><b>Clarity</b><small>Concise rewrites and message structure</small></button>
         <button data-go="authority"><span>02</span><b>Authority</b><small>Confident, measured language</small></button>
         <button data-go="meetings"><span>03</span><b>Meetings</b><small>Diplomacy, challenge and alignment</small></button>
         <button data-go="stories"><span>04</span><b>Storytelling</b><small>Make experience memorable</small></button>
         <button data-go="speaking"><span>05</span><b>Speaking</b><small>Timed answers and self-review</small></button>
-        <button data-go="journal"><span>06</span><b>Journal</b><small>Track communication lessons</small></button>
-        <button data-go="notes"><span>07</span><b>Notes</b><small>Save ideas and useful phrases</small></button>
-        <button data-go="clarity"><span>08</span><b>Phrase bank</b><small>Natural language for professional life</small></button>
+        <button data-go="examiner"><span>06</span><b>AI Examiner</b><small>Get corrections, six scores and targeted feedback</small></button>
+        <button data-go="journal"><span>07</span><b>Journal</b><small>Track communication lessons</small></button>
+        <button data-go="notes"><span>08</span><b>Notes</b><small>Save ideas and useful phrases</small></button>
+        <button data-go="clarity"><span>09</span><b>Phrase bank</b><small>Natural language for professional life</small></button>
       </div>
     </section>
 
     <section class="panel clarity">
-      <div class="panel-head"><div><p class="eyebrow">DAILY CLARITY DRILL</p><h2>Say more with fewer words</h2><p>Rewrite the message first. Then compare it with a concise model.</p></div><input id="clarityDate" type="date" aria-label="Clarity practice date"></div>
+      <div class="panel-head"><div><p class="eyebrow">5 DAILY · 350 CLARITY EXERCISES</p><h2>Say more with fewer words</h2><p>Rewrite the message first. Then compare it with a concise model.</p></div><input id="clarityDate" type="date" aria-label="Clarity practice date"></div>
       <div id="clarityCards" class="drill-grid"></div>
       <div class="phrase-bank"><h3>Useful structures</h3><div id="phraseBank"></div></div>
     </section>
 
     <section class="panel authority dark">
-      <div class="panel-head"><div><p class="eyebrow">CALM AUTHORITY</p><h2>Remove unnecessary hesitation</h2><p>Choose the version that sounds confident without becoming aggressive.</p></div><input id="authorityDate" type="date" aria-label="Authority practice date"></div>
+      <div class="panel-head"><div><p class="eyebrow">3 DAILY · 350 AUTHORITY EXERCISES</p><h2>Remove unnecessary hesitation</h2><p>Choose the version that sounds confident without becoming aggressive.</p></div><input id="authorityDate" type="date" aria-label="Authority practice date"></div>
       <div id="authorityCards" class="choice-grid"></div>
     </section>
 
     <section class="panel meetings">
-      <div class="panel-head"><div><p class="eyebrow">WORKPLACE LANGUAGE</p><h2>Handle the moment well</h2><p>Write what you would say aloud. Reveal the model only afterwards.</p></div><input id="meetingDate" type="date" aria-label="Meeting practice date"></div>
+      <div class="panel-head"><div><p class="eyebrow">3 DAILY · 350 MEETING SCENARIOS</p><h2>Handle the moment well</h2><p>Write what you would say aloud. Reveal the model only afterwards.</p></div><input id="meetingDate" type="date" aria-label="Meeting practice date"></div>
       <div id="meetingCards" class="scenario-grid"></div>
     </section>
 
@@ -75,7 +78,7 @@
         <label>Action<textarea data-story="action" placeholder="What did you decide and do?"></textarea></label>
         <label>Result<textarea data-story="result" placeholder="What changed? Use evidence where possible."></textarea></label>
         <label>Insight<textarea data-story="insight" placeholder="What should the listener remember?"></textarea></label>
-        <button id="saveStory" class="primary">Save story</button><span id="storyStatus" class="status"></span>
+        <div class="inline-actions"><button id="saveStory" class="primary">Save story</button><button id="reviewStory" class="review-btn">Copy for AI review</button></div><span id="storyStatus" class="status"></span>
       </div></div>
     </section>
 
@@ -83,6 +86,17 @@
       <div class="panel-head"><div><p class="eyebrow">TWO-MINUTE PRACTICE</p><h2>Think, structure, speak</h2><p>Take 30 seconds to plan. Record yourself on your phone, then assess the result here.</p></div></div>
       <div class="speaking-layout"><div class="prompt-card"><span>TODAY'S PROMPT</span><h3 id="speakingPrompt"></h3><button id="newSpeakingPrompt" class="outline">New prompt</button></div><div class="timer-card"><strong id="timer">02:00</strong><button id="timerButton" class="primary light">Start</button><button id="resetTimer" class="text-light">Reset</button></div></div>
       <div class="self-check"><h3>After speaking</h3><label><input type="checkbox" data-speaking-check="point"> My main point was clear in the first 20 seconds.</label><label><input type="checkbox" data-speaking-check="structure"> My answer had a visible structure.</label><label><input type="checkbox" data-speaking-check="evidence"> I used a concrete example or evidence.</label><label><input type="checkbox" data-speaking-check="pace"> I paused instead of using filler words.</label><label><input type="checkbox" data-speaking-check="ending"> I ended with a clear conclusion.</label></div>
+      <div class="speaking-review"><label for="speakingTranscript">Transcript or notes from your answer</label><textarea id="speakingTranscript" placeholder="Type what you said, or use your phone's speech-to-text …"></textarea><button id="reviewSpeaking" class="primary light">Copy for AI review</button><span id="speakingReviewStatus" class="status"></span></div>
+    </section>
+
+    <section class="panel examiner">
+      <div class="panel-head"><div><p class="eyebrow">MEASURE, CORRECT, REPEAT</p><h2>Your AI Examiner</h2><p>This creates a rigorous review request for ChatGPT. Paste it into ChatGPT, then record the scores and key corrections here.</p></div></div>
+      <div class="examiner-steps"><div><strong>1</strong><span>Paste your answer</span></div><div><strong>2</strong><span>Copy the examiner request</span></div><div><strong>3</strong><span>Record the feedback</span></div></div>
+      <div class="examiner-layout">
+        <div class="examiner-request"><label for="examinerContext">Exercise or situation</label><input id="examinerContext" placeholder="For example: explaining a project delay"><label for="examinerText">Your English</label><textarea id="examinerText" placeholder="Paste the message, story or speaking transcript you want examined …"></textarea><button id="copyExaminer" class="primary">Copy complete examiner request</button><span id="examinerCopyStatus" class="status" aria-live="polite"></span></div>
+        <div class="score-sheet"><h3>Record the examiner’s scores</h3><div class="score-grid"><label>Grammar<input type="number" min="1" max="10" data-score="grammar"></label><label>Clarity<input type="number" min="1" max="10" data-score="clarity"></label><label>Authority<input type="number" min="1" max="10" data-score="authority"></label><label>Naturalness<input type="number" min="1" max="10" data-score="naturalness"></label><label>Warmth<input type="number" min="1" max="10" data-score="warmth"></label><label>Vocabulary<input type="number" min="1" max="10" data-score="vocabulary"></label></div><label>Important corrections<textarea id="examinerCorrections" placeholder="Paste the corrected version and explanations …"></textarea></label><label>Executive version<textarea id="examinerExecutive" placeholder="Paste the polished version …"></textarea></label><label>Recurring mistake to practise<input id="examinerMistake" placeholder="For example: too many hedging phrases"></label><button id="saveAssessment" class="primary">Save assessment</button><span id="assessmentStatus" class="status"></span></div>
+      </div>
+      <div class="assessment-history"><div><h3>Progress and mistake log</h3><p id="assessmentAverage">No assessment saved yet.</p></div><div id="assessmentHistory"></div></div>
     </section>
 
     <section class="panel journal">
@@ -97,6 +111,6 @@
     </section>
   </main>
   <footer><b>English with Impact</b><span>Clarity creates authority. Warmth makes it memorable.</span></footer>
-  <script src="app.js?v=1"></script>
+  <script src="app.js?v=2"></script>
 </body>
 </html>

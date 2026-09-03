@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="A private C1+ English communication trainer for clarity, authority, warmth and persuasive impact.">
   <title>English with Impact</title>
-  <link rel="stylesheet" href="styles.css?v=2">
+  <link rel="stylesheet" href="styles.css?v=3">
+  <link rel="stylesheet" href="grammar.css?v=1">
 </head>
 <body>
   <header class="topbar"><a class="brand" href="#">English <span>with Impact</span></a><p id="today"></p></header>
@@ -18,6 +19,7 @@
       <button class="tab" data-view="stories">Storytelling</button>
       <button class="tab" data-view="speaking">Speaking</button>
       <button class="tab examiner-tab" data-view="examiner">AI Examiner</button>
+      <button class="tab" data-view="grammar">Grammar & Style</button>
       <button class="tab" data-view="journal">Journal</button>
       <button class="tab" data-view="notes">Notes</button>
     </nav>
@@ -39,7 +41,7 @@
     </section>
 
     <section class="overview map">
-      <div class="section-head"><div><p class="eyebrow">TRAINING MAP</p><h2>Nine focused workspaces</h2></div><p>Choose a card to begin.</p></div>
+      <div class="section-head"><div><p class="eyebrow">TRAINING MAP</p><h2>Ten focused workspaces</h2></div><p>Choose a card to begin.</p></div>
       <div class="content-counts" aria-label="Exercise counts"><div><strong>350</strong><span>clarity exercises</span><small>5 each day</small></div><div><strong>350</strong><span>authority exercises</span><small>3 each day</small></div><div><strong>350</strong><span>meeting scenarios</span><small>3 each day</small></div><div><strong>1,050</strong><span>core exercises</span><small>plus writing practice</small></div></div>
       <div class="map-grid">
         <button data-go="clarity"><span>01</span><b>Clarity</b><small>Concise rewrites and message structure</small></button>
@@ -48,9 +50,10 @@
         <button data-go="stories"><span>04</span><b>Storytelling</b><small>Make experience memorable</small></button>
         <button data-go="speaking"><span>05</span><b>Speaking</b><small>Timed answers and self-review</small></button>
         <button data-go="examiner"><span>06</span><b>AI Examiner</b><small>Get corrections, six scores and targeted feedback</small></button>
-        <button data-go="journal"><span>07</span><b>Journal</b><small>Track communication lessons</small></button>
-        <button data-go="notes"><span>08</span><b>Notes</b><small>Save ideas and useful phrases</small></button>
-        <button data-go="clarity"><span>09</span><b>Phrase bank</b><small>Natural language for professional life</small></button>
+        <button data-go="grammar"><span>07</span><b>Grammar & Style</b><small>Rules, punctuation and professional examples</small></button>
+        <button data-go="journal"><span>08</span><b>Journal</b><small>Track communication lessons</small></button>
+        <button data-go="notes"><span>09</span><b>Notes</b><small>Save ideas and useful phrases</small></button>
+        <button data-go="clarity"><span>10</span><b>Phrase bank</b><small>Natural language for professional life</small></button>
       </div>
     </section>
 
@@ -99,6 +102,30 @@
       <div class="assessment-history"><div><h3>Progress and mistake log</h3><p id="assessmentAverage">No assessment saved yet.</p></div><div id="assessmentHistory"></div></div>
     </section>
 
+    <section class="panel grammar">
+      <div class="panel-head"><div><p class="eyebrow">GRAMMAR & PROFESSIONAL STYLE</p><h2>Rules you can use immediately</h2><p>Open a topic for the rule, contrast and examples. Focus on the choices that change meaning, tone or credibility.</p></div></div>
+      <div class="grammar-list">
+        <details open><summary><span>01</span>Commas: joining clauses and adding information</summary><div><p>Use a comma before <b>but, so, yet, for, and, nor</b> when they join two complete clauses. Use commas around non-essential information, after an introductory phrase, and between items in a list.</p><ul><li>The model converged, <b>but</b> the result was not physically credible.</li><li><b>After reviewing the evidence,</b> we changed the boundary condition.</li><li>The senior engineer, <b>who joined the review remotely,</b> supported the recommendation.</li></ul><p class="avoid">Avoid joining two complete sentences with only a comma: “The test failed, we repeated it.”</p></div></details>
+        <details><summary><span>02</span>Semicolons: connecting closely related sentences</summary><div><p>Use a semicolon between two complete sentences whose ideas are closely connected. It is stronger than a comma but less separate than a full stop. It can also separate complex list items.</p><ul><li>The deadline remains unchanged<b>;</b> the scope, however, has increased.</li><li>Option A reduces cost<b>;</b> Option B improves reliability.</li></ul><p>Do not use a semicolon before a dependent fragment: use a comma in “Although the risk is small, we should monitor it.”</p></div></details>
+        <details><summary><span>03</span>Colons, dashes and parentheses</summary><div><p>Use a colon after a complete clause to introduce an explanation, list or conclusion. A dash creates emphasis; parentheses make information secondary.</p><ul><li>We need one decision<b>:</b> approve the additional test.</li><li>The final result was clear<b>—</b>the original assumption was wrong.</li><li>The second run <b>(completed on Friday)</b> confirmed the trend.</li></ul></div></details>
+        <details><summary><span>04</span>Past simple: completed events</summary><div><p>Use the past simple for a finished action at a finished time. It is the normal tense for telling a chronological story.</p><ul><li>We <b>received</b> the data on Monday and <b>completed</b> the analysis on Thursday.</li><li>I <b>led</b> the review and <b>presented</b> the recommendation.</li></ul><p>Specific past time expressions—yesterday, last year, in 2024—normally require the past simple.</p></div></details>
+        <details><summary><span>05</span>Present perfect: past connected to now</summary><div><p>Use <b>have/has + past participle</b> for experience, unfinished periods, recent results and past actions whose present consequence matters.</p><ul><li>I <b>have worked</b> in Germany for thirteen years. (The period continues.)</li><li>We <b>have identified</b> the cause. (The finding matters now.)</li><li>I <b>have led</b> several international teams. (Experience, no finished time stated.)</li></ul><p class="avoid">Not: “I have completed it yesterday.” Say: “I completed it yesterday.”</p></div></details>
+        <details><summary><span>06</span>Past perfect: showing which past event came first</summary><div><p>Use <b>had + past participle</b> when one past action happened before another past reference point.</p><ul><li>By the time the review started, we <b>had already corrected</b> the mesh.</li><li>The result changed because the supplier <b>had updated</b> the input data.</li></ul><p>Once the sequence is obvious, continue with the past simple; do not overload the story with past perfect forms.</p></div></details>
+        <details><summary><span>07</span>Imaginary present and future: second conditional</summary><div><p>Use <b>if + past simple, would + base verb</b> for an unreal, unlikely or hypothetical present/future situation.</p><ul><li>If we <b>had</b> more time, we <b>would test</b> another design.</li><li>If I <b>were</b> leading the project, I <b>would clarify</b> ownership first.</li></ul><p>In formal English, <b>were</b> is preferred for all persons in hypothetical statements: “If I were …”</p></div></details>
+        <details><summary><span>08</span>Imaginary past: third and mixed conditionals</summary><div><p>Use <b>if + past perfect, would have + past participle</b> for an unreal past. Use a mixed conditional when the imagined past changes the present.</p><ul><li>If we <b>had validated</b> the assumption earlier, we <b>would have avoided</b> the delay.</li><li>If I <b>had accepted</b> that role, I <b>would be living</b> abroad now. (mixed)</li></ul></div></details>
+        <details><summary><span>09</span>Real conditions: zero and first conditionals</summary><div><p>Use the zero conditional for general truths and the first conditional for a realistic future possibility.</p><ul><li>If the temperature <b>rises</b>, the material <b>expands</b>. (general)</li><li>If the customer <b>approves</b> today, we <b>will start</b> tomorrow. (real future)</li></ul><p>After <b>if</b>, normally use the present tense—not “will”—for a future condition.</p></div></details>
+        <details><summary><span>10</span>Modal verbs: certainty, advice and obligation</summary><div><p>Choose the modal according to the strength of your claim.</p><ul><li>The change <b>may</b> affect the result. (possibility)</li><li>The change <b>should</b> improve stability. (reasonable expectation)</li><li>The change <b>must</b> be validated. (necessity)</li><li>The change <b>cannot</b> explain the full deviation. (impossibility)</li></ul><p>For past deductions: “The input <b>may have caused</b> the difference.”</p></div></details>
+        <details><summary><span>11</span>Articles: a, an, the and no article</summary><div><p>Use <b>a/an</b> for one non-specific countable item, <b>the</b> for something identifiable, and no article for plural or uncountable ideas in general.</p><ul><li>We identified <b>a</b> risk. <b>The</b> risk affects the deadline.</li><li><b>Simulation</b> supports engineering decisions. (general field)</li><li><b>The simulation</b> we discussed is complete. (specific)</li></ul></div></details>
+        <details><summary><span>12</span>Relative clauses: essential versus extra information</summary><div><p>Do not use commas around an essential defining clause. Use commas around a non-defining clause that merely adds information.</p><ul><li>The result <b>that exceeded the limit</b> requires investigation. (which result?)</li><li>The final result, <b>which exceeded the limit</b>, requires investigation. (extra fact)</li></ul><p>Use <b>who</b> for people, <b>which</b> for things and <b>that</b> mainly in defining clauses.</p></div></details>
+        <details><summary><span>13</span>Reported speech and reporting verbs</summary><div><p>Use reporting verbs to show the purpose and strength of another person’s statement.</p><ul><li>The customer <b>confirmed that</b> the scope had not changed.</li><li>The reviewer <b>suggested testing</b> another condition.</li><li>The project lead <b>warned that</b> the deadline was at risk.</li></ul><p>Useful verbs: acknowledge, argue, clarify, confirm, emphasise, recommend, report, suggest and warn.</p></div></details>
+        <details><summary><span>14</span>Hedging without sounding uncertain</summary><div><p>Hedging makes a claim proportionate to the evidence. Remove apologetic fillers; keep precise limits.</p><ul><li>Weak: “I’m not sure, but maybe this is wrong.”</li><li>Measured: “The current evidence <b>suggests</b> that this assumption is unreliable.”</li><li>Measured: “This is <b>likely</b> to affect the result, although further validation is required.”</li></ul></div></details>
+        <details><summary><span>15</span>Parallel structure and readable lists</summary><div><p>Items joined in a list or comparison should use the same grammatical form.</p><ul><li>Parallel: Our goals are <b>reducing cost, improving reliability and shortening delivery time</b>.</li><li>Not parallel: reducing cost, better reliability and to shorten delivery time.</li></ul><p>Parallel structure makes even familiar ideas sound controlled and memorable.</p></div></details>
+        <details><summary><span>16</span>Emphasis and inversion in formal English</summary><div><p>Use fronting and inversion sparingly when the contrast deserves emphasis.</p><ul><li><b>What matters most is</b> the reliability of the conclusion.</li><li><b>Only after the second test did we identify</b> the cause.</li><li><b>Not only did the change reduce cost, but it also improved</b> performance.</li></ul></div></details>
+        <details><summary><span>17</span>Active and passive voice</summary><div><p>Use active voice when responsibility matters. Use passive voice when the process or result matters more than the actor.</p><ul><li>Active: <b>The simulation team validated</b> the model.</li><li>Passive: <b>The model was validated</b> against test data.</li></ul><p>Too much passive voice can hide ownership and make a message harder to follow.</p></div></details>
+        <details><summary><span>18</span>Sentence boundaries: fragments and run-ons</summary><div><p>Every independent sentence needs a complete clause. Separate complete ideas with a full stop, semicolon or a conjunction—not only a comma.</p><ul><li>Fragment: “Because the input arrived late.”</li><li>Complete: “The review was delayed because the input arrived late.”</li><li>Run-on: “The input arrived late, the review was delayed.”</li><li>Correct: “The input arrived late<b>;</b> therefore, the review was delayed.”</li></ul></div></details>
+      </div>
+    </section>
+
     <section class="panel journal">
       <div class="panel-head"><div><p class="eyebrow">COMMUNICATION JOURNAL</p><h2>One lesson every day</h2><p>Reflect on a real conversation and decide what you will repeat or improve.</p></div><input id="journalDate" type="date" aria-label="Journal date"></div>
       <div class="journal-grid"><label>Where did I communicate well?<textarea data-journal="well"></textarea></label><label>Where did I lose clarity or confidence?<textarea data-journal="improve"></textarea></label><label>What will I say differently next time?<textarea data-journal="next"></textarea></label><label>One sentence worth keeping<textarea data-journal="keep"></textarea></label></div>
@@ -111,6 +138,6 @@
     </section>
   </main>
   <footer><b>English with Impact</b><span>Clarity creates authority. Warmth makes it memorable.</span></footer>
-  <script src="app.js?v=2"></script>
+  <script src="app.js?v=3"></script>
 </body>
 </html>

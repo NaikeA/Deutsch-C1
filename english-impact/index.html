@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="A private C1+ English communication trainer for clarity, authority, warmth and persuasive impact.">
+  <title>English with Impact</title>
+  <link rel="stylesheet" href="styles.css?v=1">
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="#">English <span>with Impact</span></a><p id="today"></p></header>
+  <main>
+    <nav class="tabs" aria-label="Training areas">
+      <button class="tab active" data-view="overview">Overview</button>
+      <button class="tab" data-view="clarity">Clarity</button>
+      <button class="tab" data-view="authority">Authority</button>
+      <button class="tab" data-view="meetings">Meetings</button>
+      <button class="tab" data-view="stories">Storytelling</button>
+      <button class="tab" data-view="speaking">Speaking</button>
+      <button class="tab" data-view="journal">Journal</button>
+      <button class="tab" data-view="notes">Notes</button>
+    </nav>
+
+    <section class="overview hero">
+      <div><p class="eyebrow">C1+ → COMMUNICATION WITH IMPACT</p><h1>Be clear.<br><em>Be memorable.</em></h1><p class="lede">Turn strong English into a communication style that sounds thoughtful, credible and easy to follow—especially when explaining technical work or leading a discussion.</p></div>
+      <div class="score"><strong id="overallScore">0%</strong><span>weekly consistency</span></div>
+    </section>
+
+    <section class="overview dashboard">
+      <article class="today-card"><p class="eyebrow">TODAY · 45 MINUTES</p><h2>Your high-impact practice</h2><div class="daily-list">
+        <label><input type="checkbox" data-daily="clarity"><span><b>10 min · Clarity</b><small>Make five messages shorter and sharper.</small></span></label>
+        <label><input type="checkbox" data-daily="authority"><span><b>10 min · Authority</b><small>Replace hesitant language with calm confidence.</small></span></label>
+        <label><input type="checkbox" data-daily="meeting"><span><b>10 min · Meetings</b><small>Practise one difficult workplace moment.</small></span></label>
+        <label><input type="checkbox" data-daily="speaking"><span><b>10 min · Speaking</b><small>Record a two-minute answer.</small></span></label>
+        <label><input type="checkbox" data-daily="review"><span><b>5 min · Reflection</b><small>Save one lesson in your journal.</small></span></label>
+      </div><div class="progress"><i id="dailyBar"></i></div><p id="dailyStatus">0 of 5 completed</p></article>
+      <aside class="principle"><p class="eyebrow">TODAY'S PRINCIPLE</p><blockquote id="principleText"></blockquote><button id="nextPrinciple" class="outline">Another principle</button></aside>
+    </section>
+
+    <section class="overview map">
+      <div class="section-head"><div><p class="eyebrow">TRAINING MAP</p><h2>Eight focused workspaces</h2></div><p>Choose a card to begin.</p></div>
+      <div class="map-grid">
+        <button data-go="clarity"><span>01</span><b>Clarity</b><small>Concise rewrites and message structure</small></button>
+        <button data-go="authority"><span>02</span><b>Authority</b><small>Confident, measured language</small></button>
+        <button data-go="meetings"><span>03</span><b>Meetings</b><small>Diplomacy, challenge and alignment</small></button>
+        <button data-go="stories"><span>04</span><b>Storytelling</b><small>Make experience memorable</small></button>
+        <button data-go="speaking"><span>05</span><b>Speaking</b><small>Timed answers and self-review</small></button>
+        <button data-go="journal"><span>06</span><b>Journal</b><small>Track communication lessons</small></button>
+        <button data-go="notes"><span>07</span><b>Notes</b><small>Save ideas and useful phrases</small></button>
+        <button data-go="clarity"><span>08</span><b>Phrase bank</b><small>Natural language for professional life</small></button>
+      </div>
+    </section>
+
+    <section class="panel clarity">
+      <div class="panel-head"><div><p class="eyebrow">DAILY CLARITY DRILL</p><h2>Say more with fewer words</h2><p>Rewrite the message first. Then compare it with a concise model.</p></div><input id="clarityDate" type="date" aria-label="Clarity practice date"></div>
+      <div id="clarityCards" class="drill-grid"></div>
+      <div class="phrase-bank"><h3>Useful structures</h3><div id="phraseBank"></div></div>
+    </section>
+
+    <section class="panel authority dark">
+      <div class="panel-head"><div><p class="eyebrow">CALM AUTHORITY</p><h2>Remove unnecessary hesitation</h2><p>Choose the version that sounds confident without becoming aggressive.</p></div><input id="authorityDate" type="date" aria-label="Authority practice date"></div>
+      <div id="authorityCards" class="choice-grid"></div>
+    </section>
+
+    <section class="panel meetings">
+      <div class="panel-head"><div><p class="eyebrow">WORKPLACE LANGUAGE</p><h2>Handle the moment well</h2><p>Write what you would say aloud. Reveal the model only afterwards.</p></div><input id="meetingDate" type="date" aria-label="Meeting practice date"></div>
+      <div id="meetingCards" class="scenario-grid"></div>
+    </section>
+
+    <section class="panel stories">
+      <div class="panel-head"><div><p class="eyebrow">CAREER STORYTELLING</p><h2>Make your experience easy to remember</h2><p>Use Context → Tension → Action → Result → Insight. Keep the technical detail, but give it a clear purpose.</p></div><input id="storyDate" type="date" aria-label="Story date"></div>
+      <div class="story-layout"><div id="storyPrompt" class="story-prompt"></div><div class="story-editor">
+        <label>Context<textarea data-story="context" placeholder="What was happening?"></textarea></label>
+        <label>Tension<textarea data-story="tension" placeholder="What made it difficult or important?"></textarea></label>
+        <label>Action<textarea data-story="action" placeholder="What did you decide and do?"></textarea></label>
+        <label>Result<textarea data-story="result" placeholder="What changed? Use evidence where possible."></textarea></label>
+        <label>Insight<textarea data-story="insight" placeholder="What should the listener remember?"></textarea></label>
+        <button id="saveStory" class="primary">Save story</button><span id="storyStatus" class="status"></span>
+      </div></div>
+    </section>
+
+    <section class="panel speaking dark">
+      <div class="panel-head"><div><p class="eyebrow">TWO-MINUTE PRACTICE</p><h2>Think, structure, speak</h2><p>Take 30 seconds to plan. Record yourself on your phone, then assess the result here.</p></div></div>
+      <div class="speaking-layout"><div class="prompt-card"><span>TODAY'S PROMPT</span><h3 id="speakingPrompt"></h3><button id="newSpeakingPrompt" class="outline">New prompt</button></div><div class="timer-card"><strong id="timer">02:00</strong><button id="timerButton" class="primary light">Start</button><button id="resetTimer" class="text-light">Reset</button></div></div>
+      <div class="self-check"><h3>After speaking</h3><label><input type="checkbox" data-speaking-check="point"> My main point was clear in the first 20 seconds.</label><label><input type="checkbox" data-speaking-check="structure"> My answer had a visible structure.</label><label><input type="checkbox" data-speaking-check="evidence"> I used a concrete example or evidence.</label><label><input type="checkbox" data-speaking-check="pace"> I paused instead of using filler words.</label><label><input type="checkbox" data-speaking-check="ending"> I ended with a clear conclusion.</label></div>
+    </section>
+
+    <section class="panel journal">
+      <div class="panel-head"><div><p class="eyebrow">COMMUNICATION JOURNAL</p><h2>One lesson every day</h2><p>Reflect on a real conversation and decide what you will repeat or improve.</p></div><input id="journalDate" type="date" aria-label="Journal date"></div>
+      <div class="journal-grid"><label>Where did I communicate well?<textarea data-journal="well"></textarea></label><label>Where did I lose clarity or confidence?<textarea data-journal="improve"></textarea></label><label>What will I say differently next time?<textarea data-journal="next"></textarea></label><label>One sentence worth keeping<textarea data-journal="keep"></textarea></label></div>
+      <div class="save-row"><span id="journalStatus" class="status"></span><button id="saveJournal" class="primary">Save reflection</button></div>
+    </section>
+
+    <section class="panel notes">
+      <div class="panel-head"><div><p class="eyebrow">DAILY NOTES</p><h2>Keep useful language close</h2><p>Save new expressions, feedback, observations and ideas by date.</p></div><input id="notesDate" type="date" aria-label="Notes date"></div>
+      <div class="notes-layout"><div><input id="notesTitle" class="title-input" maxlength="100" placeholder="Optional title"><textarea id="notesText" class="notes-text" spellcheck="true" placeholder="Write your notes here …"></textarea><div class="save-row"><span id="notesStatus" class="status"></span><button id="saveNotes" class="primary">Save notes</button></div></div><aside><h3>Saved notes</h3><div id="notesHistory"></div></aside></div>
+    </section>
+  </main>
+  <footer><b>English with Impact</b><span>Clarity creates authority. Warmth makes it memorable.</span></footer>
+  <script src="app.js?v=1"></script>
+</body>
+</html>

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="Persönlicher Lerntracker für den Weg von Deutsch B2 zu C1.">
   <title>Deutsch auf C1</title>
-  <link rel="stylesheet" href="styles.css?v=14">
+  <link rel="stylesheet" href="styles.css?v=15">
 </head>
 <body>
   <header class="topbar">
@@ -20,7 +20,11 @@
       <button class="main-tab" data-view="articles">Artikel</button>
       <button class="main-tab" data-view="correction">Satzkorrektur</button>
       <button class="main-tab" data-view="notes">Notizen</button>
-      <button class="main-tab" data-view="lab">Fehlerlabor</button>
+      <button class="main-tab" data-view="lab-journal">Fehlerjournal</button>
+      <button class="main-tab" data-view="lab-endings">Endungen</button>
+      <button class="main-tab" data-view="lab-spelling">Rechtschreibung</button>
+      <button class="main-tab" data-view="lab-natural">Natürliches Deutsch</button>
+      <button class="main-tab" data-view="lab-connectors">Satzbau</button>
       <button class="main-tab grammar-tab" data-view="grammar">Grammatik</button>
     </nav>
     <section class="intro">
@@ -49,7 +53,7 @@
         <button type="button" class="summary-card" data-go-view="grammar"><strong>18</strong><span>Grammatikthemen</span><small>Nachschlagewerk von A1 bis C1</small></button>
         <button type="button" class="summary-card" data-go-view="lab" data-go-lab="journal"><strong>1</strong><span>Persönliches Fehlerjournal</span><small>Speichert wiederkehrende Fehler</small></button>
         <button type="button" class="summary-card" data-go-view="writing"><strong>täglich</strong><span>Freies Schreiben</span><small>Absätze, Impulse und 7-Punkte-Check</small></button>
-        <button type="button" class="summary-card" data-go-view="notes"><strong>8</strong><span>Lernbereiche</span><small>Inklusive täglicher Notizen</small></button>
+        <button type="button" class="summary-card" data-go-view="notes"><strong>12</strong><span>direkte Lernbereiche</span><small>Inklusive Fehlertraining und Notizen</small></button>
       </div>
       <p class="summary-note">Die Zahl 2.730 zählt die vorbereiteten Wörter und Übungen. Die 6.300 einzelnen Verbformen und deine eigenen Texte kommen zusätzlich dazu.</p>
     </section>
@@ -205,10 +209,11 @@
     </section>
   </main>
   <footer><span>Deutsch auf C1</span><p>Klarheit vor Komplexität. Fortschritt vor Perfektion. · Wortdaten: <a href="https://github.com/gambolputty/german-nouns" target="_blank" rel="noreferrer">german-nouns</a></p></footer>
-  <script src="nouns.js?v=14"></script>
-  <script src="verbs.js?v=14"></script>
-  <script src="corrections.js?v=14"></script>
-  <script src="lab.js?v=14"></script>
-  <script src="app.js?v=14"></script>
+  <script src="nouns.js?v=15"></script>
+  <script src="verb-meanings.js?v=15"></script>
+  <script src="verbs.js?v=15"></script>
+  <script src="corrections.js?v=15"></script>
+  <script src="lab.js?v=15"></script>
+  <script src="app.js?v=15"></script>
 </body>
 </html>

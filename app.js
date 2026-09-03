@@ -69,5 +69,6 @@ const VIEW_KEY='deutsch-c1-active-view-v1';
 const viewMap={overview:['.intro','.site-summary','.grid','.roadmap'],writing:['.writing-studio'],verbs:['.verb-gym'],articles:['.article-gym'],correction:['.correction-gym'],lab:['.error-lab'],grammar:['.grammar-reference']};
 const allViews=Object.values(viewMap).flatMap(selectors=>selectors.flatMap(s=>[...document.querySelectorAll(s)]));
 function showView(name){if(!viewMap[name])name='overview';allViews.forEach(x=>x.hidden=true);viewMap[name].forEach(s=>document.querySelectorAll(s).forEach(x=>x.hidden=false));document.querySelectorAll('.main-tab').forEach(x=>{const on=x.dataset.view===name;x.classList.toggle('active',on);x.setAttribute('aria-selected',on)});localStorage.setItem(VIEW_KEY,name);window.scrollTo({top:0,behavior:'smooth'})}
+document.querySelectorAll('[data-go-view]').forEach(card=>card.addEventListener('click',()=>{const labTarget=card.dataset.goLab;if(labTarget){activeLab=labTarget;document.querySelectorAll('.lab-tab').forEach(x=>x.classList.toggle('active',x.dataset.lab===labTarget));renderLab()}showView(card.dataset.goView)}));
 document.querySelectorAll('.main-tab').forEach(btn=>btn.addEventListener('click',()=>showView(btn.dataset.view)));showView(localStorage.getItem(VIEW_KEY)||'overview');
 render();save();

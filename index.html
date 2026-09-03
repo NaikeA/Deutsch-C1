@@ -76,7 +76,12 @@
           <label><input type="checkbox" data-review="verbs"><span>Stehen die Verben an der richtigen Stelle?</span></label>
           <label><input type="checkbox" data-review="articles"><span>Stimmen Artikel, Fälle und Endungen?</span></label>
           <label><input type="checkbox" data-review="links"><span>Habe ich Sätze sinnvoll verbunden?</span></label>
+          <label><input type="checkbox" data-review="spelling"><span>Habe ich die Rechtschreibung geprüft?</span></label>
+          <label><input type="checkbox" data-review="plurals"><span>Stimmen Singular und Plural?</span></label>
+          <label><input type="checkbox" data-review="natural"><span>Klingen meine Ausdrücke natürlich?</span></label>
           <button id="saveEntry" class="save-btn">Tagesabsatz speichern</button>
+          <button id="copyForCorrection" class="copy-review-btn">Für ChatGPT-Korrektur kopieren</button>
+          <p id="copyCorrectionStatus" class="copy-status"></p>
           <p class="review-note">Tipp: Lies deinen Text einmal laut. Viele Fehler werden dadurch sofort hörbar.</p>
         </aside>
       </div>
@@ -113,6 +118,12 @@
       <div class="correction-summary"><span id="correctionScore">Noch nicht bewertet</span><button id="clearCorrections" class="text-btn">Diese Übung leeren</button></div>
     </section>
 
+    <section class="error-lab" id="fehlerlabor">
+      <div class="lab-head"><div><p class="kicker">MEIN FEHLERLABOR</p><h2>Genau die Fehler trainieren, die ich mache</h2><p>Kurze tägliche Übungen. Fehler werden im persönlichen Journal gesammelt und häufiger sichtbar gemacht.</p></div><div class="entry-date"><label for="labDate">Übung vom</label><input id="labDate" type="date"></div></div>
+      <div class="lab-tabs" role="tablist"><button class="lab-tab active" data-lab="journal">Fehlerjournal</button><button class="lab-tab" data-lab="endings">Endungen</button><button class="lab-tab" data-lab="spelling">Rechtschreibung</button><button class="lab-tab" data-lab="natural">Natürliches Deutsch</button><button class="lab-tab" data-lab="connectors">Satzbau</button></div>
+      <div id="labContent" class="lab-content"></div>
+    </section>
+
     <section class="roadmap">
       <div class="roadmap-title"><p class="kicker">DER WEG</p><h2>Vier Etappen zu C1</h2></div>
       <ol>
@@ -127,6 +138,7 @@
   <script src="nouns.js"></script>
   <script src="verbs.js"></script>
   <script src="corrections.js"></script>
+  <script src="lab.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

@@ -104,6 +104,15 @@
       <div class="article-actions"><span id="articleScore">Noch nicht geprüft</span><div><button id="clearArticles" class="text-btn">Antworten leeren</button><button id="checkArticles" class="article-check">Alle prüfen</button></div></div>
     </section>
 
+    <section class="correction-gym" id="satzkorrektur">
+      <div class="correction-head">
+        <div><p class="kicker">2 SÄTZE PRO TAG · 280 SÄTZE</p><h2>Fehler finden und korrigieren</h2><p>Schreibe jeden Satz richtig. Vergleiche deine Version anschließend mit der Musterlösung.</p></div>
+        <div class="entry-date"><label for="correctionDate">Übung vom</label><input id="correctionDate" type="date"></div>
+      </div>
+      <div id="correctionCards" class="correction-cards"></div>
+      <div class="correction-summary"><span id="correctionScore">Noch nicht bewertet</span><button id="clearCorrections" class="text-btn">Diese Übung leeren</button></div>
+    </section>
+
     <section class="roadmap">
       <div class="roadmap-title"><p class="kicker">DER WEG</p><h2>Vier Etappen zu C1</h2></div>
       <ol>
@@ -117,6 +126,7 @@
   <footer><span>Deutsch auf C1</span><p>Klarheit vor Komplexität. Fortschritt vor Perfektion. · Wortdaten: <a href="https://github.com/gambolputty/german-nouns" target="_blank" rel="noreferrer">german-nouns</a></p></footer>
   <script src="nouns.js"></script>
   <script src="verbs.js"></script>
+  <script src="corrections.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

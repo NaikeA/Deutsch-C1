@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="Persönlicher Lerntracker für den Weg von Deutsch B2 zu C1.">
   <title>Deutsch auf C1</title>
-  <link rel="stylesheet" href="styles.css?v=13">
+  <link rel="stylesheet" href="styles.css?v=14">
 </head>
 <body>
   <header class="topbar">
@@ -19,6 +19,7 @@
       <button class="main-tab" data-view="verbs">Verben</button>
       <button class="main-tab" data-view="articles">Artikel</button>
       <button class="main-tab" data-view="correction">Satzkorrektur</button>
+      <button class="main-tab" data-view="notes">Notizen</button>
       <button class="main-tab" data-view="lab">Fehlerlabor</button>
       <button class="main-tab grammar-tab" data-view="grammar">Grammatik</button>
     </nav>
@@ -48,7 +49,7 @@
         <button type="button" class="summary-card" data-go-view="grammar"><strong>18</strong><span>Grammatikthemen</span><small>Nachschlagewerk von A1 bis C1</small></button>
         <button type="button" class="summary-card" data-go-view="lab" data-go-lab="journal"><strong>1</strong><span>Persönliches Fehlerjournal</span><small>Speichert wiederkehrende Fehler</small></button>
         <button type="button" class="summary-card" data-go-view="writing"><strong>täglich</strong><span>Freies Schreiben</span><small>Absätze, Impulse und 7-Punkte-Check</small></button>
-        <button type="button" class="summary-card" data-go-view="overview"><strong>7</strong><span>Lernbereiche</span><small>Übersichtlich in Tabs organisiert</small></button>
+        <button type="button" class="summary-card" data-go-view="notes"><strong>8</strong><span>Lernbereiche</span><small>Inklusive täglicher Notizen</small></button>
       </div>
       <p class="summary-note">Die Zahl 2.730 zählt die vorbereiteten Wörter und Übungen. Die 6.300 einzelnen Verbformen und deine eigenen Texte kommen zusätzlich dazu.</p>
     </section>
@@ -146,6 +147,23 @@
       <div class="correction-summary"><span id="correctionScore">Noch nicht bewertet</span><button id="clearCorrections" class="text-btn">Diese Übung leeren</button></div>
     </section>
 
+    <section class="notes-studio" id="notizen">
+      <div class="notes-head">
+        <div><p class="kicker">MEINE TÄGLICHEN NOTIZEN</p><h2>Gedanken festhalten</h2><p>Schreibe neue Wörter, Beobachtungen, Fragen oder Dinge auf, die du später wiederholen möchtest.</p></div>
+        <div class="entry-date"><label for="notesDate">Notiz vom</label><input id="notesDate" type="date"></div>
+      </div>
+      <div class="notes-layout">
+        <div class="notes-editor">
+          <label for="notesTitle">Titel <small>(optional)</small></label>
+          <input id="notesTitle" type="text" maxlength="100" placeholder="Zum Beispiel: Neue Wörter aus dem Gespräch">
+          <label for="dailyNotes">Notizen</label>
+          <textarea id="dailyNotes" lang="de" spellcheck="true" placeholder="Was möchtest du heute festhalten?"></textarea>
+          <div class="notes-actions"><span id="notesStatus" aria-live="polite">Noch nicht gespeichert</span><div><button id="deleteNote" class="text-btn" type="button">Notiz löschen</button><button id="saveNote" class="save-btn" type="button">Notiz speichern</button></div></div>
+        </div>
+        <aside class="notes-history"><h3>Gespeicherte Notizen</h3><p>Wähle einen Tag aus, um seine Notiz zu öffnen.</p><div id="notesList"></div></aside>
+      </div>
+    </section>
+
     <section class="error-lab" id="fehlerlabor">
       <div class="lab-head"><div><p class="kicker">MEIN FEHLERLABOR · 4 × 350 ÜBUNGEN</p><h2>Genau die Fehler trainieren, die ich mache</h2><p>Kurze tägliche Übungen. Fehler werden im persönlichen Journal gesammelt und häufiger sichtbar gemacht.</p></div><div class="entry-date"><label for="labDate">Übung vom</label><input id="labDate" type="date"></div></div>
       <div class="lab-tabs" role="tablist"><button class="lab-tab active" data-lab="journal">Fehlerjournal</button><button class="lab-tab" data-lab="endings">Endungen</button><button class="lab-tab" data-lab="spelling">Rechtschreibung</button><button class="lab-tab" data-lab="natural">Natürliches Deutsch</button><button class="lab-tab" data-lab="connectors">Satzbau</button></div>
@@ -187,10 +205,10 @@
     </section>
   </main>
   <footer><span>Deutsch auf C1</span><p>Klarheit vor Komplexität. Fortschritt vor Perfektion. · Wortdaten: <a href="https://github.com/gambolputty/german-nouns" target="_blank" rel="noreferrer">german-nouns</a></p></footer>
-  <script src="nouns.js?v=13"></script>
-  <script src="verbs.js?v=13"></script>
-  <script src="corrections.js?v=13"></script>
-  <script src="lab.js?v=13"></script>
-  <script src="app.js?v=13"></script>
+  <script src="nouns.js?v=14"></script>
+  <script src="verbs.js?v=14"></script>
+  <script src="corrections.js?v=14"></script>
+  <script src="lab.js?v=14"></script>
+  <script src="app.js?v=14"></script>
 </body>
 </html>

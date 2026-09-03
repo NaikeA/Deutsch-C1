@@ -13,6 +13,15 @@
     <p id="today"></p>
   </header>
   <main>
+    <nav class="main-tabs" aria-label="Lernbereiche">
+      <button class="main-tab active" data-view="overview">Übersicht</button>
+      <button class="main-tab" data-view="writing">Schreiben</button>
+      <button class="main-tab" data-view="verbs">Verben</button>
+      <button class="main-tab" data-view="articles">Artikel</button>
+      <button class="main-tab" data-view="correction">Satzkorrektur</button>
+      <button class="main-tab" data-view="lab">Fehlerlabor</button>
+      <button class="main-tab grammar-tab" data-view="grammar">Grammatik</button>
+    </nav>
     <section class="intro">
       <div>
         <p class="eyebrow">MEIN LERNFORTSCHRITT</p>
@@ -122,6 +131,30 @@
       <div class="lab-head"><div><p class="kicker">MEIN FEHLERLABOR · 4 × 350 ÜBUNGEN</p><h2>Genau die Fehler trainieren, die ich mache</h2><p>Kurze tägliche Übungen. Fehler werden im persönlichen Journal gesammelt und häufiger sichtbar gemacht.</p></div><div class="entry-date"><label for="labDate">Übung vom</label><input id="labDate" type="date"></div></div>
       <div class="lab-tabs" role="tablist"><button class="lab-tab active" data-lab="journal">Fehlerjournal</button><button class="lab-tab" data-lab="endings">Endungen</button><button class="lab-tab" data-lab="spelling">Rechtschreibung</button><button class="lab-tab" data-lab="natural">Natürliches Deutsch</button><button class="lab-tab" data-lab="connectors">Satzbau</button></div>
       <div id="labContent" class="lab-content"></div>
+    </section>
+
+    <section class="grammar-reference" id="grammatik">
+      <div class="grammar-head"><p class="kicker">GRAMMATIK A1–C1</p><h2>Regeln schnell nachschlagen</h2><p>Klicke auf ein Thema. Die Beispiele zeigen die Regel und typische Fehler.</p></div>
+      <div class="grammar-list">
+        <details open><summary><span>01</span>Satzbau im Hauptsatz</summary><div><p>Das konjugierte Verb steht auf <b>Position 2</b>. Das erste Satzglied kann wechseln.</p><ul><li>Ich <b>arbeite</b> heute zu Hause.</li><li>Heute <b>arbeite</b> ich zu Hause.</li></ul><p class="wrong-example">Nicht: Heute ich arbeite zu Hause.</p></div></details>
+        <details><summary><span>02</span>Nebensätze: dass, weil, ob, wenn, obwohl</summary><div><p>Im Nebensatz steht das konjugierte Verb <b>am Ende</b>. Vor dem Nebensatz steht ein Komma.</p><ul><li>Ich weiß, dass die Antwort richtig <b>ist</b>.</li><li>Ich bleibe zu Hause, weil ich müde <b>bin</b>.</li><li>Ich frage mich, ob er morgen <b>kommt</b>.</li></ul></div></details>
+        <details><summary><span>03</span>Verbklammer und trennbare Verben</summary><div><p>Präfix oder Infinitiv steht am Satzende.</p><ul><li>Ich <b>rufe</b> dich später <b>an</b>.</li><li>Wir <b>müssen</b> das Problem heute <b>lösen</b>.</li><li>Sie <b>hat</b> die Aufgabe <b>abgeschlossen</b>.</li></ul></div></details>
+        <details><summary><span>04</span>Nominativ, Akkusativ, Dativ und Genitiv</summary><div><table><tr><th>Fall</th><th>Frage</th><th>Beispiel</th></tr><tr><td>Nominativ</td><td>Wer?</td><td>Der Kollege hilft.</td></tr><tr><td>Akkusativ</td><td>Wen?</td><td>Ich sehe den Kollegen.</td></tr><tr><td>Dativ</td><td>Wem?</td><td>Ich helfe dem Kollegen.</td></tr><tr><td>Genitiv</td><td>Wessen?</td><td>Das Auto des Kollegen.</td></tr></table></div></details>
+        <details><summary><span>05</span>Bestimmte und unbestimmte Artikel</summary><div><table><tr><th>Fall</th><th>maskulin</th><th>feminin</th><th>neutral</th><th>Plural</th></tr><tr><td>Nom.</td><td>der/ein</td><td>die/eine</td><td>das/ein</td><td>die</td></tr><tr><td>Akk.</td><td>den/einen</td><td>die/eine</td><td>das/ein</td><td>die</td></tr><tr><td>Dat.</td><td>dem/einem</td><td>der/einer</td><td>dem/einem</td><td>den + n</td></tr><tr><td>Gen.</td><td>des/eines</td><td>der/einer</td><td>des/eines</td><td>der</td></tr></table></div></details>
+        <details><summary><span>06</span>Adjektivendungen</summary><div><p>Der Artikel zeigt, wie stark das Adjektiv die grammatische Information markieren muss.</p><ul><li>der <b>neue</b> Kollege / ein <b>neuer</b> Kollege</li><li>den <b>neuen</b> Kollegen / einen <b>neuen</b> Kollegen</li><li>mit dem <b>neuen</b> Kollegen / mit einem <b>neuen</b> Kollegen</li><li><b>guter</b> Kaffee, <b>frische</b> Milch, <b>kaltes</b> Wasser</li></ul></div></details>
+        <details><summary><span>07</span>Präpositionen und Fälle</summary><div><p><b>Akkusativ:</b> durch, für, gegen, ohne, um. <b>Dativ:</b> aus, bei, mit, nach, seit, von, zu, gegenüber.</p><p>Wechselpräpositionen: an, auf, hinter, in, neben, über, unter, vor, zwischen. Ort = Dativ; Richtung/Ziel = Akkusativ.</p><ul><li>Ich bin <b>im Büro</b>. / Ich gehe <b>ins Büro</b>.</li></ul></div></details>
+        <details><summary><span>08</span>Zeitformen und Perfekt</summary><div><p>Im Gespräch wird die Vergangenheit meistens mit dem Perfekt ausgedrückt.</p><ul><li>Ich <b>habe gearbeitet</b>.</li><li>Ich <b>bin gegangen</b>.</li><li>Ich <b>hatte gegessen</b>, bevor er kam. (Plusquamperfekt)</li></ul><p>Bewegung und Zustandswechsel stehen häufig mit <b>sein</b>; die meisten anderen Verben mit <b>haben</b>.</p></div></details>
+        <details><summary><span>09</span>Modalverben</summary><div><p>Das Modalverb wird konjugiert; der Vollverb-Infinitiv steht am Ende.</p><ul><li>Ich <b>kann</b> heute länger <b>arbeiten</b>.</li><li>Wir <b>müssen</b> eine Entscheidung <b>treffen</b>.</li></ul><p>Perfekt mit Ersatzinfinitiv: Wir haben länger arbeiten <b>müssen</b>.</p></div></details>
+        <details><summary><span>10</span>Reflexive Verben und Pronomen</summary><div><ul><li>Ich erinnere <b>mich</b> an den Termin.</li><li>Du interessierst <b>dich</b> für Technik.</li><li>Ich wasche <b>mir</b> die Hände. (Dativ, weil „die Hände“ Akkusativ ist)</li></ul></div></details>
+        <details><summary><span>11</span>Relativsätze</summary><div><p>Das Relativpronomen richtet sich im Genus und Numerus nach dem Bezugswort; der Fall kommt aus seiner Funktion im Relativsatz.</p><ul><li>Der Mann, <b>der</b> dort arbeitet, ist mein Kollege.</li><li>Der Mann, <b>den</b> ich sehe, ist mein Kollege.</li><li>Der Mann, <b>dem</b> ich helfe, ist mein Kollege.</li></ul></div></details>
+        <details><summary><span>12</span>Passiv</summary><div><p>Vorgangspassiv: <b>werden + Partizip II</b>. Zustandspassiv: <b>sein + Partizip II</b>.</p><ul><li>Der Bericht <b>wird geschrieben</b>.</li><li>Der Bericht <b>ist geschrieben</b>.</li><li>Der Bericht <b>wurde geschrieben</b>.</li></ul></div></details>
+        <details><summary><span>13</span>Konjunktiv II und höfliche Sprache</summary><div><p>Wünsche, irreale Situationen, Vorschläge und höfliche Bitten.</p><ul><li>Ich <b>würde</b> gern flüssiger sprechen.</li><li>Wenn ich mehr Zeit <b>hätte</b>, <b>würde</b> ich täglich lesen.</li><li><b>Könnten</b> Sie mir bitte helfen?</li></ul></div></details>
+        <details><summary><span>14</span>Konnektoren und logische Beziehungen</summary><div><table><tr><th>Funktion</th><th>Konnektoren</th></tr><tr><td>Grund</td><td>weil, da, denn</td></tr><tr><td>Folge</td><td>deshalb, daher, sodass</td></tr><tr><td>Gegensatz</td><td>aber, obwohl, trotzdem</td></tr><tr><td>Bedingung</td><td>wenn, falls, sofern</td></tr><tr><td>Ziel</td><td>damit, um … zu</td></tr><tr><td>Ergänzung</td><td>außerdem, darüber hinaus</td></tr></table></div></details>
+        <details><summary><span>15</span>Negation: nicht und kein</summary><div><p><b>Kein</b> verneint ein Nomen ohne bestimmten Artikel. <b>Nicht</b> verneint Verben, Adjektive, Satzteile oder den ganzen Satz.</p><ul><li>Ich habe <b>keine</b> Zeit.</li><li>Die Erklärung ist <b>nicht</b> verständlich.</li><li>Ich komme heute <b>nicht</b>.</li></ul></div></details>
+        <details><summary><span>16</span>Kommasetzung</summary><div><p>Ein Komma steht vor Nebensätzen und zwischen Haupt- und Nebensatz.</p><ul><li>Ich glaube, <b>dass</b> das stimmt.</li><li><b>Wenn</b> ich Zeit habe, rufe ich an.</li><li>Ich lerne täglich, <b>um</b> sicherer zu sprechen.</li></ul><p>Vor einfachen Hauptsatzverbindungen mit „und“ oder „oder“ steht meistens kein Komma.</p></div></details>
+        <details><summary><span>17</span>Nomen, Plural und Großschreibung</summary><div><p>Alle Nomen werden großgeschrieben und am besten zusammen mit Artikel und Plural gelernt.</p><ul><li><b>die Antwort – die Antworten</b></li><li><b>das Substantiv – die Substantive</b></li><li><b>der Kollege – die Kollegen</b></li></ul><p>Im Dativ Plural kommt meist ein zusätzliches <b>-n</b>: mit den Kollegen.</p></div></details>
+        <details><summary><span>18</span>Infinitiv mit zu</summary><div><ul><li>Ich versuche, jeden Tag Deutsch <b>zu sprechen</b>.</li><li>Ich freue mich darauf, dich <b>zu sehen</b>.</li><li>Ich habe vor, früher <b>aufzustehen</b>.</li></ul><p>Nach Modalverben und nach „lassen“, „sehen“ und „hören“ steht normalerweise kein „zu“.</p></div></details>
+      </div>
     </section>
 
     <section class="roadmap">

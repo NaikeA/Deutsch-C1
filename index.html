@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Persönlicher Lerntracker für den Weg von Deutsch B2 zu C1.">
+  <title>Deutsch auf C1</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#">Deutsch<span>auf C1</span></a>
+    <p id="today"></p>
+  </header>
+  <main>
+    <section class="intro">
+      <div>
+        <p class="eyebrow">MEIN LERNFORTSCHRITT</p>
+        <h1>Von gutem Deutsch<br>zu <em>präzisem</em> Deutsch.</h1>
+        <p class="lede">Nicht alles neu lernen. Bestehendes Wissen aktivieren, wiederkehrende Fehler korrigieren und sicher über komplexe Themen sprechen.</p>
+      </div>
+      <div class="level-ring" aria-label="Gesamtfortschritt">
+        <svg viewBox="0 0 120 120"><circle class="track" cx="60" cy="60" r="51"/><circle id="ring" class="fill" cx="60" cy="60" r="51"/></svg>
+        <div><strong id="totalPercent">0%</strong><span>Richtung C1</span></div>
+      </div>
+    </section>
+
+    <section class="grid">
+      <article class="card skills">
+        <div class="card-head"><div><p class="kicker">KOMPETENZEN</p><h2>Wo ich heute stehe</h2></div><span class="badge">B2 → C1</span></div>
+        <div id="skills"></div>
+      </article>
+
+      <article class="card focus">
+        <p class="kicker">DIESER WOCHE</p><h2>Mein Fokus</h2>
+        <label class="focus-item"><input type="checkbox" data-task="articles"><span><b>Artikel & Endungen</b><small>15 Min. Fehlerjournal</small></span></label>
+        <label class="focus-item"><input type="checkbox" data-task="speaking"><span><b>Technisch sprechen</b><small>5 Min. Aufnahme über CFD</small></span></label>
+        <label class="focus-item"><input type="checkbox" data-task="writing"><span><b>Präzise schreiben</b><small>250 Wörter + Überarbeitung</small></span></label>
+        <label class="focus-item"><input type="checkbox" data-task="listening"><span><b>Nuancen hören</b><small>Interview anhören & zusammenfassen</small></span></label>
+        <div class="week-progress"><span id="weekText">0 von 4 erledigt</span><div><i id="weekBar"></i></div></div>
+      </article>
+
+      <article class="card practice">
+        <div class="card-head"><div><p class="kicker">PRAXIS</p><h2>Heute trainiert</h2></div><button id="resetDay" class="text-btn">Zurücksetzen</button></div>
+        <div class="practice-grid">
+          <button class="practice-btn" data-minutes="10"><span>Wortschatz</span><b>+10</b><small>Minuten</small></button>
+          <button class="practice-btn" data-minutes="15"><span>Hören / Lesen</span><b>+15</b><small>Minuten</small></button>
+          <button class="practice-btn" data-minutes="15"><span>Sprechen</span><b>+15</b><small>Minuten</small></button>
+          <button class="practice-btn" data-minutes="10"><span>Korrektur</span><b>+10</b><small>Minuten</small></button>
+        </div>
+        <div class="today-total"><strong id="minutes">0</strong><span>Minuten heute</span><div class="goal"><i id="minuteBar"></i></div><small>Ziel: 50 Minuten</small></div>
+      </article>
+
+      <article class="card phrase">
+        <p class="kicker">SATZ DER WOCHE</p>
+        <blockquote>„Eine besondere Herausforderung bestand darin, dass mehrere Randbedingungen zunächst nicht eindeutig definiert waren.“</blockquote>
+        <button id="copyPhrase" class="outline-btn">Satz kopieren</button>
+      </article>
+    </section>
+
+    <section class="writing-studio" id="schreiben">
+      <div class="writing-head">
+        <div><p class="kicker">TÄGLICH SCHREIBEN</p><h2>Gedanken in Worte fassen</h2><p>Schreibe ehrlich und einfach. Präzision kommt beim zweiten Lesen.</p></div>
+        <div class="entry-date"><label for="entryDate">Eintrag vom</label><input id="entryDate" type="date"></div>
+      </div>
+      <div class="writing-layout">
+        <div class="editor-wrap">
+          <div class="prompt"><span>HEUTIGER IMPULS</span><button id="newPrompt" aria-label="Anderen Schreibimpuls zeigen">↻</button><p id="promptText"></p></div>
+          <label class="sr-only" for="dailyParagraph">Mein Absatz auf Deutsch</label>
+          <textarea id="dailyParagraph" lang="de" spellcheck="true" placeholder="Heute denke ich darüber nach, dass …"></textarea>
+          <div class="editor-foot"><span><b id="wordCount">0</b> Wörter · <b id="charCount">0</b> Zeichen</span><span id="saveStatus">Noch nicht gespeichert</span></div>
+        </div>
+        <aside class="review-panel">
+          <p class="kicker">VOR DEM SPEICHERN</p><h3>Mein Sprach-Check</h3>
+          <label><input type="checkbox" data-review="message"><span>Ist meine Hauptaussage klar?</span></label>
+          <label><input type="checkbox" data-review="verbs"><span>Stehen die Verben an der richtigen Stelle?</span></label>
+          <label><input type="checkbox" data-review="articles"><span>Stimmen Artikel, Fälle und Endungen?</span></label>
+          <label><input type="checkbox" data-review="links"><span>Habe ich Sätze sinnvoll verbunden?</span></label>
+          <button id="saveEntry" class="save-btn">Tagesabsatz speichern</button>
+          <p class="review-note">Tipp: Lies deinen Text einmal laut. Viele Fehler werden dadurch sofort hörbar.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="verb-gym" id="verben">
+      <div class="verb-head">
+        <div><p class="kicker">5 VERBEN PRO TAG</p><h2>Verben aktiv beherrschen</h2><p>Konjugiere jedes Verb für eine Person. Wechsle danach die Person und wiederhole die Runde.</p></div>
+        <div class="entry-date"><label for="verbDate">Übung vom</label><input id="verbDate" type="date"></div>
+      </div>
+      <div class="person-picker" role="group" aria-label="Person auswählen">
+        <span>Person</span>
+        <button class="person active" data-person="0">ich</button><button class="person" data-person="1">du</button><button class="person" data-person="2">man</button><button class="person" data-person="3">wir</button><button class="person" data-person="4">ihr</button><button class="person" data-person="5">sie</button>
+      </div>
+      <div id="verbCards" class="verb-cards"></div>
+      <div class="verb-summary"><span id="verbScore">0 von 15 Formen richtig</span><button id="clearVerbs" class="text-btn">Diese Runde leeren</button></div>
+    </section>
+
+    <section class="article-gym" id="artikel">
+      <div class="article-head">
+        <div><p class="kicker">10 WÖRTER PRO TAG · 700 WÖRTER</p><h2>Der, die oder das?</h2><p>Wähle den bestimmten Artikel. Fehlerhafte Wörter kehren automatisch zur Wiederholung zurück.</p></div>
+        <div class="entry-date"><label for="articleDate">Übung vom</label><input id="articleDate" type="date"></div>
+      </div>
+      <div id="articleCards" class="article-cards"></div>
+      <div class="article-actions"><span id="articleScore">Noch nicht geprüft</span><div><button id="clearArticles" class="text-btn">Antworten leeren</button><button id="checkArticles" class="article-check">Alle prüfen</button></div></div>
+    </section>
+
+    <section class="roadmap">
+      <div class="roadmap-title"><p class="kicker">DER WEG</p><h2>Vier Etappen zu C1</h2></div>
+      <ol>
+        <li class="active"><span>01</span><div><b>Fundament festigen</b><small>Artikel, Fälle, Satzbau</small></div></li>
+        <li><span>02</span><div><b>Ausdruck erweitern</b><small>Verknüpfen, begründen, nuancieren</small></div></li>
+        <li><span>03</span><div><b>Beruflich überzeugen</b><small>Projekte, Konflikte, Technik</small></div></li>
+        <li><span>04</span><div><b>C1 nachweisen</b><small>Prüfungsformat & Simulationen</small></div></li>
+      </ol>
+    </section>
+  </main>
+  <footer><span>Deutsch auf C1</span><p>Klarheit vor Komplexität. Fortschritt vor Perfektion. · Wortdaten: <a href="https://github.com/gambolputty/german-nouns" target="_blank" rel="noreferrer">german-nouns</a></p></footer>
+  <script src="nouns.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

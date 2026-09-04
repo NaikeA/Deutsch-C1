@@ -1,0 +1,25 @@
+.verb-count-picker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  color: #aebbb6;
+  font-size: .8rem;
+}
+
+.verb-count-picker select {
+  background: #203730;
+  border: 1px solid #496057;
+  border-radius: 8px;
+  color: #fff;
+  padding: 7px 28px 7px 10px;
+  font: 600 .86rem 'DM Sans', sans-serif;
+  color-scheme: dark;
+}
+
+@media (max-width: 760px) {
+  .verb-count-picker {
+    width: 100%;
+    margin: 8px 0 0;
+  }
+}

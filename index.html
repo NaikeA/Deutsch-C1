@@ -135,14 +135,15 @@
         <div><span id="listeningTopic" class="listening-topic"></span><strong id="listeningTitle"></strong><small>ca. 30–60 Sekunden</small></div>
         <div class="listening-controls">
           <button id="playListening" type="button">▶ Text anhören</button>
-          <button id="backListening" type="button" aria-label="Fünf Sekunden zurück">↶ 5 Sek.</button>
+          <button id="backListening" type="button" aria-label="Vorheriger Satz">↶ Vorheriger Satz</button>
           <button id="pauseListening" type="button">⏸ Pause</button>
-          <button id="forwardListening" type="button" aria-label="Fünf Sekunden vor">5 Sek. ↷</button>
+          <button id="repeatListening" type="button">↻ Satz wiederholen</button>
+          <button id="forwardListening" type="button" aria-label="Nächster Satz">Nächster Satz ↷</button>
           <button id="stopListening" type="button">■ Stopp</button>
           <label for="listeningVoice">Stimme <select id="listeningVoice" aria-label="Deutsche Stimme auswählen"><option value="">Beste verfügbare Stimme</option></select></label>
           <label for="listeningRate">Tempo <select id="listeningRate"><option value="0.8">0,8×</option><option value="0.9">0,9×</option><option value="1" selected>1,0×</option><option value="1.1">1,1×</option></select></label>
         </div>
-        <div class="listening-timeline"><span id="listeningCurrentTime">0:00</span><input id="listeningSeek" type="range" min="0" max="1000" value="0" aria-label="Wiedergabeposition"><span id="listeningTotalTime">0:00</span></div>
+        <div class="listening-timeline" hidden><span id="listeningCurrentTime">0:00</span><input id="listeningSeek" type="range" min="0" max="1000" value="0" aria-label="Wiedergabeposition"><span id="listeningTotalTime">0:00</span></div>
         <p id="listeningStatus" aria-live="polite">Bereit zum Anhören</p>
       </div>
       <div id="listeningQuestions" class="listening-questions"></div>
@@ -248,6 +249,6 @@
   <script src="verbs.js?v=16"></script>
   <script src="corrections.js?v=16"></script>
   <script src="lab.js?v=16"></script>
-  <script src="app.js?v=28"></script>
+  <script src="app.js?v=29"></script>
 </body>
 </html>

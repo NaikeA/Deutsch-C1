@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="Persönlicher Lerntracker für den Weg von Deutsch B2 zu C1.">
   <title>Deutsch auf C1</title>
-  <link rel="stylesheet" href="styles.css?v=15">
+  <link rel="stylesheet" href="styles.css?v=16">
+  <link rel="stylesheet" href="verb-count.css?v=16">
 </head>
 <body>
   <header class="topbar">
@@ -43,7 +44,7 @@
       <div class="summary-head"><div><p class="kicker">INHALT DER WEBSITE</p><h2>Mein gesamtes Deutsch-Training</h2></div><div class="summary-total"><strong>2.730</strong><span>vorbereitete Lerninhalte</span></div></div>
       <div class="summary-grid">
         <button type="button" class="summary-card" data-go-view="articles"><strong>700</strong><span>Substantive</span><small>10 pro Tag · Artikel und Plural</small></button>
-        <button type="button" class="summary-card" data-go-view="verbs"><strong>350</strong><span>Alltagsverben</span><small>5 pro Tag · 6 Personen · 3 Zeiten</small></button>
+        <button type="button" class="summary-card" data-go-view="verbs"><strong>350</strong><span>Alltagsverben</span><small>1–10 pro Tag · 6 Personen · 3 Zeiten</small></button>
         <button type="button" class="summary-card" data-go-view="verbs"><strong>6.300</strong><span>Verbformen</span><small>Präsens, Präteritum und Perfekt</small></button>
         <button type="button" class="summary-card" data-go-view="correction"><strong>280</strong><span>Fehlersätze</span><small>2 pro Tag · mit Musterlösung</small></button>
         <button type="button" class="summary-card" data-go-view="lab" data-go-lab="spelling"><strong>350</strong><span>Rechtschreibwörter</span><small>5 pro Tag</small></button>
@@ -122,15 +123,16 @@
 
     <section class="verb-gym" id="verben">
       <div class="verb-head">
-        <div><p class="kicker">5 VERBEN PRO TAG · 350 VERBEN</p><h2>Verben aktiv beherrschen</h2><p>Konjugiere jedes Verb für eine Person. Wechsle danach die Person und wiederhole die Runde.</p></div>
+        <div><p class="kicker">1–10 VERBEN PRO TAG · 350 VERBEN</p><h2>Verben aktiv beherrschen</h2><p>Wähle deine tägliche Anzahl und konjugiere jedes Verb für eine Person. Wechsle danach die Person und wiederhole die Runde.</p></div>
         <div class="entry-date"><label for="verbDate">Übung vom</label><input id="verbDate" type="date"></div>
       </div>
       <div class="person-picker" role="group" aria-label="Person auswählen">
         <span>Person</span>
         <button class="person active" data-person="0">ich</button><button class="person" data-person="1">du</button><button class="person" data-person="2">man</button><button class="person" data-person="3">wir</button><button class="person" data-person="4">ihr</button><button class="person" data-person="5">sie</button>
+        <label class="verb-count-picker" for="verbCount">Verben pro Tag <select id="verbCount" aria-label="Anzahl der Verben pro Tag"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></label>
       </div>
       <div id="verbCards" class="verb-cards"></div>
-      <div class="verb-summary"><span id="verbScore">0 von 15 Formen richtig</span><button id="clearVerbs" class="text-btn">Diese Runde leeren</button></div>
+      <div class="verb-summary"><span id="verbScore">Auswahl wird geladen …</span><button id="clearVerbs" class="text-btn">Diese Runde leeren</button></div>
     </section>
 
     <section class="article-gym" id="artikel">
@@ -209,11 +211,11 @@
     </section>
   </main>
   <footer><span>Deutsch auf C1</span><p>Klarheit vor Komplexität. Fortschritt vor Perfektion. · Wortdaten: <a href="https://github.com/gambolputty/german-nouns" target="_blank" rel="noreferrer">german-nouns</a></p></footer>
-  <script src="nouns.js?v=15"></script>
-  <script src="verb-meanings.js?v=15"></script>
-  <script src="verbs.js?v=15"></script>
-  <script src="corrections.js?v=15"></script>
-  <script src="lab.js?v=15"></script>
-  <script src="app.js?v=15"></script>
+  <script src="nouns.js?v=16"></script>
+  <script src="verb-meanings.js?v=16"></script>
+  <script src="verbs.js?v=16"></script>
+  <script src="corrections.js?v=16"></script>
+  <script src="lab.js?v=16"></script>
+  <script src="app.js?v=16"></script>
 </body>
 </html>

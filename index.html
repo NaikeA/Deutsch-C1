@@ -7,6 +7,7 @@
   <title>Deutsch auf C1</title>
   <link rel="stylesheet" href="styles.css?v=16">
   <link rel="stylesheet" href="verb-count.css?v=16">
+  <link rel="stylesheet" href="listening.css?v=17">
 </head>
 <body>
   <header class="topbar">
@@ -18,6 +19,7 @@
       <button class="main-tab active" data-view="overview">Übersicht</button>
       <button class="main-tab" data-view="lab-journal">Fehlerjournal</button>
       <button class="main-tab" data-view="writing">Schreiben</button>
+      <button class="main-tab" data-view="listening">Hörverstehen</button>
       <button class="main-tab" data-view="verbs">Verben</button>
       <button class="main-tab" data-view="articles">Artikel</button>
       <button class="main-tab" data-view="correction">Satzkorrektur</button>
@@ -41,12 +43,13 @@
     </section>
 
     <section class="site-summary">
-      <div class="summary-head"><div><p class="kicker">INHALT DER WEBSITE</p><h2>Mein gesamtes Deutsch-Training</h2></div><div class="summary-total"><strong>2.730</strong><span>vorbereitete Lerninhalte</span></div></div>
+      <div class="summary-head"><div><p class="kicker">INHALT DER WEBSITE</p><h2>Mein gesamtes Deutsch-Training</h2></div><div class="summary-total"><strong>2.742</strong><span>vorbereitete Lerninhalte</span></div></div>
       <div class="summary-grid">
         <button type="button" class="summary-card" data-go-view="articles"><strong>700</strong><span>Substantive</span><small>10 pro Tag · Artikel und Plural</small></button>
         <button type="button" class="summary-card" data-go-view="verbs"><strong>350</strong><span>Alltagsverben</span><small>1–10 pro Tag · 6 Personen · 3 Zeiten</small></button>
         <button type="button" class="summary-card" data-go-view="verbs"><strong>6.300</strong><span>Verbformen</span><small>Präsens, Präteritum und Perfekt</small></button>
         <button type="button" class="summary-card" data-go-view="correction"><strong>280</strong><span>Fehlersätze</span><small>2 pro Tag · mit Musterlösung</small></button>
+        <button type="button" class="summary-card" data-go-view="listening"><strong>12</strong><span>C1-Hörtexte</span><small>30–60 Sekunden · je 2 Fragen</small></button>
         <button type="button" class="summary-card" data-go-view="lab" data-go-lab="spelling"><strong>350</strong><span>Rechtschreibwörter</span><small>5 pro Tag</small></button>
         <button type="button" class="summary-card" data-go-view="lab" data-go-lab="endings"><strong>350</strong><span>Endungsübungen</span><small>Artikel, Fälle und Adjektive</small></button>
         <button type="button" class="summary-card" data-go-view="lab" data-go-lab="natural"><strong>350</strong><span>Natürliche Ausdrücke</span><small>Von verständlich zu idiomatisch</small></button>
@@ -54,9 +57,9 @@
         <button type="button" class="summary-card" data-go-view="grammar"><strong>18</strong><span>Grammatikthemen</span><small>Nachschlagewerk von A1 bis C1</small></button>
         <button type="button" class="summary-card" data-go-view="lab" data-go-lab="journal"><strong>1</strong><span>Persönliches Fehlerjournal</span><small>Speichert wiederkehrende Fehler</small></button>
         <button type="button" class="summary-card" data-go-view="writing"><strong>täglich</strong><span>Freies Schreiben</span><small>Absätze, Impulse und 7-Punkte-Check</small></button>
-        <button type="button" class="summary-card" data-go-view="notes"><strong>12</strong><span>direkte Lernbereiche</span><small>Inklusive Fehlertraining und Notizen</small></button>
+        <button type="button" class="summary-card" data-go-view="notes"><strong>13</strong><span>direkte Lernbereiche</span><small>Inklusive Hörverstehen und Notizen</small></button>
       </div>
-      <p class="summary-note">Die Zahl 2.730 zählt die vorbereiteten Wörter und Übungen. Die 6.300 einzelnen Verbformen und deine eigenen Texte kommen zusätzlich dazu.</p>
+      <p class="summary-note">Die Zahl 2.742 zählt die vorbereiteten Wörter, Hörtexte und Übungen. Die 6.300 einzelnen Verbformen und deine eigenen Texte kommen zusätzlich dazu.</p>
     </section>
 
     <section class="grid">
@@ -119,6 +122,26 @@
           <p class="review-note">Tipp: Lies deinen Text einmal laut. Viele Fehler werden dadurch sofort hörbar.</p>
         </aside>
       </div>
+    </section>
+
+    <section class="listening-studio" id="hoerverstehen">
+      <div class="listening-head">
+        <div><p class="kicker">C1 HÖRVERSTEHEN · 12 ÜBUNGEN</p><h2>Genau zuhören, sicher verstehen</h2><p>Höre den Text, ohne mitzulesen. Beantworte danach zwei Fragen zum Inhalt.</p></div>
+        <div class="entry-date"><label for="listeningDate">Übung vom</label><input id="listeningDate" type="date"></div>
+      </div>
+      <div class="listening-player">
+        <div><span id="listeningTopic" class="listening-topic"></span><strong id="listeningTitle"></strong><small>ca. 30–60 Sekunden</small></div>
+        <div class="listening-controls">
+          <button id="playListening" type="button">▶ Text anhören</button>
+          <button id="stopListening" type="button">■ Stopp</button>
+          <label for="listeningRate">Tempo <select id="listeningRate"><option value="0.8">0,8×</option><option value="0.9">0,9×</option><option value="1" selected>1,0×</option><option value="1.1">1,1×</option></select></label>
+        </div>
+        <p id="listeningStatus" aria-live="polite">Bereit zum Anhören</p>
+      </div>
+      <div id="listeningQuestions" class="listening-questions"></div>
+      <div class="listening-actions"><span id="listeningScore">Noch nicht geprüft</span><div><button id="showTranscript" class="text-btn" type="button">Transkript anzeigen</button><button id="checkListening" type="button">Antworten prüfen</button></div></div>
+      <div id="listeningTranscript" class="listening-transcript" hidden><span>TRANSKRIPT</span><p></p></div>
+      <p id="listeningSupport" class="listening-support" hidden>Auf diesem Gerät ist keine Sprachausgabe verfügbar. Du kannst das Transkript zum Lesen verwenden.</p>
     </section>
 
     <section class="verb-gym" id="verben">
@@ -212,10 +235,11 @@
   </main>
   <footer><span>Deutsch auf C1</span><p>Klarheit vor Komplexität. Fortschritt vor Perfektion. · Wortdaten: <a href="https://github.com/gambolputty/german-nouns" target="_blank" rel="noreferrer">german-nouns</a></p></footer>
   <script src="nouns.js?v=16"></script>
+  <script src="listening.js?v=17"></script>
   <script src="verb-meanings.js?v=16"></script>
   <script src="verbs.js?v=16"></script>
   <script src="corrections.js?v=16"></script>
   <script src="lab.js?v=16"></script>
-  <script src="app.js?v=16"></script>
+  <script src="app.js?v=17"></script>
 </body>
 </html>

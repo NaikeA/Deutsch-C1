@@ -29,15 +29,21 @@ const writing=JSON.parse(localStorage.getItem(WRITING_KEY)||'{}');
 const entryDate=document.querySelector('#entryDate');
 const paragraph=document.querySelector('#dailyParagraph');
 const status=document.querySelector('#saveStatus');
+const correctedText=document.querySelector('#correctedText');
+const correctedStatus=document.querySelector('#correctedStatus');
 let promptIndex=new Date().getDate()%prompts.length;
 entryDate.value=day;
 function showPrompt(){document.querySelector('#promptText').textContent=prompts[promptIndex]}
-function loadEntry(){const entry=writing[entryDate.value]||{text:'',review:{}};paragraph.value=entry.text||'';document.querySelectorAll('[data-review]').forEach(x=>x.checked=!!entry.review?.[x.dataset.review]);status.textContent=entry.text?'Gespeicherter Eintrag':'Noch nicht gespeichert';updateCounts(false)}
+function loadEntry(){const entry=writing[entryDate.value]||{text:'',review:{},correctedHtml:''};paragraph.value=entry.text||'';correctedText.innerHTML=entry.correctedHtml||'';document.querySelectorAll('[data-review]').forEach(x=>x.checked=!!entry.review?.[x.dataset.review]);status.textContent=entry.text?'Gespeicherter Eintrag':'Noch nicht gespeichert';correctedStatus.textContent=entry.correctedHtml?'Gespeicherte Korrektur':'Noch nicht gespeichert';updateCounts(false)}
 function updateCounts(markUnsaved=true){const clean=paragraph.value.trim();document.querySelector('#wordCount').textContent=clean?clean.split(/\s+/).length:0;document.querySelector('#charCount').textContent=paragraph.value.length;if(markUnsaved)status.textContent='Änderungen nicht gespeichert'}
 paragraph.addEventListener('input',()=>updateCounts());
 entryDate.addEventListener('change',loadEntry);
 document.querySelector('#newPrompt').addEventListener('click',()=>{promptIndex=(promptIndex+1)%prompts.length;showPrompt()});
-document.querySelector('#saveEntry').addEventListener('click',()=>{const review={};document.querySelectorAll('[data-review]').forEach(x=>review[x.dataset.review]=x.checked);writing[entryDate.value]={text:paragraph.value.trim(),review,savedAt:new Date().toISOString()};localStorage.setItem(WRITING_KEY,JSON.stringify(writing));status.textContent='Gespeichert ✓'});
+document.querySelector('#saveEntry').addEventListener('click',()=>{const review={};document.querySelectorAll('[data-review]').forEach(x=>review[x.dataset.review]=x.checked);writing[entryDate.value]={...(writing[entryDate.value]||{}),text:paragraph.value.trim(),review,savedAt:new Date().toISOString()};localStorage.setItem(WRITING_KEY,JSON.stringify(writing));status.textContent='Gespeichert ✓'});
+document.querySelectorAll('[data-format]').forEach(button=>button.addEventListener('click',()=>{correctedText.focus();document.execCommand(button.dataset.format,false,button.dataset.value||null);correctedStatus.textContent='Änderungen nicht gespeichert'}));
+correctedText.addEventListener('input',()=>{correctedStatus.textContent='Änderungen nicht gespeichert'});
+document.querySelector('#saveCorrected').addEventListener('click',()=>{writing[entryDate.value]={...(writing[entryDate.value]||{}),text:paragraph.value.trim(),correctedHtml:correctedText.innerHTML,correctedSavedAt:new Date().toISOString()};localStorage.setItem(WRITING_KEY,JSON.stringify(writing));correctedStatus.textContent='Gespeichert ✓'});
+document.querySelector('#clearCorrected').addEventListener('click',()=>{correctedText.innerHTML='';if(writing[entryDate.value]){writing[entryDate.value].correctedHtml='';localStorage.setItem(WRITING_KEY,JSON.stringify(writing))}correctedStatus.textContent='Noch nicht gespeichert'});
 document.querySelector('#copyForCorrection').addEventListener('click',async()=>{const text=paragraph.value.trim();const note=document.querySelector('#copyCorrectionStatus');if(!text){note.textContent='Schreibe zuerst einen Absatz.';return}const prompt='Bitte korrigiere meinen deutschen Text. Zeige mir: 1. eine korrigierte natürliche Version, 2. meine Fehler nach Kategorien (Rechtschreibung, Artikel/Endungen, Plural, Satzbau, Wortwahl), 3. drei kurze Übungen zu meinen häufigsten Fehlern. Text:\n\n'+text;await navigator.clipboard.writeText(prompt);note.textContent='Korrekturauftrag kopiert ✓'});
 showPrompt();loadEntry();
 const notes=JSON.parse(localStorage.getItem(NOTES_KEY)||'{}');

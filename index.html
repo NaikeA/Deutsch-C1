@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="styles.css?v=16">
   <link rel="stylesheet" href="verb-count.css?v=16">
   <link rel="stylesheet" href="listening.css?v=19">
+  <link rel="stylesheet" href="playback.css?v=24">
   <link rel="stylesheet" href="noun-meanings.css?v=20">
 </head>
 <body>
@@ -141,6 +142,7 @@
           <label for="listeningVoice">Stimme <select id="listeningVoice" aria-label="Deutsche Stimme auswählen"><option value="">Beste verfügbare Stimme</option></select></label>
           <label for="listeningRate">Tempo <select id="listeningRate"><option value="0.8">0,8×</option><option value="0.9">0,9×</option><option value="1" selected>1,0×</option><option value="1.1">1,1×</option></select></label>
         </div>
+        <div class="listening-timeline"><span id="listeningCurrentTime">0:00</span><input id="listeningSeek" type="range" min="0" max="1000" value="0" aria-label="Wiedergabeposition"><span id="listeningTotalTime">0:00</span></div>
         <p id="listeningStatus" aria-live="polite">Bereit zum Anhören</p>
       </div>
       <div id="listeningQuestions" class="listening-questions"></div>
@@ -246,6 +248,6 @@
   <script src="verbs.js?v=16"></script>
   <script src="corrections.js?v=16"></script>
   <script src="lab.js?v=16"></script>
-  <script src="app.js?v=23"></script>
+  <script src="app.js?v=24"></script>
 </body>
 </html>

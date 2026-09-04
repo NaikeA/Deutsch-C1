@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="Persönlicher Lerntracker für den Weg von Deutsch B2 zu C1.">
   <title>Deutsch auf C1</title>
-  <link rel="stylesheet" href="styles.css?v=16">
+  <link rel="stylesheet" href="styles.css?v=17">
   <link rel="stylesheet" href="verb-count.css?v=16">
   <link rel="stylesheet" href="listening.css?v=19">
   <link rel="stylesheet" href="playback.css?v=24">
@@ -110,6 +110,14 @@
           <label class="sr-only" for="dailyParagraph">Mein Absatz auf Deutsch</label>
           <textarea id="dailyParagraph" lang="de" spellcheck="true" placeholder="Heute denke ich darüber nach, dass …"></textarea>
           <div class="editor-foot"><span><b id="wordCount">0</b> Wörter · <b id="charCount">0</b> Zeichen</span><span id="saveStatus">Noch nicht gespeichert</span></div>
+          <div class="corrected-editor">
+            <div class="corrected-editor-head"><div><p class="kicker">KI-KORRIGIERTE VERSION</p><h3>Verbesserte Fassung</h3><p>Kopiere hier deine korrigierte Version hinein und formatiere wichtige Stellen.</p></div></div>
+            <div class="format-toolbar" role="toolbar" aria-label="Text formatieren">
+              <button type="button" data-format="bold" title="Fett"><b>B</b></button><button type="button" data-format="italic" title="Kursiv"><i>I</i></button><button type="button" data-format="underline" title="Unterstrichen"><u>U</u></button><button type="button" data-format="strikeThrough" title="Durchgestrichen"><s>S</s></button><button type="button" data-format="insertUnorderedList" title="Aufzählung">• Liste</button><button type="button" data-format="formatBlock" data-value="h3" title="Überschrift">Überschrift</button>
+            </div>
+            <div id="correctedText" class="corrected-text" contenteditable="true" role="textbox" aria-multiline="true" lang="de" spellcheck="true" data-placeholder="Korrigierten Text hier einfügen …"></div>
+            <div class="corrected-editor-foot"><span id="correctedStatus">Noch nicht gespeichert</span><div><button id="clearCorrected" class="text-btn" type="button">Leeren</button><button id="saveCorrected" class="save-btn" type="button">Korrigierte Version speichern</button></div></div>
+          </div>
         </div>
         <aside class="review-panel">
           <p class="kicker">VOR DEM SPEICHERN</p><h3>Mein Sprach-Check</h3>
@@ -258,6 +266,6 @@
   <script src="verbs.js?v=16"></script>
   <script src="corrections.js?v=16"></script>
   <script src="lab.js?v=16"></script>
-  <script src="app.js?v=33"></script>
+  <script src="app.js?v=34"></script>
 </body>
 </html>

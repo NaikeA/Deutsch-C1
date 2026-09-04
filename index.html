@@ -4,8 +4,16 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="Persönlicher Lerntracker für den Weg von Deutsch B2 zu C1.">
+  <meta name="theme-color" content="#0b392d">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Deutsch C1">
   <title>Deutsch auf C1</title>
-  <link rel="stylesheet" href="styles.css?v=17">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon-192.png" sizes="192x192">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="stylesheet" href="styles.css?v=18">
   <link rel="stylesheet" href="verb-count.css?v=16">
   <link rel="stylesheet" href="listening.css?v=19">
   <link rel="stylesheet" href="playback.css?v=24">
@@ -64,6 +72,11 @@
         <button type="button" class="summary-card" data-go-view="notes"><strong>täglich</strong><span>Persönliche Notizen</span><small>Eigene Gedanken automatisch speichern</small></button>
       </div>
       <p class="summary-note">Die Zahl 3.090 zählt die vorbereiteten Wörter, Hörtexte und Übungen. Die 6.300 einzelnen Verbformen und deine eigenen Texte kommen zusätzlich dazu.</p>
+      <div class="app-tools">
+        <div><p class="kicker">APP & DATENSICHERUNG</p><h3>Auf Android installieren</h3><p>Installiere den Lerntrainer als eigenständige App. Sichere deine Einträge als Datei, um sie auf ein anderes Gerät zu übertragen.</p></div>
+        <div class="app-tool-actions"><button id="installApp" type="button" hidden>App installieren</button><button id="exportBackup" class="outline-btn" type="button">Backup exportieren</button><button id="importBackup" class="outline-btn" type="button">Backup importieren</button><input id="backupFile" type="file" accept="application/json,.json" hidden></div>
+        <p id="appToolStatus" class="app-tool-status" aria-live="polite">Deine Daten bleiben auf diesem Gerät.</p>
+      </div>
     </section>
 
     <section class="grid">
@@ -266,6 +279,6 @@
   <script src="verbs.js?v=16"></script>
   <script src="corrections.js?v=16"></script>
   <script src="lab.js?v=16"></script>
-  <script src="app.js?v=35"></script>
+  <script src="app.js?v=36"></script>
 </body>
 </html>

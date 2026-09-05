@@ -1,4 +1,4 @@
-const CACHE_NAME='deutsch-c1-v7';
+const CACHE_NAME='deutsch-c1-v8';
 const CORE=['./','./index.html','./styles.css?v=21','./verb-count.css?v=16','./listening.css?v=19','./playback.css?v=24','./noun-meanings.css?v=20','./vocabulary.css?v=1','./cases.css?v=2','./nouns.js?v=16','./noun-meanings.js?v=20','./listening.js?v=19','./verb-meanings.js?v=16','./verbs.js?v=16','./corrections.js?v=16','./lab.js?v=16','./cases.js?v=1','./app.js?v=39','./manifest.webmanifest','./app-icon.svg'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE_NAME).then(cache=>Promise.allSettled(CORE.map(url=>cache.add(url)))).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE_NAME).map(key=>caches.delete(key)))).then(()=>self.clients.claim()))});

@@ -60,8 +60,31 @@ function queueNoteSave(){notesStatus.textContent='Wird gespeichert …';clearTim
 notesTitle.addEventListener('input',queueNoteSave);dailyNotes.addEventListener('input',queueNoteSave);notesDate.addEventListener('change',loadNote);document.querySelector('#saveNote').addEventListener('click',()=>saveNote(false));document.querySelector('#deleteNote').addEventListener('click',()=>{if(!notes[notesDate.value])return;if(!window.confirm('Möchtest du diese Notiz wirklich löschen?'))return;delete notes[notesDate.value];localStorage.setItem(NOTES_KEY,JSON.stringify(notes));loadNote()});loadNote();
 const listeningExercises=window.GERMAN_LISTENING||[];
 const isNativeAndroid=!!(window.Capacitor?.isNativePlatform?.()&&window.Capacitor?.getPlatform?.()==='android');
-const nativeTts=isNativeAndroid?window.Capacitor?.Plugins?.TextToSpeech:null;const listeningDate=document.querySelector('#listeningDate');const listeningState=JSON.parse(localStorage.getItem(LISTENING_KEY)||'{}');const listeningRate=document.querySelector('#listeningRate');const listeningVoice=document.querySelector('#listeningVoice');const listeningSeek=document.querySelector('#listeningSeek');let listeningUtterance=null;let germanVoices=[];let listeningOffset=0;let listeningRun=0;let listeningPaused=false;let listeningDragging=false;let listeningPreviewOffset=0;let listeningTimer=null;let listeningTimerStart=0;let listeningTimerOffset=0;listeningDate.value=day;
-function loadGermanVoices(){if(nativeTts){listeningVoice.innerHTML='<option value="">Android-Gerätestimme</option>';listeningVoice.disabled=true;return}if(!('speechSynthesis'in window))return;germanVoices=window.speechSynthesis.getVoices().filter(v=>v.lang.toLowerCase().startsWith('de')).sort((a,b)=>{const quality=name=>/natural|premium|enhanced|google|microsoft|anna|katja|conrad/i.test(name)?0:1;return quality(a.name)-quality(b.name)||a.name.localeCompare(b.name)});const saved=localStorage.getItem(LISTENING_VOICE_KEY)||'';listeningVoice.innerHTML='<option value="">Beste verfügbare Stimme</option>'+germanVoices.map(v=>`<option value="${esc(v.voiceURI)}">${esc(v.name)} · ${esc(v.lang)}${v.localService?' · Gerät':''}</option>`).join('');if(germanVoices.some(v=>v.voiceURI===saved))listeningVoice.value=saved;document.querySelector('#listeningStatus').textContent=germanVoices.length?`${germanVoices.length} deutsche Stimme${germanVoices.length===1?'':'n'} verfügbar`:'Keine deutsche Stimme gefunden'}
+const nativeTts=isNativeAndroid&&typeof window.Capacitor?.nativePromise==='function'?{speak:options=>window.Capacitor.nativePromise('TextToSpeech','speak',options),stop:()=>window.Capacitor.nativePromise('TextToSpeech','stop',{}),getSupportedVoices:()=>window.Capacitor.nativePromise('TextToSpeech','getSupportedVoices',{}),openInstall:()=>window.Capacitor.nativePromise('TextToSpeech','openInstall',{})}:null;const listeningDate=document.querySelector('#listeningDate');const listeningState=JSON.parse(localStorage.getItem(LISTENING_KEY)||'{}');const listeningRate=document.querySelector('#listeningRate');const listeningVoice=document.querySelector('#listeningVoice');const listeningSeek=document.querySelector('#listeningSeek');let listeningUtterance=null;let germanVoices=[];let listeningOffset=0;let listeningRun=0;let listeningPaused=false;let listeningDragging=false;let listeningPreviewOffset=0;let listeningTimer=null;let listeningTimerStart=0;let listeningTimerOffset=0;listeningDate.value=day;
+async function loadGermanVoices(){
+  if(nativeTts){
+    try{
+      const result=await nativeTts.getSupportedVoices();
+      const allVoices=(result?.voices||[]).map((voice,index)=>({...voice,nativeIndex:index}));
+      germanVoices=allVoices.filter(v=>(v.lang||'').toLowerCase().startsWith('de'));
+      const saved=localStorage.getItem(LISTENING_VOICE_KEY)||'';
+      listeningVoice.disabled=false;
+      listeningVoice.innerHTML='<option value="">Beste verfügbare Stimme</option>'+germanVoices.map(v=>`<option value="${v.nativeIndex}">${esc(v.name)} · ${esc(v.lang)}${v.localService?' · Gerät':''}</option>`).join('');
+      if(germanVoices.some(v=>String(v.nativeIndex)===saved))listeningVoice.value=saved;
+      document.querySelector('#listeningStatus').textContent=germanVoices.length?`${germanVoices.length} deutsche Stimme${germanVoices.length===1?'':'n'} verfügbar`:'Keine deutsche Android-Stimme gefunden';
+    }catch(error){
+      listeningVoice.innerHTML='<option value="">Android-Gerätestimme</option>';
+      document.querySelector('#listeningStatus').textContent='Android-Sprachausgabe wird vorbereitet …';
+    }
+    return
+  }
+  if(!('speechSynthesis'in window))return;
+  germanVoices=window.speechSynthesis.getVoices().filter(v=>v.lang.toLowerCase().startsWith('de')).sort((a,b)=>{const quality=name=>/natural|premium|enhanced|google|microsoft|anna|katja|conrad/i.test(name)?0:1;return quality(a.name)-quality(b.name)||a.name.localeCompare(b.name)});
+  const saved=localStorage.getItem(LISTENING_VOICE_KEY)||'';
+  listeningVoice.innerHTML='<option value="">Beste verfügbare Stimme</option>'+germanVoices.map(v=>`<option value="${esc(v.voiceURI)}">${esc(v.name)} · ${esc(v.lang)}${v.localService?' · Gerät':''}</option>`).join('');
+  if(germanVoices.some(v=>v.voiceURI===saved))listeningVoice.value=saved;
+  document.querySelector('#listeningStatus').textContent=germanVoices.length?`${germanVoices.length} deutsche Stimme${germanVoices.length===1?'':'n'} verfügbar`:'Keine deutsche Stimme gefunden'
+}
 if('speechSynthesis'in window){loadGermanVoices();window.speechSynthesis.onvoiceschanged=loadGermanVoices}listeningVoice.addEventListener('change',()=>localStorage.setItem(LISTENING_VOICE_KEY,listeningVoice.value));
 function currentListening(){const n=Math.floor(new Date(listeningDate.value+'T12:00:00Z').getTime()/86400000);return listeningExercises[((n%listeningExercises.length)+listeningExercises.length)%listeningExercises.length]}
 function formatListeningTime(seconds){seconds=Math.max(0,Math.round(seconds));return`${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')}`}
@@ -91,7 +114,7 @@ async function speakSentence(index,continueText=false){
     document.querySelector('#pauseListening').textContent='⏸ Pause';
     document.querySelector('#listeningStatus').textContent=`Satz ${activeIndex+1} von ${sentences.length} · Wiedergabe läuft`;
     try{
-      await nativeTts.speak({text:sentences[activeIndex],lang:'de-DE',rate:+listeningRate.value,pitch:1,volume:1});
+      await nativeTts.speak({text:sentences[activeIndex],lang:'de-DE',rate:+listeningRate.value,pitch:1,volume:1,voice:listeningVoice.value===''?-1:+listeningVoice.value,queueStrategy:0});
       if(run!==listeningRun)return;
       listeningUtterance=null;
       if(continueText&&activeIndex<sentences.length-1){speakSentence(activeIndex+1,true);return}

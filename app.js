@@ -154,7 +154,27 @@ listeningRate.addEventListener('change',()=>updateListeningTimeline());
 document.querySelector('#stopListening').addEventListener('click',stopListening);listeningDate.addEventListener('change',renderListening);document.querySelector('#showTranscript').addEventListener('click',e=>{const box=document.querySelector('#listeningTranscript');box.hidden=!box.hidden;e.currentTarget.textContent=box.hidden?'Transkript anzeigen':'Transkript ausblenden'});document.querySelector('#clearListening').addEventListener('click',()=>{delete listeningState[listeningDate.value];localStorage.setItem(LISTENING_KEY,JSON.stringify(listeningState));renderListening();document.querySelector('#listeningScore').textContent='Antworten gelöscht'});document.querySelector('#checkListening').addEventListener('click',()=>{const item=currentListening();const saved=listeningState[listeningDate.value]||{answers:[]};let score=0;document.querySelectorAll('.listening-question').forEach((card,i)=>{const chosen=saved.answers?.[i];card.querySelectorAll('.listening-option').forEach(btn=>{const value=+btn.dataset.answer;btn.classList.toggle('correct',value===item.questions[i].answer);btn.classList.toggle('wrong',value===chosen&&value!==item.questions[i].answer)});if(chosen===item.questions[i].answer)score++;card.querySelector('.listening-explanation').textContent=item.questions[i].why});saved.score=score;listeningState[listeningDate.value]=saved;localStorage.setItem(LISTENING_KEY,JSON.stringify(listeningState));document.querySelector('#listeningScore').textContent=`${score} von 2 richtig`});renderListening();
 const verbPronunciationMode=document.querySelector('#verbPronunciationMode');const articlePronunciationMode=document.querySelector('#articlePronunciationMode');const savedPronunciationMode=localStorage.getItem(PRONUNCIATION_MODE_KEY)||'word';verbPronunciationMode.value=savedPronunciationMode;articlePronunciationMode.value=savedPronunciationMode;
 function setPronunciationMode(value){verbPronunciationMode.value=value;articlePronunciationMode.value=value;localStorage.setItem(PRONUNCIATION_MODE_KEY,value)}verbPronunciationMode.addEventListener('change',()=>setPronunciationMode(verbPronunciationMode.value));articlePronunciationMode.addEventListener('change',()=>setPronunciationMode(articlePronunciationMode.value));
-function speakPractice(text,button){if(!('speechSynthesis'in window)){button.title='Auf diesem Gerät ist keine Sprachausgabe verfügbar';return}window.speechSynthesis.cancel();document.querySelectorAll('.pronounce-word.speaking').forEach(x=>x.classList.remove('speaking'));const utterance=new SpeechSynthesisUtterance(text);utterance.lang='de-DE';utterance.rate=.9;const selected=germanVoices.find(v=>v.voiceURI===listeningVoice.value)||germanVoices[0];if(selected)utterance.voice=selected;utterance.onstart=()=>button.classList.add('speaking');utterance.onend=utterance.onerror=()=>button.classList.remove('speaking');window.speechSynthesis.speak(utterance)}
+async function speakPractice(text,button){
+  document.querySelectorAll('.pronounce-word.speaking').forEach(x=>x.classList.remove('speaking'));
+  if(nativeTts){
+    try{
+      await nativeTts.stop().catch(()=>{});
+      button.classList.add('speaking');
+      await nativeTts.speak({text,lang:'de-DE',rate:.9,pitch:1,volume:1,voice:listeningVoice.value===''?-1:+listeningVoice.value,queueStrategy:0});
+    }catch(error){
+      button.title='Android-Sprachausgabe ist nicht verfügbar';
+    }finally{
+      button.classList.remove('speaking');
+    }
+    return
+  }
+  if(!('speechSynthesis'in window)){button.title='Auf diesem Gerät ist keine Sprachausgabe verfügbar';return}
+  window.speechSynthesis.cancel();
+  const utterance=new SpeechSynthesisUtterance(text);utterance.lang='de-DE';utterance.rate=.9;
+  const selected=germanVoices.find(v=>v.voiceURI===listeningVoice.value)||germanVoices[0];if(selected)utterance.voice=selected;
+  utterance.onstart=()=>button.classList.add('speaking');utterance.onend=utterance.onerror=()=>button.classList.remove('speaking');
+  window.speechSynthesis.speak(utterance)
+}
 const verbs=window.GERMAN_VERBS;
 const verbMeanings=window.GERMAN_VERB_MEANINGS||{};
 let verbPerson=0;const verbDate=document.querySelector('#verbDate');const verbCount=document.querySelector('#verbCount');const verbState=JSON.parse(localStorage.getItem(VERB_KEY)||'{}');verbDate.value=day;verbCount.value=localStorage.getItem(VERB_COUNT_KEY)||'5';

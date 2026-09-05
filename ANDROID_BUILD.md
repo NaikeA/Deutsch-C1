@@ -17,6 +17,7 @@ This Android package embeds the complete `dist` website. It does not load or rev
    ```
 
 If the `android` folder already exists, skip `npm run android:init`.
+The commands automatically prepare the `dist` folder whether the website files came from Sites or from the GitHub Pages repository root.
 
 ## Test APK
 

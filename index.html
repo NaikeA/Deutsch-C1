@@ -18,6 +18,7 @@
   <link rel="stylesheet" href="playback.css?v=24">
   <link rel="stylesheet" href="noun-meanings.css?v=20">
   <link rel="stylesheet" href="vocabulary.css?v=1">
+  <link rel="stylesheet" href="cases.css?v=1">
 </head>
 <body>
   <header class="topbar">
@@ -33,6 +34,7 @@
       <button class="main-tab" data-view="listening">Hörverstehen</button>
       <button class="main-tab" data-view="verbs">Verben</button>
       <button class="main-tab" data-view="articles">Artikel</button>
+      <button class="main-tab" data-view="cases">Akkusativ &amp; Dativ</button>
       <button class="main-tab" data-view="correction">Satzkorrektur</button>
       <button class="main-tab" data-view="notes">Notizen</button>
       <button class="main-tab" data-view="lab-endings">Endungen</button>
@@ -54,9 +56,10 @@
     </section>
 
     <section class="site-summary">
-      <div class="summary-head"><div><p class="kicker">INHALT DER WEBSITE</p><h2>Mein gesamtes Deutsch-Training</h2></div><div class="summary-total"><strong>3.090</strong><span>vorbereitete Lerninhalte</span></div></div>
+      <div class="summary-head"><div><p class="kicker">INHALT DER WEBSITE</p><h2>Mein gesamtes Deutsch-Training</h2></div><div class="summary-total"><strong>4.490</strong><span>vorbereitete Lerninhalte</span></div></div>
       <div class="summary-grid">
         <button type="button" class="summary-card" data-go-view="articles"><strong>700</strong><span>Substantive</span><small>10 pro Tag · Artikel und Plural</small></button>
+        <button type="button" class="summary-card" data-go-view="cases"><strong>1.400</strong><span>Akkusativ &amp; Dativ</span><small>15 pro Tag · 7 Übungsarten</small></button>
         <button type="button" class="summary-card" data-go-view="verbs"><strong>350</strong><span>Alltagsverben</span><small>1–10 pro Tag · 6 Personen · 3 Zeiten</small></button>
         <button type="button" class="summary-card" data-go-view="verbs"><strong>6.300</strong><span>Verbformen</span><small>Präsens, Präteritum und Perfekt</small></button>
         <button type="button" class="summary-card" data-go-view="correction"><strong>280</strong><span>Fehlersätze</span><small>2 pro Tag · mit Musterlösung</small></button>
@@ -70,7 +73,7 @@
         <button type="button" class="summary-card" data-go-view="writing"><strong>täglich</strong><span>Freies Schreiben</span><small>Absätze, Impulse und 7-Punkte-Check</small></button>
         <button type="button" class="summary-card" data-go-view="notes"><strong>täglich</strong><span>Persönliche Notizen</span><small>Eigene Gedanken automatisch speichern</small></button>
       </div>
-      <p class="summary-note">Die Zahl 3.090 zählt die vorbereiteten Wörter, Hörtexte und Übungen. Die 6.300 einzelnen Verbformen und deine eigenen Texte kommen zusätzlich dazu.</p>
+      <p class="summary-note">Die Zahl 4.490 zählt die vorbereiteten Wörter, Hörtexte und Übungen. Die 6.300 einzelnen Verbformen und deine eigenen Texte kommen zusätzlich dazu.</p>
       <div class="app-tools">
         <div><p class="kicker">APP & DATENSICHERUNG</p><h3>Auf Android installieren</h3><p>Installiere den Lerntrainer als eigenständige App. Sichere deine Einträge als Datei, um sie auf ein anderes Gerät zu übertragen.</p></div>
         <div class="app-tool-actions"><button id="installApp" type="button" hidden>App installieren</button><button id="exportBackup" class="outline-btn" type="button">Backup exportieren</button><button id="importBackup" class="outline-btn" type="button">Backup importieren</button><input id="backupFile" type="file" accept="application/json,.json" hidden></div>
@@ -200,6 +203,14 @@
       <div class="article-actions"><span id="articleScore">Noch nicht geprüft</span><div><button id="clearArticles" class="text-btn">Antworten leeren</button><button id="checkArticles" class="article-check">Alle prüfen</button></div></div>
     </section>
 
+    <section class="case-gym" id="akkusativ-dativ">
+      <div class="case-head"><div><p class="kicker">1.400 ÜBUNGEN · 15 PRO TAG</p><h2>Akkusativ und Dativ sicher beherrschen</h2><p>Trainiere Artikel, Endungen, Pronomen, Verben, Wechselpräpositionen und Sätze mit zwei Objekten. Fehler werden in deinem Fehlerjournal gespeichert.</p></div><div class="entry-date"><label for="caseDate">Übung vom</label><input id="caseDate" type="date"></div></div>
+      <div class="case-tabs" role="tablist" aria-label="Übungsart"><button class="case-tab active" data-case-category="Gemischt">Gemischt</button><button class="case-tab" data-case-category="Artikel &amp; Endungen">Artikel &amp; Endungen</button><button class="case-tab" data-case-category="Verben &amp; Kasus">Verben &amp; Kasus</button><button class="case-tab" data-case-category="Pronomen">Pronomen</button><button class="case-tab" data-case-category="Wo oder wohin?">Wo oder wohin?</button><button class="case-tab" data-case-category="Zwei Objekte">Zwei Objekte</button><button class="case-tab" data-case-category="Fehler korrigieren">Fehler korrigieren</button><button class="case-tab" data-case-category="Alltagsdialoge">Alltagsdialoge</button></div>
+      <div class="case-progress"><span id="caseSetLabel">Gemischte Tagesübung</span><span id="caseProgressText">0 von 15 beantwortet</span></div>
+      <div id="caseCards" class="case-cards"></div>
+      <div class="case-actions"><span id="caseScore">Noch nicht geprüft</span><div><button id="clearCases" class="text-btn" type="button">Antworten leeren</button><button id="checkCases" class="case-check" type="button">Alle prüfen</button></div></div>
+    </section>
+
     <section class="correction-gym" id="satzkorrektur">
       <div class="correction-head">
         <div><p class="kicker">2 SÄTZE PRO TAG · 280 SÄTZE</p><h2>Fehler finden und korrigieren</h2><p>Schreibe jeden Satz richtig. Vergleiche deine Version anschließend mit der Musterlösung.</p></div>
@@ -280,6 +291,7 @@
   <script src="verbs.js?v=16"></script>
   <script src="corrections.js?v=16"></script>
   <script src="lab.js?v=16"></script>
-  <script src="app.js?v=37"></script>
+  <script src="cases.js?v=1"></script>
+  <script src="app.js?v=38"></script>
 </body>
 </html>

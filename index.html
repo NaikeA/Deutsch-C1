@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="playback.css?v=24">
   <link rel="stylesheet" href="noun-meanings.css?v=20">
   <link rel="stylesheet" href="vocabulary.css?v=1">
-  <link rel="stylesheet" href="cases.css?v=1">
+  <link rel="stylesheet" href="cases.css?v=2">
 </head>
 <body>
   <header class="topbar">
@@ -59,7 +59,7 @@
       <div class="summary-head"><div><p class="kicker">INHALT DER WEBSITE</p><h2>Mein gesamtes Deutsch-Training</h2></div><div class="summary-total"><strong>4.490</strong><span>vorbereitete Lerninhalte</span></div></div>
       <div class="summary-grid">
         <button type="button" class="summary-card" data-go-view="articles"><strong>700</strong><span>Substantive</span><small>10 pro Tag · Artikel und Plural</small></button>
-        <button type="button" class="summary-card" data-go-view="cases"><strong>1.400</strong><span>Akkusativ &amp; Dativ</span><small>15 pro Tag · 7 Übungsarten</small></button>
+        <button type="button" class="summary-card" data-go-view="cases"><strong>1.400</strong><span>Akkusativ &amp; Dativ</span><small>5–15 pro Tag · 7 Übungsarten</small></button>
         <button type="button" class="summary-card" data-go-view="verbs"><strong>350</strong><span>Alltagsverben</span><small>1–10 pro Tag · 6 Personen · 3 Zeiten</small></button>
         <button type="button" class="summary-card" data-go-view="verbs"><strong>6.300</strong><span>Verbformen</span><small>Präsens, Präteritum und Perfekt</small></button>
         <button type="button" class="summary-card" data-go-view="correction"><strong>280</strong><span>Fehlersätze</span><small>2 pro Tag · mit Musterlösung</small></button>
@@ -204,9 +204,9 @@
     </section>
 
     <section class="case-gym" id="akkusativ-dativ">
-      <div class="case-head"><div><p class="kicker">1.400 ÜBUNGEN · 15 PRO TAG</p><h2>Akkusativ und Dativ sicher beherrschen</h2><p>Trainiere Artikel, Endungen, Pronomen, Verben, Wechselpräpositionen und Sätze mit zwei Objekten. Fehler werden in deinem Fehlerjournal gespeichert.</p></div><div class="entry-date"><label for="caseDate">Übung vom</label><input id="caseDate" type="date"></div></div>
+      <div class="case-head"><div><p class="kicker">1.400 ÜBUNGEN · 5, 10 ODER 15 PRO TAG</p><h2>Akkusativ und Dativ sicher beherrschen</h2><p>Trainiere Artikel, Endungen, Pronomen, Verben, Wechselpräpositionen und Sätze mit zwei Objekten. Fehler werden in deinem Fehlerjournal gespeichert.</p></div><div class="case-head-controls"><label for="caseCount">Übungen pro Tag<select id="caseCount"><option value="5">5</option><option value="10">10</option><option value="15">15</option></select></label><div class="entry-date"><label for="caseDate">Übung vom</label><input id="caseDate" type="date"></div></div></div>
       <div class="case-tabs" role="tablist" aria-label="Übungsart"><button class="case-tab active" data-case-category="Gemischt">Gemischt</button><button class="case-tab" data-case-category="Artikel &amp; Endungen">Artikel &amp; Endungen</button><button class="case-tab" data-case-category="Verben &amp; Kasus">Verben &amp; Kasus</button><button class="case-tab" data-case-category="Pronomen">Pronomen</button><button class="case-tab" data-case-category="Wo oder wohin?">Wo oder wohin?</button><button class="case-tab" data-case-category="Zwei Objekte">Zwei Objekte</button><button class="case-tab" data-case-category="Fehler korrigieren">Fehler korrigieren</button><button class="case-tab" data-case-category="Alltagsdialoge">Alltagsdialoge</button></div>
-      <div class="case-progress"><span id="caseSetLabel">Gemischte Tagesübung</span><span id="caseProgressText">0 von 15 beantwortet</span></div>
+      <div class="case-progress"><span id="caseSetLabel">Gemischte Tagesübung</span><span id="caseProgressText">0 von 5 beantwortet</span></div>
       <div id="caseCards" class="case-cards"></div>
       <div class="case-actions"><span id="caseScore">Noch nicht geprüft</span><div><button id="clearCases" class="text-btn" type="button">Antworten leeren</button><button id="checkCases" class="case-check" type="button">Alle prüfen</button></div></div>
     </section>
@@ -292,6 +292,6 @@
   <script src="corrections.js?v=16"></script>
   <script src="lab.js?v=16"></script>
   <script src="cases.js?v=1"></script>
-  <script src="app.js?v=38"></script>
+  <script src="app.js?v=39"></script>
 </body>
 </html>

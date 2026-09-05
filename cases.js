@@ -11,8 +11,10 @@
   for(let i=0;i<240;i++){
     const noun=nouns[i%nouns.length],adj=adjectives[Math.floor(i/nouns.length)%adjectives.length],kase=i%2?'dat':'acc',kind=Math.floor(i/2)%2?'ind':'def';
     const answer=phrase(noun,adj,kind,kase);const otherCase=kase==='acc'?'dat':'acc';const altKind=kind==='def'?'ind':'def';
-    const prompt=kase==='acc'?`Ich bespreche heute ___ . (${noun[2]})`:`Ich spreche heute mit ___ . (${noun[2]})`;
-    add('Artikel & Endungen',prompt,[answer,phrase(noun,adj,kind,otherCase),phrase(noun,adj,altKind,kase),phrase(noun,adj,altKind,otherCase)],answer,kase==='dat'?`„mit“ verlangt immer den Dativ. Richtig ist: ${answer}.`:`„besprechen“ hat ein Akkusativobjekt. Richtig ist: ${answer}.`);
+    const englishArticle=kind==='def'?'the':/^[aeiou]/i.test(noun[2])?'an':'a';
+    const prompt=kase==='acc'?`Ich bespreche heute ___ . (${englishArticle} ${noun[2]})`:`Ich spreche heute mit ___ . (${englishArticle} ${noun[2]})`;
+    const articleHint=kind==='def'?'„the“ verlangt hier den bestimmten Artikel.':'„a/an“ verlangt hier den unbestimmten Artikel.';
+    add('Artikel & Endungen',prompt,[answer,phrase(noun,adj,kind,otherCase),phrase(noun,adj,altKind,kase),phrase(noun,adj,altKind,otherCase)],answer,kase==='dat'?`„mit“ verlangt den Dativ. ${articleHint} Richtig ist: ${answer}.`:`„besprechen“ hat ein Akkusativobjekt. ${articleHint} Richtig ist: ${answer}.`);
   }
   const dativeVerbs=[['helfen','Ich helfe'],['danken','Ich danke'],['folgen','Ich folge'],['vertrauen','Ich vertraue'],['gehören','Das gehört'],['gratulieren','Ich gratuliere'],['antworten','Ich antworte'],['zuhören','Ich höre',' zu'],['widersprechen','Ich widerspreche'],['begegnen','Ich begegne'],['fehlen','Das fehlt'],['zustimmen','Ich stimme',' zu']];
   const accusativeVerbs=[['sehen','Ich sehe'],['besuchen','Ich besuche'],['fragen','Ich frage'],['anrufen','Ich rufe',' an'],['treffen','Ich treffe'],['unterstützen','Ich unterstütze'],['brauchen','Ich brauche'],['kennen','Ich kenne'],['verstehen','Ich verstehe'],['informieren','Ich informiere'],['prüfen','Ich prüfe'],['beobachten','Ich beobachte']];

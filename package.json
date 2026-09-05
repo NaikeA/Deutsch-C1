@@ -4,8 +4,9 @@
   "private": true,
   "description": "Self-contained Android package for Deutsch auf C1",
   "scripts": {
-    "android:init": "cap add android",
-    "android:sync": "cap sync android",
+    "prepare:web": "node scripts/prepare-web.mjs",
+    "android:init": "npm run prepare:web && cap add android",
+    "android:sync": "npm run prepare:web && cap sync android",
     "android:open": "cap open android",
     "android:debug-apk": "npm run android:sync && cd android && ./gradlew assembleDebug",
     "android:release-apk": "npm run android:sync && cd android && ./gradlew assembleRelease"

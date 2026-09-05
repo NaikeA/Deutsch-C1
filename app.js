@@ -14,7 +14,7 @@ const LISTENING_KEY='deutsch-c1-listening-v1';
 const LISTENING_VOICE_KEY='deutsch-c1-listening-voice-v1';
 const PRONUNCIATION_MODE_KEY='deutsch-c1-pronunciation-mode-v1';
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const defaults={skills:{Grammatik:54,Sprechen:58,Schreiben:50,Hören:68,Wortschatz:62},tasks:{},minutes:0,date:''};
+const defaults={skills:{Grammatik:0,Sprechen:0,Schreiben:0,Hören:0,Wortschatz:0},tasks:{},minutes:0,date:''};
 const day=new Date().toISOString().slice(0,10);
 let state={...defaults,...JSON.parse(localStorage.getItem(KEY)||'{}')};
 if(state.date!==day){state.minutes=0;state.date=day}

@@ -1,0 +1,9 @@
+{
+  "appId": "de.amit.deutschaufc1",
+  "appName": "Deutsch auf C1",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https"
+  }
+}

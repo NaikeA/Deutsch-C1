@@ -1,6 +1,16 @@
 (function(){
   const exercises=[];
-  const add=(category,prompt,options,answer,explanation)=>exercises.push({id:`case-${exercises.length+1}`,category,prompt,options:[...new Set(options)],answer,explanation});
+  const shuffledOptions=(options,key)=>{
+    const values=[...new Set(options)];
+    let seed=2166136261;
+    for(const char of key){seed^=char.charCodeAt(0);seed=Math.imul(seed,16777619)}
+    for(let i=values.length-1;i>0;i--){seed^=seed<<13;seed^=seed>>>17;seed^=seed<<5;const j=(seed>>>0)%(i+1);[values[i],values[j]]=[values[j],values[i]]}
+    return values
+  };
+  const add=(category,prompt,options,answer,explanation)=>{
+    const id=`case-${exercises.length+1}`;
+    exercises.push({id,category,prompt,options:shuffledOptions(options,`${id}|${category}|${prompt}`),answer,explanation})
+  };
   const nouns=[
     ['m','Kollege','colleague','Kollegen'],['f','Kollegin','colleague'],['n','Projekt','project'],['m','Kunde','customer','Kunden'],['f','Chefin','manager'],['n','Team','team'],['m','Arzt','doctor'],['f','Nachbarin','neighbour'],['n','Kind','child'],['m','Freund','friend'],['f','Lehrerin','teacher'],['n','Unternehmen','company'],['m','Mitarbeiter','employee'],['f','Person','person'],['n','Problem','problem'],['m','Projektleiter','project manager'],['f','Abteilung','department'],['n','Büro','office'],['m','Vorschlag','suggestion'],['f','Entscheidung','decision'],['n','Ergebnis','result'],['m','Termin','appointment'],['f','Aufgabe','task'],['n','Gespräch','conversation'],['m','Bericht','report'],['f','E-Mail','email'],['n','Dokument','document'],['m','Plan','plan'],['f','Lösung','solution'],['n','Angebot','offer']
   ];

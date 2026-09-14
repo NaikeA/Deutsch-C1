@@ -12,7 +12,7 @@
   <title>Deutsch auf C1</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="app-icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=21">
+  <link rel="stylesheet" href="styles.css?v=22">
   <link rel="stylesheet" href="verb-count.css?v=16">
   <link rel="stylesheet" href="listening.css?v=19">
   <link rel="stylesheet" href="playback.css?v=24">
@@ -125,6 +125,14 @@
           <label class="sr-only" for="dailyParagraph">Mein Absatz auf Deutsch</label>
           <textarea id="dailyParagraph" lang="de" spellcheck="true" placeholder="Heute denke ich darüber nach, dass …"></textarea>
           <div class="editor-foot"><span><b id="wordCount">0</b> Wörter · <b id="charCount">0</b> Zeichen</span><span id="saveStatus">Noch nicht gespeichert</span></div>
+          <div class="paragraph-comparison">
+            <div class="comparison-head">
+              <div><p class="kicker">ABSATZ FÜR ABSATZ</p><h3>Original und Korrektur vergleichen</h3><p>Trage jeden ursprünglichen Absatz und direkt darunter die korrigierte Fassung ein. Beide Bereiche können separat formatiert werden.</p></div>
+              <button id="addComparisonPair" class="outline-btn" type="button">+ Absatzpaar hinzufügen</button>
+            </div>
+            <div id="comparisonPairs" class="comparison-pairs"></div>
+            <div class="comparison-foot"><span id="comparisonStatus">Noch nicht gespeichert</span><button id="saveComparisons" class="save-btn" type="button">Absatzpaare speichern</button></div>
+          </div>
           <div class="corrected-editor">
             <div class="corrected-editor-head"><div><p class="kicker">KI-KORRIGIERTE VERSION</p><h3>Verbesserte Fassung</h3><p>Kopiere hier deine korrigierte Version hinein und formatiere wichtige Stellen.</p></div></div>
             <div class="format-toolbar" role="toolbar" aria-label="Text formatieren">
@@ -293,6 +301,6 @@
   <script src="lab.js?v=16"></script>
   <script src="expansions.js?v=1"></script>
   <script src="cases.js?v=3"></script>
-  <script src="app.js?v=41"></script>
+  <script src="app.js?v=42"></script>
 </body>
 </html>

@@ -16,8 +16,25 @@
   if(Array.isArray(window.GERMAN_NOUNS)){
     outer:for(const [prefix,enPrefix] of nounModifiers)for(const [article,head,plural,enHead] of nounHeads){
       if(window.GERMAN_NOUNS.length>=TARGET)break outer;
-      const word=prefix+head;
-      uniquePush(window.GERMAN_NOUNS,[article,word,prefix+plural],x=>x[1]);
+      const word=prefix+head.charAt(0).toLowerCase()+head.slice(1);
+      const compoundPlural=prefix+plural.charAt(0).toLowerCase()+plural.slice(1);
+      if(window.GERMAN_NOUN_EXAMPLES){
+        const subject=article.charAt(0).toUpperCase()+article.slice(1)+' '+word;
+        const examples={
+          Plan:subject+' hilft uns, die nächsten Schritte zu organisieren.',
+          Aufgabe:subject+' muss bis Freitag erledigt sein.',
+          Bereich:subject+' wird von einer Kollegin betreut.',
+          Ziel:'Wir legen gemeinsam '+article+' '+word+' fest.',
+          Problem:'Wir suchen nach einer Lösung für '+article+' '+word+'.',
+          Lösung:'Wir prüfen, ob '+article+' '+word+' im Alltag funktioniert.',
+          Prozess:subject+' wird Schritt für Schritt verbessert.',
+          System:subject+' wird regelmäßig überprüft.',
+          Strategie:'Wir entwickeln gemeinsam '+article+' '+word+' für das kommende Jahr.',
+          Konzept:subject+' wird bei der nächsten Besprechung vorgestellt.'
+        };
+        window.GERMAN_NOUN_EXAMPLES[word]=examples[head];
+      }
+      uniquePush(window.GERMAN_NOUNS,[article,word,compoundPlural],x=>x[1]);
       if(window.GERMAN_NOUN_MEANINGS)window.GERMAN_NOUN_MEANINGS[word]=`${enPrefix} ${enHead}`;
     }
     window.GERMAN_NOUNS=window.GERMAN_NOUNS.slice(0,TARGET);

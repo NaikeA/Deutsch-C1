@@ -256,3 +256,25 @@ document.querySelector('#exportBackup').addEventListener('click',async()=>{const
 const backupFile=document.querySelector('#backupFile');document.querySelector('#importBackup').addEventListener('click',()=>backupFile.click());backupFile.addEventListener('change',async()=>{const file=backupFile.files?.[0];if(!file)return;try{const data=JSON.parse(await file.text());if(data.format!=='deutsch-c1-backup'||!data.storage||typeof data.storage!=='object')throw new Error('invalid');Object.entries(data.storage).forEach(([key,value])=>{if(key.startsWith('deutsch-c1-')&&typeof value==='string')localStorage.setItem(key,value)});appToolStatus.textContent='Backup importiert – App wird neu geladen …';setTimeout(()=>location.reload(),700)}catch(error){appToolStatus.textContent='Diese Datei ist kein gültiges Deutsch-C1-Backup.'}finally{backupFile.value=''}});
 if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{appToolStatus.textContent='Offline-Unterstützung konnte nicht aktiviert werden.'}));
 render();save();
+
+/* Available on every learning tab; reuse the tested Android/browser TTS bridge. */
+(function(){
+const toolbar=document.createElement('div');
+toolbar.className='selected-text-toolbar';
+toolbar.innerHTML='<button type="button" class="pronounce-word" id="readSelectedText">🔊 Markierten Text vorlesen</button> <button type="button" id="stopSelectedText">■ Stopp</button> <span role="status" aria-live="polite" id="selectedTextStatus">Text markieren und auf Vorlesen klicken.</span>';
+toolbar.style.cssText='display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:12px;margin:12px 0;background:#e8f3ed;color:#064d3c;border-radius:12px;';
+document.querySelector('.main-tabs').after(toolbar);
+toolbar.querySelectorAll('button').forEach(button=>{button.style.cssText='width:auto;height:auto;border:1px solid #00785b;border-radius:8px;padding:9px 12px;background:#00785b;color:#fff;cursor:pointer;';});
+const read=toolbar.querySelector('#readSelectedText'),status=toolbar.querySelector('#selectedTextStatus');let selected='';
+function capture(){
+const field=document.activeElement;
+const text=field&&['TEXTAREA','INPUT'].includes(field.tagName)&&typeof field.selectionStart==='number'?field.value.slice(field.selectionStart,field.selectionEnd):window.getSelection()?.toString();
+if(text&&text.trim())selected=text.trim();
+}
+document.addEventListener('selectionchange',capture);
+document.addEventListener('select',capture,true);
+toolbar.addEventListener('pointerdown',event=>{capture();if(event.pointerType==='mouse')event.preventDefault();});
+read.addEventListener('click',()=>{capture();if(!selected){status.textContent='Bitte zuerst einen Text markieren.';return;}stopListening();status.textContent='Markierter Text wird vorgelesen.';speakPractice(selected,read).catch(()=>{status.textContent='Sprachausgabe ist nicht verfügbar.';});});
+toolbar.querySelector('#stopSelectedText').addEventListener('click',()=>{if(nativeTts)nativeTts.stop().catch(()=>{});if('speechSynthesis'in window)window.speechSynthesis.cancel();read.classList.remove('speaking');status.textContent='Sprachausgabe gestoppt.';});
+document.querySelectorAll('.main-tab').forEach(tab=>tab.addEventListener('click',()=>{selected='';status.textContent='Text markieren und auf Vorlesen klicken.';}));
+})();

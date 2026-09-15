@@ -262,8 +262,14 @@ render();save();
 const toolbar=document.createElement('div');
 toolbar.className='selected-text-toolbar';
 toolbar.innerHTML='<button type="button" class="pronounce-word" id="readSelectedText">🔊 Markierten Text vorlesen</button> <button type="button" id="stopSelectedText">■ Stopp</button> <span role="status" aria-live="polite" id="selectedTextStatus">Text markieren und auf Vorlesen klicken.</span>';
-toolbar.style.cssText='display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:12px;margin:12px 0;background:#e8f3ed;color:#064d3c;border-radius:12px;';
-document.querySelector('.main-tabs').after(toolbar);
+toolbar.style.cssText='position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom, 0px));z-index:1000;display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:12px;margin:0;background:#e8f3ed;color:#064d3c;border:1px solid #b4d3c3;border-radius:12px;box-shadow:0 4px 24px #0003;';
+document.body.append(toolbar);
+// Keep the last fields reachable above the floating controls, including on mobile.
+const originalBottomPadding=parseFloat(getComputedStyle(document.body).paddingBottom)||0;
+const reserveToolbarSpace=()=>{document.body.style.paddingBottom=`${originalBottomPadding+toolbar.getBoundingClientRect().height+36}px`;};
+reserveToolbarSpace();
+if(typeof ResizeObserver==='function')new ResizeObserver(reserveToolbarSpace).observe(toolbar);
+window.addEventListener('resize',reserveToolbarSpace);
 toolbar.querySelectorAll('button').forEach(button=>{button.style.cssText='width:auto;height:auto;border:1px solid #00785b;border-radius:8px;padding:9px 12px;background:#00785b;color:#fff;cursor:pointer;';});
 const read=toolbar.querySelector('#readSelectedText'),status=toolbar.querySelector('#selectedTextStatus');let selected='';
 function capture(){

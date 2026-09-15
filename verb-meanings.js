@@ -160,7 +160,7 @@ window.GERMAN_VERB_MEANINGS={
   "kommen": "come",
   "können": "can; be able to",
   "kontrollieren": "check; inspect",
-  "kosten": "cost",
+  "kosten": "cost; taste; sample",
   "kranken": "suffer; ail",
   "kriegen": "get; receive (colloquial)",
   "kümmern": "take care of",

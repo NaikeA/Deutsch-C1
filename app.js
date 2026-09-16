@@ -365,7 +365,7 @@ document.addEventListener('select',capture,true);
 document.addEventListener('mouseup',capture,true);
 document.addEventListener('keyup',capture,true);
 document.addEventListener('touchend',()=>setTimeout(capture,0),true);
-toolbar.addEventListener('pointerdown',event=>{capture();if(event.pointerType==='mouse')event.preventDefault();});
+toolbar.addEventListener('pointerdown',capture,true);
 let selectedSpeechRun=0;
 function selectedTextChunks(text,maxLength=220){
   const sentences=text.replace(/\s+/g,' ').trim().match(/[^.!?;:]+[.!?;:]?|.+$/g)||[text];

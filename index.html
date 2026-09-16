@@ -12,7 +12,7 @@
   <title>Deutsch auf C1</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="app-icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=27">
+  <link rel="stylesheet" href="styles.css?v=28">
   <link rel="stylesheet" href="verb-count.css?v=16">
   <link rel="stylesheet" href="listening.css?v=19">
   <link rel="stylesheet" href="playback.css?v=24">
@@ -42,6 +42,11 @@
       <button class="main-tab grammar-tab" data-view="grammar">Grammatik</button>
       <button class="main-tab" data-view="notes">Notizen</button>
     </nav>
+    <div id="selectedTextToolbar" class="selected-text-toolbar" role="region" aria-label="Text vorlesen">
+      <button type="button" id="readSelectedText">🔊 Markierten Text vorlesen</button>
+      <button type="button" id="stopSelectedText">■ Stopp</button>
+      <span role="status" aria-live="polite" id="selectedTextStatus">Text markieren und auf Vorlesen klicken.</span>
+    </div>
     <section class="intro">
       <div>
         <p class="eyebrow">MEIN LERNFORTSCHRITT</p>
@@ -299,6 +304,6 @@
   <script src="lab.js?v=16"></script>
   <script src="expansions.js?v=2"></script>
   <script src="cases.js?v=4"></script>
-  <script src="app.js?v=50"></script>
+  <script src="app.js?v=51"></script>
 </body>
 </html>

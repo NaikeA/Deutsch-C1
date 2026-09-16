@@ -112,7 +112,7 @@
       </article>
     </section>
 
-    <section class="writing-studio" id="schreiben">
+    <section hidden class="writing-studio" id="schreiben">
       <div class="writing-head">
         <div><p class="kicker">TÄGLICH SCHREIBEN</p><h2>Gedanken in Worte fassen</h2><p>Schreibe ehrlich und einfach. Präzision kommt beim zweiten Lesen.</p></div>
         <div class="entry-date"><label for="entryDate">Eintrag vom</label><input id="entryDate" type="date"></div>
@@ -157,7 +157,7 @@
       </div>
     </section>
 
-    <section class="listening-studio" id="hoerverstehen">
+    <section hidden class="listening-studio" id="hoerverstehen">
       <div class="listening-head">
         <div><p class="kicker">C1 HÖRVERSTEHEN · 360 ÜBUNGEN</p><h2>Genau zuhören, sicher verstehen</h2><p>Höre den Text, ohne mitzulesen. Beantworte danach zwei Fragen zum Inhalt.</p></div>
         <div class="entry-date"><label for="listeningDate">Übung vom</label><input id="listeningDate" type="date"></div>
@@ -184,7 +184,7 @@
       <p id="listeningSupport" class="listening-support" hidden>Auf diesem Gerät ist keine Sprachausgabe verfügbar. Du kannst das Transkript zum Lesen verwenden.</p>
     </section>
 
-    <section class="verb-gym" id="verben">
+    <section hidden class="verb-gym" id="verben">
       <div class="verb-head">
         <div><p class="kicker">1–10 VERBEN PRO TAG · 1.000 ÜBUNGEN</p><h2>Verben aktiv beherrschen</h2><p>Wähle deine tägliche Anzahl und konjugiere jedes Verb für eine Person. Wechsle danach die Person und wiederhole die Runde.</p></div>
         <div class="entry-date"><label for="verbDate">Übung vom</label><input id="verbDate" type="date"></div>
@@ -199,7 +199,7 @@
       <div class="verb-summary"><span id="verbScore">Auswahl wird geladen …</span><button id="clearVerbs" class="text-btn">Diese Runde leeren</button></div>
     </section>
 
-    <section class="article-gym" id="artikel">
+    <section hidden class="article-gym" id="artikel">
       <div class="article-head">
         <div><p class="kicker">10 WÖRTER PRO TAG · 1.000 WÖRTER</p><h2>Der, die oder das?</h2><p>Wähle den bestimmten Artikel. Fehlerhafte Wörter kehren automatisch zur Wiederholung zurück.</p></div>
         <div class="entry-date"><label for="articleDate">Übung vom</label><input id="articleDate" type="date"></div>
@@ -209,7 +209,7 @@
       <div class="article-actions"><span id="articleScore">Noch nicht geprüft</span><div><button id="clearArticles" class="text-btn">Antworten leeren</button><button id="checkArticles" class="article-check">Alle prüfen</button></div></div>
     </section>
 
-    <section class="case-gym" id="akkusativ-dativ">
+    <section hidden class="case-gym" id="akkusativ-dativ">
       <div class="case-head"><div><p class="kicker">1.400 ÜBUNGEN · 5, 10 ODER 15 PRO TAG</p><h2>Akkusativ und Dativ sicher beherrschen</h2><p>Trainiere Artikel, Endungen, Pronomen, Verben, Wechselpräpositionen und Sätze mit zwei Objekten. Fehler werden in deinem Fehlerjournal gespeichert.</p></div><div class="case-head-controls"><label for="caseCount">Übungen pro Tag<select id="caseCount"><option value="5">5</option><option value="10">10</option><option value="15">15</option></select></label><div class="entry-date"><label for="caseDate">Übung vom</label><input id="caseDate" type="date"></div></div></div>
       <div class="case-tabs" role="tablist" aria-label="Übungsart"><button class="case-tab active" data-case-category="Gemischt">Gemischt</button><button class="case-tab" data-case-category="Artikel &amp; Endungen">Artikel &amp; Endungen</button><button class="case-tab" data-case-category="Verben &amp; Kasus">Verben &amp; Kasus</button><button class="case-tab" data-case-category="Pronomen">Pronomen</button><button class="case-tab" data-case-category="Wo oder wohin?">Wo oder wohin?</button><button class="case-tab" data-case-category="Zwei Objekte">Zwei Objekte</button><button class="case-tab" data-case-category="Fehler korrigieren">Fehler korrigieren</button><button class="case-tab" data-case-category="Alltagsdialoge">Alltagsdialoge</button></div>
       <div class="case-progress"><span id="caseSetLabel">Gemischte Tagesübung</span><span id="caseProgressText">0 von 5 beantwortet</span></div>
@@ -217,7 +217,7 @@
       <div class="case-actions"><span id="caseScore">Noch nicht geprüft</span><div><button id="clearCases" class="text-btn" type="button">Antworten leeren</button><button id="checkCases" class="case-check" type="button">Alle prüfen</button></div></div>
     </section>
 
-    <section class="correction-gym" id="satzkorrektur">
+    <section hidden class="correction-gym" id="satzkorrektur">
       <div class="correction-head">
         <div><p class="kicker">2 SÄTZE PRO TAG · 1.000 SÄTZE</p><h2>Fehler finden und korrigieren</h2><p>Schreibe jeden Satz richtig. Vergleiche deine Version anschließend mit der Musterlösung.</p></div>
         <div class="entry-date"><label for="correctionDate">Übung vom</label><input id="correctionDate" type="date"></div>
@@ -226,7 +226,7 @@
       <div class="correction-summary"><span id="correctionScore">Noch nicht bewertet</span><button id="clearCorrections" class="text-btn">Diese Übung leeren</button></div>
     </section>
 
-    <section class="notes-studio" id="notizen">
+    <section hidden class="notes-studio" id="notizen">
       <div class="notes-head">
         <div><p class="kicker">MEINE TÄGLICHEN NOTIZEN</p><h2>Gedanken festhalten</h2><p>Schreibe neue Wörter, Beobachtungen, Fragen oder Dinge auf, die du später wiederholen möchtest.</p></div>
         <div class="entry-date"><label for="notesDate">Notiz vom</label><input id="notesDate" type="date"></div>
@@ -243,19 +243,19 @@
       </div>
     </section>
 
-    <section class="vocabulary-studio" id="tageswortschatz">
+    <section hidden class="vocabulary-studio" id="tageswortschatz">
       <div class="vocabulary-head"><div><p class="kicker">TÄGLICHER WORTSCHATZ</p><h2>Neue Wörter festhalten</h2><p>Trage ein deutsches Wort ein. Bekannte Nomen und Verben werden automatisch ins Englische übersetzt.</p></div><div class="entry-date"><label for="vocabularyDate">Eintrag vom</label><input id="vocabularyDate" type="date"></div></div>
       <div class="vocabulary-table-wrap"><table class="vocabulary-table"><thead><tr><th>#</th><th>Genus</th><th>Deutsches Wort</th><th>Wortart</th><th>English meaning</th><th>Aktion</th></tr></thead><tbody id="vocabularyRows"></tbody></table></div>
       <div class="vocabulary-actions"><span id="vocabularyStatus">Wird lokal gespeichert</span><div><button id="addVocabularyRow" class="text-btn" type="button">+ Weitere Zeile</button><button id="clearVocabulary" class="text-btn" type="button">Diesen Tag leeren</button></div></div>
     </section>
 
-    <section class="error-lab" id="fehlerlabor">
+    <section hidden class="error-lab" id="fehlerlabor">
       <div class="lab-head"><div><p class="kicker">MEIN FEHLERLABOR · 4 × 1.000 ÜBUNGEN</p><h2>Genau die Fehler trainieren, die ich mache</h2><p>Kurze tägliche Übungen. Jede Übungsart speichert deine Antworten und zeigt nur die eigenen Fehler im zugehörigen Journal.</p></div><div class="entry-date"><label for="labDate">Übung vom</label><input id="labDate" type="date"></div></div>
       <div class="lab-tabs" role="tablist"><button class="lab-tab active" data-lab="endings">Endungen</button><button class="lab-tab" data-lab="spelling">Rechtschreibung</button><button class="lab-tab" data-lab="natural">Natürliches Deutsch</button><button class="lab-tab" data-lab="connectors">Satzbau</button></div>
       <div id="labContent" class="lab-content"></div>
     </section>
 
-    <section class="grammar-reference" id="grammatik">
+    <section hidden class="grammar-reference" id="grammatik">
       <div class="grammar-head"><p class="kicker">GRAMMATIK A1–C1</p><h2>Regeln schnell nachschlagen</h2><p>Klicke auf ein Thema. Die Beispiele zeigen die Regel und typische Fehler.</p></div>
       <div class="grammar-list">
         <details><summary><span>01</span>Satzbau im Hauptsatz</summary><div><p>Das konjugierte Verb steht auf <b>Position 2</b>. Das erste Satzglied kann wechseln.</p><ul><li>Ich <b>arbeite</b> heute zu Hause.</li><li>Heute <b>arbeite</b> ich zu Hause.</li></ul><p class="wrong-example">Nicht: Heute ich arbeite zu Hause.</p></div></details>
@@ -299,6 +299,6 @@
   <script src="lab.js?v=16"></script>
   <script src="expansions.js?v=2"></script>
   <script src="cases.js?v=4"></script>
-  <script src="app.js?v=49"></script>
+  <script src="app.js?v=50"></script>
 </body>
 </html>

@@ -240,7 +240,7 @@ const labNames={endings:'Endungen',spelling:'Rechtschreibung',natural:'Natürlic
 const labJournalCategories={endings:['Endung'],spelling:['Rechtschreibung'],natural:['Natürliches Deutsch','Wortwahl'],connectors:['Satzbau']};
 function saveLabState(){localStorage.setItem(LAB_KEY,JSON.stringify(labState))}
 function labDayState(type,create=false){if(create&&!labState[labDate.value])labState[labDate.value]={};if(create&&!labState[labDate.value][type])labState[labDate.value][type]={};return labState[labDate.value]?.[type]||{}}
-function logMistake(category,wrong,correct){const id=category+'|'+wrong+'|'+correct;const old=errorLog[id]||{category,wrong,correct,count:0};old.count++;old.lastDate=day;errorLog[id]=old;localStorage.setItem(ERROR_LOG_KEY,JSON.stringify(errorLog))}
+function logMistake(category,wrong,correct){const id=category+'|'+wrong+'|'+correct;const old=errorLog[id]||{category,wrong,correct,count:0};old.count++;old.lastDate=day;errorLog[id]=old;localStorage.setItem(ERROR_LOG_KEY,JSON.stringify(errorLog));refreshInlineJournals()}
 function labItems(list,count){const n=Math.floor(new Date(labDate.value+'T12:00:00Z').getTime()/86400000);return Array.from({length:count},(_,i)=>list[((n*count+i)%list.length+list.length)%list.length])}
 function renderSectionJournal(type){
   const allowed=labJournalCategories[type]||[];
@@ -286,6 +286,26 @@ function renderLab(){
 }
 document.querySelectorAll('.lab-tab').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.lab-tab').forEach(x=>x.classList.remove('active'));btn.classList.add('active');activeLab=btn.dataset.lab;renderLab()}));
 labDate.addEventListener('change',renderLab);renderLab();
+const inlineJournalConfigs=[
+  {selector:'.article-gym',category:'Artikel',title:'Artikel'},
+  {selector:'.verb-gym',category:'Verbform',title:'Verben'},
+  {selector:'.case-gym',category:'Akkusativ/Dativ',title:'Akkusativ und Dativ'},
+  {selector:'.correction-gym',category:'Satzkorrektur',title:'Satzkorrektur'}
+];
+function refreshInlineJournals(){
+  inlineJournalConfigs.forEach(config=>{
+    const section=document.querySelector(config.selector);if(!section)return;
+    let journal=section.querySelector('.inline-error-journal');
+    if(!journal){journal=document.createElement('section');journal.className='section-journal inline-error-journal';section.append(journal)}
+    const rows=Object.entries(errorLog).filter(([,x])=>x.category===config.category).sort((a,b)=>b[1].count-a[1].count);
+    journal.innerHTML=rows.length
+      ?`<div class="section-journal-head"><h3>Fehlerjournal: ${config.title}</h3><button type="button" class="clear-inline-errors">Fehlerjournal leeren</button></div><div class="journal-list">${rows.slice(0,30).map(([id,x])=>`<article><span>${esc(x.category)}</span><div><s>${esc(x.wrong)}</s><b>${esc(x.correct)}</b></div><strong>${x.count}×</strong><button type="button" data-inline-mastered="${encodeURIComponent(id)}">Gelernt</button></article>`).join('')}</div>`
+      :`<div class="section-journal-head"><h3>Fehlerjournal: ${config.title}</h3></div><div class="lab-empty"><b>Noch keine Fehler in diesem Bereich gespeichert</b><p>Fehler aus ${config.title} erscheinen ausschließlich hier.</p></div>`;
+    journal.querySelector('.clear-inline-errors')?.addEventListener('click',()=>{Object.keys(errorLog).forEach(id=>{if(errorLog[id].category===config.category)delete errorLog[id]});localStorage.setItem(ERROR_LOG_KEY,JSON.stringify(errorLog));refreshInlineJournals()});
+    journal.querySelectorAll('[data-inline-mastered]').forEach(btn=>btn.addEventListener('click',()=>{delete errorLog[decodeURIComponent(btn.dataset.inlineMastered)];localStorage.setItem(ERROR_LOG_KEY,JSON.stringify(errorLog));refreshInlineJournals()}))
+  })
+}
+refreshInlineJournals();
 const viewMap={overview:['.intro','.site-summary','.grid','.roadmap'],writing:['.writing-studio'],listening:['.listening-studio'],verbs:['.verb-gym'],articles:['.article-gym'],cases:['.case-gym'],correction:['.correction-gym'],notes:['.notes-studio'],vocabulary:['.vocabulary-studio'],lab:['.error-lab'],'lab-endings':['.error-lab'],'lab-spelling':['.error-lab'],'lab-natural':['.error-lab'],'lab-connectors':['.error-lab'],grammar:['.grammar-reference']};
 const allViews=Object.values(viewMap).flatMap(selectors=>selectors.flatMap(s=>[...document.querySelectorAll(s)]));
 function showView(name){if(!viewMap[name])name='overview';if(name!=='listening'&&listeningUtterance)stopListening();if(name.startsWith('lab-')){activeLab=name.slice(4);document.querySelectorAll('.lab-tab').forEach(x=>x.classList.toggle('active',x.dataset.lab===activeLab));renderLab()}allViews.forEach(x=>x.hidden=true);viewMap[name].forEach(s=>document.querySelectorAll(s).forEach(x=>x.hidden=false));document.querySelectorAll('.main-tab').forEach(x=>{const on=x.dataset.view===name||(name==='lab'&&x.dataset.view===`lab-${activeLab}`);x.classList.toggle('active',on);x.setAttribute('aria-selected',on)});localStorage.setItem(VIEW_KEY,name);window.scrollTo({top:0,behavior:'smooth'})}

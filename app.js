@@ -15,7 +15,7 @@ const LISTENING_VOICE_KEY='deutsch-c1-listening-voice-v1';
 const PRONUNCIATION_MODE_KEY='deutsch-c1-pronunciation-mode-v1';
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const defaults={skills:{Grammatik:0,Sprechen:0,Schreiben:0,Hören:0,Wortschatz:0},tasks:{},minutes:0,date:'',dailyProgress:{}};
-const day=new Date().toISOString().slice(0,10);
+const now=new Date();const day=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
 let state={...defaults,...JSON.parse(localStorage.getItem(KEY)||'{}')};state.dailyProgress=state.dailyProgress||{};
 if(state.date!==day){state.minutes=0;state.tasks={};state.date=day}
 const save=()=>{localStorage.setItem(KEY,JSON.stringify(state));render()};
@@ -24,10 +24,14 @@ Object.keys(defaults.skills).forEach(name=>{const row=document.createElement('di
 document.querySelectorAll('[data-task]').forEach(box=>{box.disabled=true;box.title='Wird automatisch aus den heutigen Übungen berechnet'});
 document.querySelectorAll('[data-minutes]').forEach(btn=>btn.addEventListener('click',()=>{state.minutes+=+btn.dataset.minutes;save()}));
 document.querySelector('#resetDay').addEventListener('click',()=>{state.minutes=0;state.tasks={};delete state.dailyProgress[day];save()});
-function progressEvents(){return state.dailyProgress[day]?.events||{}}
+function progressEvents(){
+  if(!state.dailyProgress||typeof state.dailyProgress!=='object'||Array.isArray(state.dailyProgress))state.dailyProgress={};
+  if(!state.dailyProgress[day]||typeof state.dailyProgress[day]!=='object')state.dailyProgress[day]={events:{}};
+  if(!state.dailyProgress[day].events||typeof state.dailyProgress[day].events!=='object'||Array.isArray(state.dailyProgress[day].events))state.dailyProgress[day].events={};
+  return state.dailyProgress[day].events
+}
 function recordDailyProgress(area,id,units=1,minutes=1){
-  if(!state.dailyProgress[day])state.dailyProgress[day]={events:{}};
-  const events=state.dailyProgress[day].events;if(events[id])return;
+  const events=progressEvents();if(events[id])return;
   events[id]={area,units,minutes};save()
 }
 function dailyProgressSummary(){

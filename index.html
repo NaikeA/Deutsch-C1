@@ -12,7 +12,7 @@
   <title>Deutsch auf C1</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="app-icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=26">
+  <link rel="stylesheet" href="styles.css?v=27">
   <link rel="stylesheet" href="verb-count.css?v=16">
   <link rel="stylesheet" href="listening.css?v=19">
   <link rel="stylesheet" href="playback.css?v=24">
@@ -48,9 +48,9 @@
         <h1>Von gutem Deutsch<br>zu <em>präzisem</em> Deutsch.</h1>
         <p class="lede">Nicht alles neu lernen. Bestehendes Wissen aktivieren, wiederkehrende Fehler korrigieren und sicher über komplexe Themen sprechen.</p>
       </div>
-      <div class="level-ring" aria-label="Gesamtfortschritt">
+      <div class="level-ring" aria-label="Heutiger Gesamtfortschritt">
         <svg viewBox="0 0 120 120"><circle class="track" cx="60" cy="60" r="51"/><circle id="ring" class="fill" cx="60" cy="60" r="51"/></svg>
-        <div><strong id="totalPercent">0%</strong><span>Richtung C1</span></div>
+        <div><strong id="totalPercent">0%</strong><span>Heute erledigt</span></div>
       </div>
     </section>
 
@@ -86,17 +86,17 @@
       </article>
 
       <article class="card focus">
-        <p class="kicker">DIESER WOCHE</p><h2>Mein Fokus</h2>
-        <label class="focus-item"><input type="checkbox" data-task="articles"><span><b>Artikel & Endungen</b><small>15 Min. Fehlerjournal</small></span></label>
-        <label class="focus-item"><input type="checkbox" data-task="speaking"><span><b>Technisch sprechen</b><small>5 Min. Aufnahme über CFD</small></span></label>
-        <label class="focus-item"><input type="checkbox" data-task="writing"><span><b>Präzise schreiben</b><small>250 Wörter + Überarbeitung</small></span></label>
-        <label class="focus-item"><input type="checkbox" data-task="listening"><span><b>Nuancen hören</b><small>Interview anhören & zusammenfassen</small></span></label>
+        <p class="kicker">HEUTE</p><h2>Meine Tagesziele</h2>
+        <label class="focus-item"><input type="checkbox" data-task="articles"><span><b>Artikel & Wortschatz</b><small>10 Aufgaben abschließen</small></span></label>
+        <label class="focus-item"><input type="checkbox" data-task="speaking"><span><b>Verben aktiv üben</b><small>Gewählte Tagesrunde abschließen</small></span></label>
+        <label class="focus-item"><input type="checkbox" data-task="writing"><span><b>Präzise schreiben</b><small>Satzkorrektur und eigener Text</small></span></label>
+        <label class="focus-item"><input type="checkbox" data-task="listening"><span><b>Nuancen hören</b><small>Beide Hörfragen beantworten</small></span></label>
         <div class="week-progress"><span id="weekText">0 von 4 erledigt</span><div><i id="weekBar"></i></div></div>
       </article>
 
       <article class="card practice">
         <div class="card-head"><div><p class="kicker">PRAXIS</p><h2>Heute trainiert</h2></div><button id="resetDay" class="text-btn">Zurücksetzen</button></div>
-        <div class="practice-grid">
+        <p class="automatic-progress-note">Abgeschlossene Übungen werden automatisch gezählt. Mit den Schaltflächen kannst du zusätzliche Übungszeit ergänzen.</p><div class="practice-grid">
           <button class="practice-btn" data-minutes="10"><span>Wortschatz</span><b>+10</b><small>Minuten</small></button>
           <button class="practice-btn" data-minutes="15"><span>Hören / Lesen</span><b>+15</b><small>Minuten</small></button>
           <button class="practice-btn" data-minutes="15"><span>Sprechen</span><b>+15</b><small>Minuten</small></button>
@@ -299,6 +299,6 @@
   <script src="lab.js?v=16"></script>
   <script src="expansions.js?v=2"></script>
   <script src="cases.js?v=4"></script>
-  <script src="app.js?v=48"></script>
+  <script src="app.js?v=49"></script>
 </body>
 </html>

@@ -340,9 +340,11 @@ render();save();
 
 /* Available on every learning tab; reuse the tested Android/browser TTS bridge. */
 (function(){
-const toolbar=document.createElement('div');
-toolbar.className='selected-text-toolbar';
-toolbar.innerHTML='<button type="button" class="pronounce-word" id="readSelectedText">🔊 Markierten Text vorlesen</button> <button type="button" id="stopSelectedText">■ Stopp</button> <span role="status" aria-live="polite" id="selectedTextStatus">Text markieren und auf Vorlesen klicken.</span>';
+let toolbar=document.querySelector('#selectedTextToolbar');
+if(!toolbar){
+  toolbar=document.createElement('div');toolbar.id='selectedTextToolbar';toolbar.className='selected-text-toolbar';
+  toolbar.innerHTML='<button type="button" id="readSelectedText">🔊 Markierten Text vorlesen</button> <button type="button" id="stopSelectedText">■ Stopp</button> <span role="status" aria-live="polite" id="selectedTextStatus">Text markieren und auf Vorlesen klicken.</span>'
+}
 toolbar.style.cssText='position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom, 0px));z-index:1000;display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:12px;margin:0;background:#e8f3ed;color:#064d3c;border:1px solid #b4d3c3;border-radius:12px;box-shadow:0 4px 24px #0003;';
 document.body.append(toolbar);
 // Keep the last fields reachable above the floating controls, including on mobile.

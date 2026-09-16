@@ -363,7 +363,34 @@ if(text&&text.trim())selected=text.trim();
 document.addEventListener('selectionchange',capture);
 document.addEventListener('select',capture,true);
 toolbar.addEventListener('pointerdown',event=>{capture();if(event.pointerType==='mouse')event.preventDefault();});
-read.addEventListener('click',()=>{capture();if(!selected){status.textContent='Bitte zuerst einen Text markieren.';return;}stopListening();status.textContent='Markierter Text wird vorgelesen.';speakPractice(selected,read).catch(()=>{status.textContent='Sprachausgabe ist nicht verfügbar.';});});
-toolbar.querySelector('#stopSelectedText').addEventListener('click',()=>{if(nativeTts)nativeTts.stop().catch(()=>{});if('speechSynthesis'in window)window.speechSynthesis.cancel();read.classList.remove('speaking');status.textContent='Sprachausgabe gestoppt.';});
+let selectedSpeechRun=0;
+function selectedTextChunks(text,maxLength=220){
+  const sentences=text.replace(/\s+/g,' ').trim().match(/[^.!?;:]+[.!?;:]?|.+$/g)||[text];
+  const chunks=[];
+  sentences.forEach(sentence=>{let part=sentence.trim();while(part.length>maxLength){let cut=part.lastIndexOf(' ',maxLength);if(cut<60)cut=maxLength;chunks.push(part.slice(0,cut).trim());part=part.slice(cut).trim()}if(part)chunks.push(part)});
+  return chunks
+}
+function speakBrowserSelection(chunks,index,run){
+  if(run!==selectedSpeechRun)return;
+  if(index>=chunks.length){read.classList.remove('speaking');status.textContent='Vorlesen beendet ✓';return}
+  const utterance=new SpeechSynthesisUtterance(chunks[index]);utterance.lang='de-DE';utterance.rate=.9;
+  const voice=germanVoices.find(v=>v.voiceURI===listeningVoice.value)||germanVoices[0];if(voice)utterance.voice=voice;
+  utterance.onstart=()=>{read.classList.add('speaking');status.textContent=`Vorlesen: Teil ${index+1} von ${chunks.length}`};
+  utterance.onend=()=>speakBrowserSelection(chunks,index+1,run);
+  utterance.onerror=()=>{read.classList.remove('speaking');status.textContent='Die Sprachausgabe konnte diesen Text nicht lesen.'};
+  window.speechSynthesis.speak(utterance)
+}
+read.addEventListener('click',async()=>{
+  capture();if(!selected){status.textContent='Bitte zuerst einen Text markieren.';return}
+  const chunks=selectedTextChunks(selected),run=++selectedSpeechRun;read.classList.add('speaking');status.textContent='Sprachausgabe wird gestartet …';
+  if(nativeTts){
+    try{await nativeTts.stop().catch(()=>{});for(let i=0;i<chunks.length&&run===selectedSpeechRun;i++){status.textContent=`Vorlesen: Teil ${i+1} von ${chunks.length}`;await nativeTts.speak({text:chunks[i],lang:'de-DE',rate:.9,pitch:1,volume:1,voice:listeningVoice.value===''?-1:+listeningVoice.value,queueStrategy:1})}if(run===selectedSpeechRun)status.textContent='Vorlesen beendet ✓'}
+    catch(error){status.textContent='Android-Sprachausgabe ist nicht verfügbar. Bitte prüfe die installierte deutsche Stimme.'}
+    finally{if(run===selectedSpeechRun)read.classList.remove('speaking')}return
+  }
+  if(!('speechSynthesis'in window)){read.classList.remove('speaking');status.textContent='Auf diesem Gerät ist keine Sprachausgabe verfügbar.';return}
+  window.speechSynthesis.cancel();setTimeout(()=>speakBrowserSelection(chunks,0,run),100)
+});
+toolbar.querySelector('#stopSelectedText').addEventListener('click',()=>{selectedSpeechRun++;if(nativeTts)nativeTts.stop().catch(()=>{});if('speechSynthesis'in window)window.speechSynthesis.cancel();read.classList.remove('speaking');status.textContent='Sprachausgabe gestoppt.';});
 document.querySelectorAll('.main-tab').forEach(tab=>tab.addEventListener('click',()=>{selected='';status.textContent='Text markieren und auf Vorlesen klicken.';}));
 })();

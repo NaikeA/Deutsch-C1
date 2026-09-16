@@ -12,7 +12,7 @@
   <title>Deutsch auf C1</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="app-icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=24">
+  <link rel="stylesheet" href="styles.css?v=25">
   <link rel="stylesheet" href="verb-count.css?v=16">
   <link rel="stylesheet" href="listening.css?v=19">
   <link rel="stylesheet" href="playback.css?v=24">
@@ -28,7 +28,6 @@
   <main>
     <nav class="main-tabs" aria-label="Lernbereiche">
       <button class="main-tab active" data-view="overview">Übersicht</button>
-      <button class="main-tab" data-view="lab-journal">Fehlerjournal</button>
       <button class="main-tab" data-view="vocabulary">Tageswortschatz</button>
       <button class="main-tab" data-view="writing">Schreiben</button>
       <button class="main-tab" data-view="listening">Hörverstehen</button>
@@ -69,7 +68,6 @@
         <button type="button" class="summary-card" data-go-view="lab" data-go-lab="natural"><strong>1.000</strong><span>Natürliche Ausdrücke</span><small>Von verständlich zu idiomatisch</small></button>
         <button type="button" class="summary-card" data-go-view="lab" data-go-lab="connectors"><strong>1.000</strong><span>Satzbauübungen</span><small>Konnektoren und Verbposition</small></button>
         <button type="button" class="summary-card" data-go-view="grammar"><strong>18</strong><span>Grammatikthemen</span><small>Nachschlagewerk von A1 bis C1</small></button>
-        <button type="button" class="summary-card" data-go-view="lab" data-go-lab="journal"><strong>1</strong><span>Persönliches Fehlerjournal</span><small>Speichert wiederkehrende Fehler</small></button>
         <button type="button" class="summary-card" data-go-view="writing"><strong>täglich</strong><span>Freies Schreiben</span><small>Absätze, Impulse und 7-Punkte-Check</small></button>
         <button type="button" class="summary-card" data-go-view="notes"><strong>täglich</strong><span>Persönliche Notizen</span><small>Eigene Gedanken automatisch speichern</small></button>
       </div>
@@ -252,8 +250,8 @@
     </section>
 
     <section class="error-lab" id="fehlerlabor">
-      <div class="lab-head"><div><p class="kicker">MEIN FEHLERLABOR · 4 × 1.000 ÜBUNGEN</p><h2>Genau die Fehler trainieren, die ich mache</h2><p>Kurze tägliche Übungen. Fehler werden im persönlichen Journal gesammelt und häufiger sichtbar gemacht.</p></div><div class="entry-date"><label for="labDate">Übung vom</label><input id="labDate" type="date"></div></div>
-      <div class="lab-tabs" role="tablist"><button class="lab-tab active" data-lab="journal">Fehlerjournal</button><button class="lab-tab" data-lab="endings">Endungen</button><button class="lab-tab" data-lab="spelling">Rechtschreibung</button><button class="lab-tab" data-lab="natural">Natürliches Deutsch</button><button class="lab-tab" data-lab="connectors">Satzbau</button></div>
+      <div class="lab-head"><div><p class="kicker">MEIN FEHLERLABOR · 4 × 1.000 ÜBUNGEN</p><h2>Genau die Fehler trainieren, die ich mache</h2><p>Kurze tägliche Übungen. Jede Übungsart speichert deine Antworten und zeigt nur die eigenen Fehler im zugehörigen Journal.</p></div><div class="entry-date"><label for="labDate">Übung vom</label><input id="labDate" type="date"></div></div>
+      <div class="lab-tabs" role="tablist"><button class="lab-tab active" data-lab="endings">Endungen</button><button class="lab-tab" data-lab="spelling">Rechtschreibung</button><button class="lab-tab" data-lab="natural">Natürliches Deutsch</button><button class="lab-tab" data-lab="connectors">Satzbau</button></div>
       <div id="labContent" class="lab-content"></div>
     </section>
 
@@ -301,6 +299,6 @@
   <script src="lab.js?v=16"></script>
   <script src="expansions.js?v=2"></script>
   <script src="cases.js?v=4"></script>
-  <script src="app.js?v=46"></script>
+  <script src="app.js?v=47"></script>
 </body>
 </html>

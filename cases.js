@@ -15,13 +15,16 @@
     ['m','Kollege','colleague','Kollegen'],['f','Kollegin','colleague'],['n','Projekt','project'],['m','Kunde','customer','Kunden'],['f','Chefin','manager'],['n','Team','team'],['m','Arzt','doctor'],['f','Nachbarin','neighbour'],['n','Kind','child'],['m','Freund','friend'],['f','Lehrerin','teacher'],['n','Unternehmen','company'],['m','Mitarbeiter','employee'],['f','Person','person'],['n','Problem','problem'],['m','Projektleiter','project manager'],['f','Abteilung','department'],['n','Büro','office'],['m','Vorschlag','suggestion'],['f','Entscheidung','decision'],['n','Ergebnis','result'],['m','Termin','appointment'],['f','Aufgabe','task'],['n','Gespräch','conversation'],['m','Bericht','report'],['f','E-Mail','email'],['n','Dokument','document'],['m','Plan','plan'],['f','Lösung','solution'],['n','Angebot','offer']
   ];
   const people=nouns.filter(n=>['Kollege','Kollegin','Kunde','Chefin','Arzt','Nachbarin','Kind','Freund','Lehrerin','Mitarbeiter','Person','Projektleiter'].includes(n[1]));
+  const adultPeople=people.filter(n=>!['Kind','Person'].includes(n[1]));
+  const articleThings=nouns.filter(n=>['Projekt','Problem','Vorschlag','Entscheidung','Ergebnis','Termin','Aufgabe','Gespräch','Bericht','E-Mail','Dokument','Plan','Lösung','Angebot'].includes(n[1]));
+  const articleNouns=[...people,...articleThings];
 const personAdjectives=['neu','freundlich','zuverlässig','hilfsbereit'];
 const thingAdjectives={Projekt:['neu','interessant','wichtig','geplant'],Team:['neu','erfahren','zuverlässig','eingespielt'],Unternehmen:['neu','erfolgreich','bekannt','international'],Problem:['neu','schwierig','dringend','ernst'],Abteilung:['neu','groß','zuständig','klein'],Büro:['neu','klein','hell','modern'],Vorschlag:['neu','interessant','hilfreich','konkret'],Entscheidung:['neu','wichtig','schwierig','endgültig'],Ergebnis:['neu','wichtig','interessant','aktuell'],Termin:['neu','wichtig','geplant','vereinbart'],Aufgabe:['neu','wichtig','schwierig','interessant'],Gespräch:['neu','wichtig','vertraulich','interessant'],Bericht:['neu','wichtig','ausführlich','aktuell'],'E-Mail':['neu','wichtig','ausführlich','aktuell'],Dokument:['neu','wichtig','vertraulich','aktuell'],Plan:['neu','wichtig','detailliert','konkret'],Lösung:['neu','hilfreich','praktisch','einfach'],Angebot:['neu','interessant','günstig','aktuell']};
   const endings={def:{acc:{m:['den','en'],f:['die','e'],n:['das','e']},dat:{m:['dem','en'],f:['der','en'],n:['dem','en']}},ind:{acc:{m:['einen','en'],f:['eine','e'],n:['ein','es']},dat:{m:['einem','en'],f:['einer','en'],n:['einem','en']}}};
   const nounForm=(noun,kase)=>kase!=='nom'&&noun[3]?noun[3]:noun[1];
   const phrase=(noun,adj,kind,kase)=>{const [article,end]=endings[kind][kase][noun[0]];return `${article} ${adj}${end} ${nounForm(noun,kase)}`};
   for(let i=0;i<240;i++){
-    const noun=nouns[i%nouns.length],adj=(thingAdjectives[noun[1]]||personAdjectives)[Math.floor(i/nouns.length)%4],kase=i%2?'dat':'acc',kind=Math.floor(i/2)%2?'ind':'def';
+    const noun=articleNouns[i%articleNouns.length],adj=(thingAdjectives[noun[1]]||personAdjectives)[Math.floor(i/articleNouns.length)%4],kase=i%2?'dat':'acc',kind=Math.floor(i/2)%2?'ind':'def';
     const answer=phrase(noun,adj,kind,kase);const otherCase=kase==='acc'?'dat':'acc';const altKind=kind==='def'?'ind':'def';
     const englishArticle=kind==='def'?'the':/^[aeiou]/i.test(noun[2])?'an':'a';
     const isPerson=people.includes(noun);const prompt=(kase==='acc'?(isPerson?'Ich treffe heute ___.':'Ich sehe mir heute ___ an.'):(isPerson?'Ich spreche heute mit ___.':'Ich beschäftige mich heute mit ___.'))+` Übersetze die Nominalgruppe mit ${kind==='def'?'bestimmtem':'unbestimmtem'} Artikel: (${englishArticle} ${noun[2]}).`;
@@ -32,14 +35,14 @@ const thingAdjectives={Projekt:['neu','interessant','wichtig','geplant'],Team:['
   const accusativeVerbs=[['sehen','Ich sehe'],['besuchen','Ich besuche'],['fragen','Ich frage'],['anrufen','Ich rufe',' an'],['treffen','Ich treffe'],['unterstützen','Ich unterstütze'],['brauchen','Ich brauche'],['kennen','Ich kenne'],['verstehen','Ich verstehe'],['informieren','Ich informiere'],['prüfen','Ich prüfe'],['beobachten','Ich beobachte']];
   const bareArticles={acc:{m:'den',f:'die',n:'das'},dat:{m:'dem',f:'der',n:'dem'}};
   for(let i=0;i<240;i++){
-    const dat=i%2===0;const list=dat?dativeVerbs:accusativeVerbs;const verb=list[Math.floor(i/2)%list.length];const noun=people[(i*7)%people.length];const kase=dat?'dat':'acc';const article=bareArticles[kase][noun[0]];const answer=`${article} ${nounForm(noun,kase)}`;
+    const dat=i%2===0;const list=dat?dativeVerbs:accusativeVerbs;const verb=list[Math.floor(i/2)%list.length];const noun=adultPeople[(i*7)%adultPeople.length];const kase=dat?'dat':'acc';const article=bareArticles[kase][noun[0]];const answer=`${article} ${nounForm(noun,kase)}`;
     const prompt=`${verb[1]} ___${verb[2]||''}. Welchen Fall verlangt „${verb[0]}“?`;
     const otherCase=kase==='dat'?'acc':'dat';const opts=[answer,`${bareArticles[otherCase][noun[0]]} ${nounForm(noun,otherCase)}`,`die ${nounForm(noun,kase)}`,`das ${nounForm(noun,kase)}`];
     add('Verben & Kasus',prompt,opts,answer,dat?`„${verb[0]}“ verlangt den Dativ: ${answer}.`:`„${verb[0]}“ verlangt den Akkusativ: ${answer}.`);
   }
   const pronouns={acc:{m:'ihn',f:'sie',n:'es'},dat:{m:'ihm',f:'ihr',n:'ihm'}};
   for(let i=0;i<200;i++){
-    const noun=people[(i*11)%people.length],kase=i%2?'dat':'acc';const article=bareArticles[kase][noun[0]],form=nounForm(noun,kase);const answer=pronouns[kase][noun[0]];const sentence=kase==='dat'?`Ich helfe ${article} ${form}.`:`Ich sehe ${article} ${form}.`;
+    const noun=adultPeople[(i*11)%adultPeople.length],kase=i%2?'dat':'acc';const article=bareArticles[kase][noun[0]],form=nounForm(noun,kase);const answer=pronouns[kase][noun[0]];const sentence=kase==='dat'?`Ich helfe ${article} ${form}.`:`Ich sehe ${article} ${form}.`;
     add('Pronomen',`${sentence} Ersetze „${article} ${form}“ durch ein Pronomen.`,['ihn','ihm','sie','ihr','es'].sort(()=>.5-(i%3)/3),answer,kase==='dat'?`Das Dativpronomen für dieses Nomen ist „${answer}“: Ich helfe ${answer}.`:`Das Akkusativpronomen ist „${answer}“: Ich sehe ${answer}.`);
   }
   // Curated scene pairs: prepositions are never combined blindly with places.
@@ -74,9 +77,20 @@ const coordination=second?` Beide Bezugspunkte stehen im selben Fall: ${answer} 
 add('Wo oder wohin?',prompt,[answer,'den','dem','der','die','das'],answer,`${caseRule}: ${scene[2]} ${answer} ${scene[1]}${second}.${coordination}`);
   }
   const transferVerbs=['gebe','schicke','zeige','erkläre','bringe','empfehle','leihe','sende','überreiche','verkaufe'];
-  const objects=[['m','Bericht'],['f','E-Mail'],['n','Dokument'],['m','Plan'],['f','Information'],['n','Angebot'],['m','Schlüssel'],['f','Rechnung'],['n','Ergebnis'],['m','Vorschlag']];
+  const transferObjects={
+    gebe:[['m','Bericht'],['n','Dokument'],['m','Schlüssel']],
+    schicke:[['f','E-Mail'],['m','Bericht'],['n','Dokument'],['f','Rechnung']],
+    zeige:[['m','Bericht'],['m','Plan'],['n','Ergebnis'],['n','Dokument']],
+    erkläre:[['m','Plan'],['m','Vorschlag'],['n','Ergebnis']],
+    bringe:[['m','Schlüssel'],['n','Dokument'],['m','Bericht']],
+    empfehle:[['n','Buch'],['n','Angebot'],['m','Vorschlag']],
+    leihe:[['m','Schlüssel'],['n','Buch']],
+    sende:[['f','E-Mail'],['m','Bericht'],['f','Rechnung']],
+    überreiche:[['m','Bericht'],['n','Dokument'],['m','Schlüssel'],['f','Rechnung']],
+    verkaufe:[['n','Fahrrad'],['n','Buch']]
+  };
   for(let i=0;i<200;i++){
-    const recipient=people[(i*5)%people.length],verb=transferVerbs[i%transferVerbs.length],object=({leihe:['m','Schlüssel'],verkaufe:['n','Fahrrad'],erkläre:['m','Plan'],empfehle:['n','Buch'],überreiche:['m','Bericht']})[verb]||objects[(i*7)%objects.length];
+    const recipient=adultPeople[(i*5)%adultPeople.length],verb=transferVerbs[i%transferVerbs.length],choices=transferObjects[verb],object=choices[Math.floor(i/transferVerbs.length)%choices.length];
     const dat=`${bareArticles.dat[recipient[0]]} ${nounForm(recipient,'dat')}`,acc=`${bareArticles.acc[object[0]]} ${object[1]}`,answer=`${dat} ${acc}`;
     add('Zwei Objekte',`Ich ${verb} ___ . Wähle Dativperson + Akkusativsache.`,[answer,`${bareArticles.acc[recipient[0]]} ${nounForm(recipient,'acc')} ${bareArticles.dat[object[0]]} ${object[1]}`,`${acc} ${bareArticles.acc[recipient[0]]} ${nounForm(recipient,'acc')}`,`${dat} ${bareArticles.dat[object[0]]} ${object[1]}`],answer,`Die Person steht im Dativ (${dat}); die Sache steht im Akkusativ (${acc}).`);
   }
@@ -87,7 +101,7 @@ add('Wo oder wohin?',prompt,[answer,'den','dem','der','die','das'],answer,`${cas
   }
   const dialogueVerbs=[['geschickt','schicke'],['gezeigt','zeige'],['erklärt','erkläre'],['gebracht','bringe'],['empfohlen','empfehle'],['gegeben','gebe'],['geliehen','leihe']];
   for(let i=0;i<140;i++){
-    const noun=people[(i*17)%people.length],verb=dialogueVerbs[i%dialogueVerbs.length],object=({geliehen:['n','Buch'],erklärt:['m','Plan'],empfohlen:['n','Buch']})[verb[0]]||objects[(i*3)%objects.length];const dat=`${bareArticles.dat[noun[0]]} ${nounForm(noun,'dat')}`,acc=`${bareArticles.acc[object[0]]} ${object[1]}`;const answer=`${dat} ${acc}`;
+    const noun=adultPeople[(i*17)%adultPeople.length],verb=dialogueVerbs[i%dialogueVerbs.length],present=verb[1],choices=transferObjects[present]||[['n','Dokument']],object=choices[Math.floor(i/dialogueVerbs.length)%choices.length];const dat=`${bareArticles.dat[noun[0]]} ${nounForm(noun,'dat')}`,acc=`${bareArticles.acc[object[0]]} ${object[1]}`;const answer=`${dat} ${acc}`;
     add('Alltagsdialoge',`A: Wem hast du etwas ${verb[0]}? B: Ich habe ___ ${verb[0]}.`,[answer,`${bareArticles.acc[noun[0]]} ${nounForm(noun,'acc')} ${acc}`,`${dat} ${bareArticles.dat[object[0]]} ${object[1]}`,`${acc} ${bareArticles.acc[noun[0]]} ${nounForm(noun,'acc')}`],answer,`Auf „wem?“ folgt der Dativ (${dat}); die übertragene Sache steht im Akkusativ (${acc}).`);
   }
   window.GERMAN_CASE_EXERCISES=exercises.slice(0,1400);

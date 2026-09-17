@@ -129,6 +129,7 @@ window.GERMAN_VERB_MEANINGS={
   "gewinnen": "win",
   "glauben": "believe",
   "gleichen": "resemble; equal",
+  "grinsen": "grin",
   "gucken": "look; watch (colloquial)",
   "haben": "have",
   "halten": "hold",
@@ -196,6 +197,7 @@ window.GERMAN_VERB_MEANINGS={
   "nehmen": "take",
   "nennen": "call",
   "nerven": "annoy",
+  "nicken": "nod",
   "nötigen": "compel; force",
   "nutzen": "use",
   "öffnen": "open",
@@ -203,6 +205,7 @@ window.GERMAN_VERB_MEANINGS={
   "passen": "suit",
   "passieren": "happen; pass",
   "planen": "plan",
+  "plaudern": "chat; have a casual conversation",
   "rauchen": "smoke",
   "reden": "talk",
   "regeln": "regulate; settle",
@@ -252,6 +255,7 @@ window.GERMAN_VERB_MEANINGS={
   "sprechen": "speak",
   "springen": "spring",
   "spüren": "feel; sense",
+  "staunen": "be amazed; marvel",
   "stecken": "stick",
   "stehen": "stand",
   "stehlen": "steal",
@@ -346,8 +350,8 @@ window.GERMAN_VERB_MEANINGS={
   "zeigen": "show",
   "zerstören": "destroy",
   "ziehen": "pull",
+  "zögern": "hesitate",
   "zurückkehren": "return",
   "zurückkommen": "return; come back",
   "zwingen": "force"
 };
-

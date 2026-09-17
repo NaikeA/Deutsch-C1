@@ -52,9 +52,9 @@ const thingAdjectives={Projekt:['neu','interessant','wichtig','geplant'],Team:['
 ['n','Haus','vor','Ich stelle das Fahrrad','Das Fahrrad steht',''],
 ['m','Schrank','hinter','Ich schiebe den Karton','Der Karton steht',''],
 ['n','Sofa','neben','Ich stelle die Lampe','Die Lampe steht',''],
-['m','Computer','zwischen','Ich lege das Notizbuch','Das Notizbuch liegt',' und dem Drucker'],
-['n','Auto','zwischen','Ich stelle das Fahrrad','Das Fahrrad steht',' und der Garage'],
-['f','Küche','zwischen','Ich stelle den Schrank','Der Schrank steht',' und dem Wohnzimmer'],
+['m','Computer','zwischen','Ich lege das Notizbuch','Das Notizbuch liegt',['m','Drucker']],
+['n','Auto','zwischen','Ich stelle das Fahrrad','Das Fahrrad steht',['f','Garage']],
+['f','Küche','zwischen','Ich stelle den Schrank','Der Schrank steht',['n','Wohnzimmer']],
 ['f','Tasche','in','Ich lege den Schlüssel','Der Schlüssel liegt',''],
 ['n','Zimmer','in','Ich stelle den Sessel','Der Sessel steht',''],
 ['m','Stuhl','auf','Ich lege die Jacke','Die Jacke liegt',''],
@@ -67,8 +67,11 @@ const thingAdjectives={Projekt:['neu','interessant','wichtig','geplant'],Team:['
 ];
   for(let i=0;i<240;i++){
 const scene=scenes[Math.floor(i/2)%scenes.length],direction=i%2===0,kase=direction?'acc':'dat',answer=bareArticles[kase][scene[0]];
-const prompt=`${direction?scene[3]:scene[4]} ${scene[2]} ___ ${scene[1]}${scene[5]}. ${direction?'Wohin?':'Wo?'}`;
-add('Wo oder wohin?',prompt,[answer,'den','dem','der','die','das'],answer,`${direction?'Die neue Zielposition verlangt hier den Akkusativ':'Die bestehende Position verlangt hier den Dativ'}: ${scene[2]} ${answer} ${scene[1]}${scene[5]}. Bei „zwischen“ werden zwei Bezugspunkte genannt.`);
+const second=Array.isArray(scene[5])?` und ${bareArticles[kase][scene[5][0]]} ${scene[5][1]}`:'';
+const prompt=`${direction?scene[3]:scene[4]} ${scene[2]} ___ ${scene[1]}${second}. ${direction?'Wohin?':'Wo?'}`;
+const caseRule=direction?'Die neue Zielposition verlangt hier den Akkusativ':'Die bestehende Position verlangt hier den Dativ';
+const coordination=second?` Beide Bezugspunkte stehen im selben Fall: ${answer} ${scene[1]} und ${bareArticles[kase][scene[5][0]]} ${scene[5][1]}.`:'';
+add('Wo oder wohin?',prompt,[answer,'den','dem','der','die','das'],answer,`${caseRule}: ${scene[2]} ${answer} ${scene[1]}${second}.${coordination}`);
   }
   const transferVerbs=['gebe','schicke','zeige','erkläre','bringe','empfehle','leihe','sende','überreiche','verkaufe'];
   const objects=[['m','Bericht'],['f','E-Mail'],['n','Dokument'],['m','Plan'],['f','Information'],['n','Angebot'],['m','Schlüssel'],['f','Rechnung'],['n','Ergebnis'],['m','Vorschlag']];

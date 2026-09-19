@@ -4,3 +4,10 @@ android/local.properties
 android/app/build/
 *.jks
 *.keystore
+
+# iOS/Xcode generated files
+ios/App/Pods/
+ios/App/build/
+ios/DerivedData/
+*.xcarchive
+*.ipa

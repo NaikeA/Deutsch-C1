@@ -1,20 +1,25 @@
 {
-  "name": "deutsch-auf-c1-android",
+  "name": "deutsch-auf-c1-mobile",
   "version": "1.0.0",
   "private": true,
-  "description": "Self-contained Android package for Deutsch auf C1",
+  "description": "Self-contained Android and iOS package for Deutsch auf C1",
   "scripts": {
     "prepare:web": "node scripts/prepare-web.mjs",
     "android:init": "npm run prepare:web && cap add android",
     "android:sync": "npm run prepare:web && cap sync android",
     "android:open": "cap open android",
     "android:debug-apk": "npm run android:sync && cd android && ./gradlew assembleDebug",
-    "android:release-apk": "npm run android:sync && cd android && ./gradlew assembleRelease"
+    "android:release-apk": "npm run android:sync && cd android && ./gradlew assembleRelease",
+    "ios:init": "npm run prepare:web && cap add ios",
+    "ios:sync": "npm run prepare:web && cap sync ios",
+    "ios:open": "cap open ios",
+    "ios:copy": "npm run prepare:web && cap copy ios"
   },
   "dependencies": {
     "@capacitor/android": "^8.0.0",
     "@capacitor/core": "^8.0.0",
-    "@capacitor-community/text-to-speech": "^8.0.2"
+    "@capacitor-community/text-to-speech": "^8.0.2",
+    "@capacitor/ios": "^8.0.0"
   },
   "devDependencies": {
     "@capacitor/cli": "^8.0.0"

@@ -1,6 +1,7 @@
 /* Short spaced reviews for verbs already practised in Verben. */
 (function(){
   const STORAGE='deutsch-c1-verb-review-v1';
+  const SESSION_KEY='deutsch-c1-verb-review-session-v1';
   const FORMS=['Präsens','Präteritum','Perfekt'];
   const PEOPLE=['ich','du','man','wir','ihr','sie'];
   const verbs=window.GERMAN_VERBS||[];
@@ -42,15 +43,33 @@
     for(const char of today()+name){hash^=char.charCodeAt(0);hash=Math.imul(hash,16777619)}
     return [(hash>>>0)%6,(hash>>>3)%3]
   }
+  function reviewSelection(date){
+    let session;
+    try{session=JSON.parse(localStorage.getItem(SESSION_KEY)||'null')}catch{}
+    if(session?.date===date&&Array.isArray(session.names))return session.names.filter(name=>byName.has(name));
+    const names=Object.entries(schedule)
+      .filter(([name,entry])=>byName.has(name)&&entry.next<=date&&entry.started<date&&entry.last!==date)
+      .sort((a,b)=>a[1].next.localeCompare(b[1].next)||a[0].localeCompare(b[0]))
+      .slice(0,3).map(([name])=>name);
+    localStorage.setItem(SESSION_KEY,JSON.stringify({date,names}));
+    return names
+  }
   function render(){
-    const date=today(),due=Object.entries(schedule)
-      .filter(([name,entry])=>byName.has(name)&&entry.next<=date&&entry.started<date)
-      .sort((a,b)=>a[1].next.localeCompare(b[1].next)||a[0].localeCompare(b[0]));
-    status.textContent=due.length
-      ? `${due.length} frühere Verben fällig · höchstens 3 kurze Wiederholungen heute`
+    const date=today(),selected=reviewSelection(date);
+    const due=Object.entries(schedule).filter(([name,entry])=>byName.has(name)&&entry.next<=date&&entry.started<date&&entry.last!==date);
+    const done=selected.filter(name=>schedule[name]?.last===date).length;
+    status.textContent=selected.length
+      ? `${done} von ${selected.length} Wiederholungen heute erledigt${due.length>selected.length-done?` · ${due.length-(selected.length-done)} weitere warten`:''}`
       : 'Heute keine Wiederholung fällig. Geprüfte Verben erscheinen später wieder.';
     box.innerHTML='';
-    for(const [name] of due.slice(0,3)){
+    for(const name of selected){
+      if(schedule[name]?.last===date){
+        const completed=document.createElement('article');
+        completed.className='verb-review-card';
+        completed.innerHTML=`<div class="review-card-head"><strong>${escapeText(name)}</strong></div><p class="review-feedback">Heute erledigt ✓ · nächste Wiederholung am ${escapeText(schedule[name].next)}</p>`;
+        box.append(completed);
+        continue
+      }
       const verb=byName.get(name),[person,form]=choice(name),expected=[verb.pr,verb.pa,verb.pe][form][person];
       const article=document.createElement('article');
       article.className='verb-review-card';
@@ -82,7 +101,9 @@
         schedule[name]={...previous,stage,next:addDays(date,intervals[stage]),last:date};
         save();
         window.dispatchEvent(new CustomEvent('verb-review-completed',{detail:{date,name}}));
-        render()
+        article.innerHTML=`<div class="review-card-head"><strong>${escapeText(name)}</strong></div><p class="review-feedback">Heute erledigt ✓ · nächste Wiederholung am ${escapeText(schedule[name].next)}</p>`;
+        const completed=selected.filter(verb=>schedule[verb]?.last===date).length;
+        status.textContent=`${completed} von ${selected.length} Wiederholungen heute erledigt`;
       }));
       box.append(article)
     }
@@ -91,7 +112,7 @@
     const {date,name}=event.detail||{};
     if(date!==today()||!byName.has(name))return;
     if(!schedule[name])schedule[name]={started:date,next:addDays(date,1),stage:0};
-    save();render()
+    save()
   });
   render()
 })();

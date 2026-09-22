@@ -46,11 +46,15 @@
   function reviewSelection(date){
     let session;
     try{session=JSON.parse(localStorage.getItem(SESSION_KEY)||'null')}catch{}
-    if(session?.date===date&&Array.isArray(session.names))return session.names.filter(name=>byName.has(name));
+    if(session?.date===date&&Array.isArray(session.names)){
+      const names=session.names.filter(name=>byName.has(name)).slice(0,1);
+      if(session.names.length!==names.length)localStorage.setItem(SESSION_KEY,JSON.stringify({date,names}));
+      return names
+    }
     const names=Object.entries(schedule)
       .filter(([name,entry])=>byName.has(name)&&entry.next<=date&&entry.started<date&&entry.last!==date)
       .sort((a,b)=>a[1].next.localeCompare(b[1].next)||a[0].localeCompare(b[0]))
-      .slice(0,3).map(([name])=>name);
+      .slice(0,1).map(([name])=>name);
     localStorage.setItem(SESSION_KEY,JSON.stringify({date,names}));
     return names
   }

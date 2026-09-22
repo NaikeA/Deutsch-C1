@@ -12,7 +12,7 @@
   <title>Deutsch auf C1</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="app-icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=29">
+  <link rel="stylesheet" href="styles.css?v=30">
   <link rel="stylesheet" href="verb-count.css?v=16">
   <link rel="stylesheet" href="listening.css?v=19">
   <link rel="stylesheet" href="playback.css?v=24">
@@ -202,6 +202,7 @@
       </div>
       <div id="verbCards" class="verb-cards"></div>
       <div class="verb-summary"><span id="verbScore">Auswahl wird geladen …</span><button id="clearVerbs" class="text-btn">Diese Runde leeren</button></div>
+      <div class="verb-review"><div class="verb-review-head"><h3>Frühere Verben wiederholen</h3><p id="verbReviewStatus" aria-live="polite">Wiederholungen werden geladen …</p></div><div id="verbReviewCards" class="verb-review-cards"></div><p class="review-note">Schreibe eine Form und einen Satz aus deinem eigenen Alltag. Deine Selbsteinschätzung bestimmt, wann das Verb wiederkommt. Die Satzgrammatik wird nicht automatisch geprüft.</p></div>
     </section>
 
     <section hidden class="article-gym" id="artikel">
@@ -306,6 +307,7 @@
   <script src="lab.js?v=16"></script>
   <script src="expansions.js?v=2"></script>
   <script src="cases.js?v=5"></script>
-  <script src="speech-controls.js?v=1"></script>\n  <script src="app.js?v=58"></script>
+  <script src="speech-controls.js?v=1"></script>\n  <script src="app.js?v=59"></script>
+  <script src="verb-review.js?v=1"></script>
 </body>
 </html>

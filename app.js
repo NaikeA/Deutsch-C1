@@ -10,7 +10,7 @@ const CORRECTION_KEY='deutsch-c1-corrections-v1';
 const ERROR_LOG_KEY='deutsch-c1-error-log-v1';
 const LAB_KEY='deutsch-c1-error-lab-v1';
 const NOTES_KEY='deutsch-c1-notes-v1';
-const LISTENING_KEY='deutsch-c1-listening-v1';
+const LISTENING_KEY='deutsch-c1-listening-v2';
 const LISTENING_VOICE_KEY='deutsch-c1-listening-voice-v1';
 const PRONUNCIATION_MODE_KEY='deutsch-c1-pronunciation-mode-v1';
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));

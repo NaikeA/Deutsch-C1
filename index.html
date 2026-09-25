@@ -12,7 +12,7 @@
   <title>Deutsch auf C1</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="app-icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=30">
+  <link rel="stylesheet" href="styles.css?v=32">
   <link rel="stylesheet" href="verb-count.css?v=16">
   <link rel="stylesheet" href="listening.css?v=19">
   <link rel="stylesheet" href="playback.css?v=24">
@@ -122,12 +122,19 @@
         <div><p class="kicker">TÄGLICH SCHREIBEN</p><h2>Gedanken in Worte fassen</h2><p>Schreibe ehrlich und einfach. Präzision kommt beim zweiten Lesen.</p></div>
         <div class="entry-date"><label for="entryDate">Eintrag vom</label><input id="entryDate" type="date"></div>
       </div>
+      <div class="writing-mode-picker" role="group" aria-label="Schreibmodus auswählen">
+        <span>Was möchtest du heute machen?</span>
+        <button type="button" class="writing-mode-button active" data-writing-mode="writing">✍ Neuen Text schreiben</button>
+        <button type="button" class="writing-mode-button" data-writing-mode="revision">↻ Text vom Vortag wiederholen</button>
+      </div>
       <div class="writing-layout">
         <div class="editor-wrap">
+          <div id="writingModePanel">
           <div class="prompt"><span>HEUTIGER IMPULS</span><button id="newPrompt" aria-label="Anderen Schreibimpuls zeigen">↻</button><p id="promptText"></p></div>
           <label class="sr-only" for="dailyParagraph">Mein Absatz auf Deutsch</label>
           <textarea id="dailyParagraph" lang="de" spellcheck="true" placeholder="Heute denke ich darüber nach, dass …"></textarea>
           <div class="editor-foot"><span><b id="wordCount">0</b> Wörter · <b id="charCount">0</b> Zeichen</span><span id="saveStatus">Noch nicht gespeichert</span></div>
+
           <div class="paragraph-comparison">
             <div class="comparison-head">
               <div><p class="kicker">ABSATZ FÜR ABSATZ</p><h3>Original und Korrektur vergleichen</h3><p>Trage jeden ursprünglichen Absatz und direkt darunter die korrigierte Fassung ein. Beide Bereiche können separat formatiert werden.</p></div>
@@ -144,8 +151,29 @@
             <div id="correctedText" class="corrected-text" contenteditable="true" role="textbox" aria-multiline="true" lang="de" spellcheck="true" data-placeholder="Korrigierten Text hier einfügen …"></div>
             <div class="corrected-editor-foot"><span id="correctedStatus">Noch nicht gespeichert</span><div><button id="clearCorrected" class="text-btn" type="button">Leeren</button><button id="saveCorrected" class="save-btn" type="button">Korrigierte Version speichern</button></div></div>
           </div>
+          </div>
+          <section id="revisionModePanel" class="memory-review" aria-labelledby="memoryReviewTitle">
+            <div class="memory-review-head">
+              <div><p class="kicker">WIEDERHOLUNG VOM VORTAG</p><h3 id="memoryReviewTitle">Aus dem Gedächtnis neu schreiben</h3><p>Schreibe das gestrige Thema noch einmal, ohne deinen alten Text anzusehen. Vergleiche erst danach beide Fassungen.</p></div>
+              <span id="memorySourceDate" class="memory-source-date"></span>
+            </div>
+            <div id="memoryUnavailable" class="memory-unavailable" hidden>Für den vorherigen Tag gibt es noch keinen gespeicherten Schreibtext.</div>
+            <div id="memoryExercise">
+              <div class="memory-topic"><span>THEMA VOM VORTAG</span><strong id="memoryTopic"></strong></div>
+              <label for="memoryRewrite">Meine neue Fassung aus dem Gedächtnis</label>
+              <textarea id="memoryRewrite" lang="de" spellcheck="true" placeholder="Schreibe das Thema neu, ohne den Text von gestern anzusehen …"></textarea>
+              <div class="memory-review-actions">
+                <span><b id="memoryWordCount">0</b> Wörter · <span id="memoryStatus">Noch nicht gespeichert</span></span>
+                <div><button id="clearMemoryRewrite" class="text-btn" type="button">Leeren</button><button id="saveMemoryRewrite" class="save-btn" type="button">Wiederholung speichern</button><button id="revealMemoryReference" class="outline-btn" type="button">Gestern vergleichen</button></div>
+              </div>
+              <div id="memoryReference" class="memory-reference" hidden>
+                <article><span>MEINE FASSUNG VON GESTERN</span><div id="memoryOriginalReference"></div></article>
+                <article><span>KORRIGIERTE FASSUNG VON GESTERN</span><div id="memoryCorrectedReference"></div></article>
+              </div>
+            </div>
+          </section>
         </div>
-        <aside class="review-panel">
+        <aside id="writingReviewPanel" class="review-panel">
           <p class="kicker">VOR DEM SPEICHERN</p><h3>Mein Sprach-Check</h3>
           <label><input type="checkbox" data-review="message"><span>Ist meine Hauptaussage klar?</span></label>
           <label><input type="checkbox" data-review="verbs"><span>Stehen die Verben an der richtigen Stelle?</span></label>
@@ -307,7 +335,7 @@
   <script src="lab.js?v=16"></script>
   <script src="expansions.js?v=2"></script>
   <script src="cases.js?v=5"></script>
-  <script src="speech-controls.js?v=1"></script>\n  <script src="app.js?v=60"></script>
+  <script src="speech-controls.js?v=1"></script>\n  <script src="app.js?v=62"></script>
   <script src="verb-review.js?v=3"></script>
 </body>
 </html>

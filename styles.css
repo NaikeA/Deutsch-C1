@@ -29,3 +29,34 @@ footer a{color:var(--green)}.article-plural{display:block;min-height:16px;color:
 .selected-text-toolbar,.selected-text-toolbar button{pointer-events:auto!important;touch-action:manipulation}
 
 .verb-review{margin-top:28px;border-top:1px solid #425951;padding-top:24px}.verb-review-head h3{color:#fff;margin:0 0 4px;font-size:1.15rem}.verb-review-head p,.review-note{color:#c6d1cc;font-size:.83rem;margin:0 0 15px}.verb-review-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr));gap:12px}.verb-review-card{background:#fff;color:var(--ink);border-radius:14px;padding:17px}.review-card-head{display:flex;flex-direction:column;gap:3px;margin-bottom:14px}.review-card-head strong{font-size:1.1rem}.review-card-head span{font-size:.8rem;color:var(--muted)}.verb-review-card label{display:block;margin:12px 0 0;font-size:.78rem;font-weight:700}.verb-review-card input,.verb-review-card textarea{display:block;width:100%;margin-top:5px;padding:9px;border:1px solid var(--line);border-radius:8px;color:var(--ink);font:500 .84rem 'DM Sans',sans-serif}.verb-review-card textarea{min-height:72px;resize:vertical}.verb-review-card input.correct{border-color:#15845f;background:#edf9f4}.verb-review-card input.wrong{border-color:#c05050;background:#fff3f3}.verb-review-card button{border:0;border-radius:8px;padding:9px 11px;font:700 .78rem 'DM Sans',sans-serif;cursor:pointer}.review-check{margin-top:12px;background:#e8f0ea;color:var(--green)}.review-feedback{font-size:.82rem;min-height:1.2em}.review-rating:not([hidden]){display:flex;gap:8px;flex-wrap:wrap}.review-rating button{background:#e8f0ea;color:var(--green)}.review-note{margin:14px 0 0}
+
+.memory-review{margin:1.5rem 0;padding:1.25rem;border:1px solid #cbdcd2;border-radius:18px;background:#f6fbf7}
+.memory-review-head{display:flex;justify-content:space-between;gap:1rem;align-items:flex-start;margin-bottom:1rem}
+.memory-review-head h3{margin:.15rem 0 .35rem}.memory-review-head p{margin:0;color:#5f7068}
+.memory-source-date{white-space:nowrap;border-radius:999px;background:#e3f1e8;color:#0a684b;padding:.45rem .75rem;font-size:.82rem;font-weight:700}
+.memory-topic{display:grid;gap:.3rem;background:#0b392d;color:white;border-radius:12px;padding:1rem;margin-bottom:1rem}
+.memory-topic span,.memory-reference article>span{font-size:.72rem;font-weight:800;letter-spacing:.09em;color:#8cdfa5}
+.memory-topic strong{font-size:1.05rem;line-height:1.45}
+#memoryRewrite{width:100%;min-height:190px;margin-top:.45rem;padding:1rem;border:1px solid #bad0c2;border-radius:12px;background:white;font:inherit;line-height:1.6;resize:vertical;box-sizing:border-box}
+#memoryRewrite:focus{outline:3px solid rgba(68,190,125,.18);border-color:#16815d}
+.memory-review-actions{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;margin-top:.75rem}
+.memory-review-actions>div{display:flex;gap:.55rem;flex-wrap:wrap}
+.memory-reference{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.1rem}
+.memory-reference article{border:1px solid #cbdcd2;border-radius:12px;background:white;padding:1rem;min-width:0}
+.memory-reference article>span{display:block;color:#087354;margin-bottom:.65rem}
+.memory-reference article>div{line-height:1.65;overflow-wrap:anywhere}
+.memory-reference hr{border:0;border-top:1px solid #dce8e1;margin:1rem 0}
+.memory-empty,.memory-unavailable{color:#6b756f;font-style:italic}
+.memory-unavailable{padding:1rem;border-radius:12px;background:#fff}
+@media(max-width:760px){.memory-review-head{display:block}.memory-source-date{display:inline-block;margin-top:.7rem}.memory-reference{grid-template-columns:1fr}.memory-review-actions{align-items:stretch}.memory-review-actions>div{display:grid;width:100%}.memory-review-actions button{width:100%}}
+
+.writing-mode-picker{display:flex;align-items:center;gap:.65rem;flex-wrap:wrap;margin:0 0 1.25rem;padding:.75rem 1rem;border:1px solid #cbdcd2;border-radius:14px;background:#fff}
+.writing-mode-picker>span{font-weight:700;margin-right:.25rem}
+.writing-mode-button{border:1px solid #b9d0c2;border-radius:999px;background:#f4f8f5;color:#33584b;padding:.65rem 1rem;font-weight:750;cursor:pointer}
+.writing-mode-button.active{background:#087354;color:#fff;border-color:#087354}
+.writing-layout.revision-active{grid-template-columns:minmax(0,1fr)}
+.writing-layout.revision-active .editor-wrap{max-width:900px;width:100%;margin-inline:auto}
+#revisionModePanel[hidden],#writingModePanel[hidden],#writingReviewPanel[hidden]{display:none!important}
+@media(max-width:760px){.writing-mode-picker{display:grid}.writing-mode-button{width:100%}}
+
+#revealMemoryReference:disabled{opacity:.48;cursor:not-allowed}

@@ -52,12 +52,77 @@ const correctedText=document.querySelector('#correctedText');
 const correctedStatus=document.querySelector('#correctedStatus');
 const comparisonPairs=document.querySelector('#comparisonPairs');
 const comparisonStatus=document.querySelector('#comparisonStatus');
+const memoryRewrite=document.querySelector('#memoryRewrite');
+const memoryStatus=document.querySelector('#memoryStatus');
+const memoryReference=document.querySelector('#memoryReference');
+const previousDate=date=>{const value=new Date(date+'T12:00:00Z');value.setUTCDate(value.getUTCDate()-1);return value.toISOString().slice(0,10)};
+const formatEntryDate=date=>new Intl.DateTimeFormat('de-DE',{day:'2-digit',month:'2-digit',year:'numeric',timeZone:'UTC'}).format(new Date(date+'T12:00:00Z'));
 const promptIndexForDate=date=>{let hash=2166136261;for(const char of date){hash^=char.charCodeAt(0);hash=Math.imul(hash,16777619)}return(hash>>>0)%prompts.length};
 let promptIndex=promptIndexForDate(day);
 entryDate.value=day;
 function showPrompt(){document.querySelector('#promptText').textContent=prompts[promptIndex]}
-function loadEntry(){const entry=writing[entryDate.value]||{text:'',review:{},correctedHtml:'',comparisonPairs:[]};promptIndex=Number.isInteger(entry.promptIndex)?entry.promptIndex%prompts.length:promptIndexForDate(entryDate.value);showPrompt();paragraph.value=entry.text||'';correctedText.innerHTML=entry.correctedHtml||'';renderComparisonPairs(entry.comparisonPairs||[]);document.querySelectorAll('[data-review]').forEach(x=>x.checked=!!entry.review?.[x.dataset.review]);status.textContent=entry.text?'Gespeicherter Eintrag':'Noch nicht gespeichert';correctedStatus.textContent=entry.correctedHtml?'Gespeicherte Korrektur':'Noch nicht gespeichert';comparisonStatus.textContent=entry.comparisonPairs?.length?'Gespeicherte Absatzpaare':'Noch nicht gespeichert';updateCounts(false)}
+function setWritingMode(mode,persist=false){
+  const selected=mode==='revision'?'revision':'writing';
+  document.querySelector('#writingModePanel').hidden=selected!=='writing';
+  document.querySelector('#revisionModePanel').hidden=selected!=='revision';
+  document.querySelector('#writingReviewPanel').hidden=selected!=='writing';
+  document.querySelector('.writing-layout').classList.toggle('revision-active',selected==='revision');
+  document.querySelectorAll('[data-writing-mode]').forEach(button=>{const active=button.dataset.writingMode===selected;button.classList.toggle('active',active);button.setAttribute('aria-pressed',active)});
+  if(persist){writing[entryDate.value]={...(writing[entryDate.value]||{}),mode:selected};localStorage.setItem(WRITING_KEY,JSON.stringify(writing))}
+}
+document.querySelectorAll('[data-writing-mode]').forEach(button=>button.addEventListener('click',()=>setWritingMode(button.dataset.writingMode,true)));
+function loadEntry(){const entry=writing[entryDate.value]||{text:'',review:{},correctedHtml:'',comparisonPairs:[]};promptIndex=Number.isInteger(entry.promptIndex)?entry.promptIndex%prompts.length:promptIndexForDate(entryDate.value);showPrompt();paragraph.value=entry.text||'';correctedText.innerHTML=entry.correctedHtml||'';renderComparisonPairs(entry.comparisonPairs||[]);document.querySelectorAll('[data-review]').forEach(x=>x.checked=!!entry.review?.[x.dataset.review]);status.textContent=entry.text?'Gespeicherter Eintrag':'Noch nicht gespeichert';correctedStatus.textContent=entry.correctedHtml?'Gespeicherte Korrektur':'Noch nicht gespeichert';comparisonStatus.textContent=entry.comparisonPairs?.length?'Gespeicherte Absatzpaare':'Noch nicht gespeichert';updateCounts(false);loadMemoryReview();setWritingMode(entry.mode||'writing')}
 function updateCounts(markUnsaved=true){const clean=paragraph.value.trim();document.querySelector('#wordCount').textContent=clean?clean.split(/\s+/).length:0;document.querySelector('#charCount').textContent=paragraph.value.length;if(markUnsaved)status.textContent='Änderungen nicht gespeichert'}
+function memoryReferenceHtml(entry,type){
+  if(type==='original'){
+    if(entry.text?.trim())return '<p>'+esc(entry.text).replace(/\n/g,'<br>')+'</p>';
+    const values=(entry.comparisonPairs||[]).map(pair=>pair.originalHtml).filter(Boolean);
+    return values.length?values.join('<hr>'):'<p class="memory-empty">Keine ursprüngliche Fassung gespeichert.</p>'
+  }
+  if(entry.correctedHtml?.replace(/<[^>]*>/g,'').trim())return entry.correctedHtml;
+  const values=(entry.comparisonPairs||[]).map(pair=>pair.correctedHtml).filter(Boolean);
+  return values.length?values.join('<hr>'):'<p class="memory-empty">Keine korrigierte Fassung gespeichert.</p>'
+}
+function updateMemoryCount(markUnsaved=true){
+  const clean=memoryRewrite.value.trim();
+  document.querySelector('#memoryWordCount').textContent=clean?clean.split(/\s+/).length:0;
+  document.querySelector('#revealMemoryReference').disabled=!clean;
+  if(markUnsaved)memoryStatus.textContent='Änderungen nicht gespeichert'
+}
+function loadMemoryReview(){
+  const current=writing[entryDate.value]||{};
+  const sourceDate=previousDate(entryDate.value);
+  const source=writing[sourceDate];
+  const available=!!(source&&(source.text?.trim()||(source.comparisonPairs||[]).some(pair=>(pair.originalHtml||'').replace(/<[^>]*>/g,'').trim())));
+  document.querySelector('#memorySourceDate').textContent='Text vom '+formatEntryDate(sourceDate);
+  document.querySelector('#memoryUnavailable').hidden=available;
+  document.querySelector('#memoryExercise').hidden=!available;
+  memoryReference.hidden=true;
+  document.querySelector('#revealMemoryReference').textContent='Gestern vergleichen';
+  memoryRewrite.value=current.memoryRewrite||'';
+  updateMemoryCount(false);
+  memoryStatus.textContent=current.memoryRewrite?'Gespeicherte Wiederholung':'Noch nicht gespeichert';
+  if(!available)return;
+  const sourcePromptIndex=Number.isInteger(source.promptIndex)?source.promptIndex%prompts.length:promptIndexForDate(sourceDate);
+  document.querySelector('#memoryTopic').textContent=prompts[sourcePromptIndex];
+  document.querySelector('#memoryOriginalReference').innerHTML=memoryReferenceHtml(source,'original');
+  document.querySelector('#memoryCorrectedReference').innerHTML=memoryReferenceHtml(source,'corrected')
+}
+memoryRewrite.addEventListener('input',()=>updateMemoryCount());
+document.querySelector('#saveMemoryRewrite').addEventListener('click',()=>{
+  writing[entryDate.value]={...(writing[entryDate.value]||{}),memoryRewrite:memoryRewrite.value.trim(),memorySourceDate:previousDate(entryDate.value),memorySavedAt:new Date().toISOString()};
+  localStorage.setItem(WRITING_KEY,JSON.stringify(writing));
+  if(memoryRewrite.value.trim())recordDailyProgress('Schreiben',`writing-memory:${entryDate.value}`,2,10);
+  memoryStatus.textContent='Gespeichert ✓'
+});
+document.querySelector('#clearMemoryRewrite').addEventListener('click',()=>{
+  memoryRewrite.value='';updateMemoryCount();
+});
+document.querySelector('#revealMemoryReference').addEventListener('click',event=>{
+  memoryReference.hidden=!memoryReference.hidden;
+  event.currentTarget.textContent=memoryReference.hidden?'Gestern vergleichen':'Vergleich ausblenden'
+});
+
 paragraph.addEventListener('input',()=>updateCounts());
 entryDate.addEventListener('change',loadEntry);
 document.querySelector('#newPrompt').addEventListener('click',()=>{promptIndex=(promptIndex+1)%prompts.length;writing[entryDate.value]={...(writing[entryDate.value]||{}),promptIndex};localStorage.setItem(WRITING_KEY,JSON.stringify(writing));showPrompt()});

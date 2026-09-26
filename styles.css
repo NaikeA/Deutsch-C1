@@ -70,3 +70,11 @@ footer a{color:var(--green)}.article-plural{display:block;min-height:16px;color:
 .pronounce-example{display:grid;place-items:center;flex:none;width:29px;height:29px;border:1px solid var(--line);border-radius:50%;background:#fff;color:var(--green);cursor:pointer}
 .pronounce-example:hover,.pronounce-example.speaking{background:var(--lime);border-color:var(--lime);transform:scale(1.04)}
 .practice-example .example-note{padding:8px 10px;margin:0;color:var(--muted);font-size:.72rem;border-top:1px dashed #c9dacf}
+
+.verb-form-block{margin-top:10px}
+.verb-form-block .verb-field{margin-top:0}
+.form-example{margin-top:5px;border:1px solid #d5e2d9;border-radius:8px;background:#f4f9f5;text-align:left}
+.form-example summary{cursor:pointer;padding:6px 9px;color:var(--green);font-size:.7rem;font-weight:750}
+.form-example-content{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;padding:0 8px 8px}
+.form-example-content p{margin:0;font-size:.78rem;line-height:1.45;overflow-wrap:anywhere}
+.verb-example-note{margin:9px 0 0;padding:8px;border-radius:7px;background:#f1f8f3;color:var(--muted);font-size:.72rem;line-height:1.45}

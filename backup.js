@@ -4,7 +4,14 @@
   const status=()=>document.querySelector('#appToolStatus');
   const setStatus=text=>{const element=status();if(element)element.textContent=text};
   const isNative=()=>!!(window.Capacitor?.isNativePlatform?.()&&window.Capacitor?.getPlatform?.()==='android');
-  const nativeCall=(plugin,method,options)=>window.Capacitor.nativePromise(plugin,method,options);
+  const pluginAvailable=plugin=>window.Capacitor?.isPluginAvailable?.(plugin)!==false;
+  const nativeCall=(plugin,method,options)=>{
+    const publicPlugin=window.Capacitor?.Plugins?.[plugin];
+    if(publicPlugin&&typeof publicPlugin[method]==='function')return publicPlugin[method](options);
+    if(typeof window.Capacitor?.nativePromise==='function')return window.Capacitor.nativePromise(plugin,method,options);
+    return Promise.reject(new Error(`${plugin} ist in dieser APK nicht verfügbar`));
+  };
+  const missingPlugins=plugins=>plugins.filter(plugin=>!pluginAvailable(plugin));
 
   function collect(){
     const storage={};
@@ -39,11 +46,16 @@
 
     if(isNative()){
       try{
+        const missing=missingPlugins(['Filesystem','Share']);
+        if(missing.length)throw new Error(`Fehlende Android-Plugins: ${missing.join(', ')}. APK neu erstellen und installieren.`);
         setStatus('Backup wird vorbereitet …');
         const saved=await nativeCall('Filesystem','writeFile',{path:fileName,data:json,directory:'CACHE',encoding:'utf8'});
         await nativeCall('Share','share',{title:'Deutsch-C1-Backup',files:[saved.uri],dialogTitle:'Backup speichern oder teilen'});
         setStatus('Backup erstellt ✓');
-      }catch(error){setStatus('Backup konnte nicht exportiert werden.')}
+      }catch(error){
+        const detail=String(error?.message||error||'Unbekannter Fehler');
+        setStatus(`Export fehlgeschlagen: ${detail}`);
+      }
       return;
     }
 
@@ -79,6 +91,8 @@
 
     if(isNative()){
       try{
+        const missing=missingPlugins(['FilePicker']);
+        if(missing.length)throw new Error(`Fehlende Android-Plugins: ${missing.join(', ')}. APK neu erstellen und installieren.`);
         setStatus('Backup-Datei auswählen …');
         const result=await nativeCall('FilePicker','pickFiles',{types:['application/json','application/octet-stream','text/plain'],limit:1,readData:true});
         const file=result?.files?.[0];
@@ -93,7 +107,7 @@
         setTimeout(()=>location.reload(),600);
       }catch(error){
         const message=String(error?.message||error||'').toLowerCase();
-        setStatus(message.includes('cancel')?'Import abgebrochen':'Diese Datei ist kein gültiges Deutsch-C1-Backup.');
+        setStatus(message.includes('cancel')?'Import abgebrochen':`Import fehlgeschlagen: ${String(error?.message||error||'Unbekannter Fehler')}`);
       }
       return;
     }

@@ -448,8 +448,106 @@ let deferredInstallPrompt=null;const installApp=document.querySelector('#install
 window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();deferredInstallPrompt=event;installApp.hidden=false;appToolStatus.textContent='Die App kann jetzt auf diesem Gerät installiert werden.'});
 installApp.addEventListener('click',async()=>{if(!deferredInstallPrompt){appToolStatus.textContent='Öffne diese Seite in Chrome und wähle im Menü „App installieren“.';return}deferredInstallPrompt.prompt();const choice=await deferredInstallPrompt.userChoice;appToolStatus.textContent=choice.outcome==='accepted'?'Installation gestartet ✓':'Installation abgebrochen';deferredInstallPrompt=null;installApp.hidden=true});
 window.addEventListener('appinstalled',()=>{appToolStatus.textContent='App erfolgreich installiert ✓';installApp.hidden=true});
-document.querySelector('#exportBackup').addEventListener('click',async()=>{const data={format:'deutsch-c1-backup',version:1,exportedAt:new Date().toISOString(),storage:{}};for(let i=0;i<localStorage.length;i++){const key=localStorage.key(i);if(key?.startsWith('deutsch-c1-'))data.storage[key]=localStorage.getItem(key)}const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const fileName=`deutsch-c1-backup-${day}.json`;if('showSaveFilePicker'in window){try{const handle=await window.showSaveFilePicker({suggestedName:fileName,types:[{description:'Deutsch-C1-Backup',accept:{'application/json':['.json']}}]});const writable=await handle.createWritable();await writable.write(blob);await writable.close();appToolStatus.textContent='Backup am gewählten Ort gespeichert ✓';return}catch(error){if(error.name==='AbortError'){appToolStatus.textContent='Export abgebrochen';return}}}const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;link.download=fileName;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);appToolStatus.textContent='Backup im Download-Ordner gespeichert ✓'});
-const backupFile=document.querySelector('#backupFile');document.querySelector('#importBackup').addEventListener('click',()=>backupFile.click());backupFile.addEventListener('change',async()=>{const file=backupFile.files?.[0];if(!file)return;try{const data=JSON.parse(await file.text());if(data.format!=='deutsch-c1-backup'||!data.storage||typeof data.storage!=='object')throw new Error('invalid');Object.entries(data.storage).forEach(([key,value])=>{if(key.startsWith('deutsch-c1-')&&typeof value==='string')localStorage.setItem(key,value)});appToolStatus.textContent='Backup importiert – App wird neu geladen …';setTimeout(()=>location.reload(),700)}catch(error){appToolStatus.textContent='Diese Datei ist kein gültiges Deutsch-C1-Backup.'}finally{backupFile.value=''}});
+function createBackupData(){
+  const data={format:'deutsch-c1-backup',version:1,exportedAt:new Date().toISOString(),storage:{}};
+  for(let i=0;i<localStorage.length;i++){
+    const key=localStorage.key(i);
+    if(key?.startsWith('deutsch-c1-'))data.storage[key]=localStorage.getItem(key);
+  }
+  return data;
+}
+function restoreBackupText(text){
+  const data=JSON.parse(text);
+  if(data.format!=='deutsch-c1-backup'||!data.storage||typeof data.storage!=='object')throw new Error('invalid');
+  const entries=Object.entries(data.storage).filter(([key,value])=>key.startsWith('deutsch-c1-')&&typeof value==='string');
+  if(!entries.length)throw new Error('empty');
+  if(!window.confirm(`Dieses Backup enthält ${entries.length} gespeicherte Bereiche. Die vorhandenen Daten werden überschrieben. Fortfahren?`))return false;
+  entries.forEach(([key,value])=>localStorage.setItem(key,value));
+  return true;
+}
+function decodeBase64Utf8(value){
+  const clean=String(value||'').replace(/\s/g,'');
+  const bytes=Uint8Array.from(atob(clean),character=>character.charCodeAt(0));
+  return new TextDecoder('utf-8').decode(bytes);
+}
+document.querySelector('#exportBackup').addEventListener('click',async()=>{
+  const data=createBackupData();
+  const json=JSON.stringify(data,null,2);
+  const fileName=`deutsch-c1-backup-${day}.json`;
+  if(isNativeAndroid&&window.Capacitor?.nativePromise){
+    try{
+      appToolStatus.textContent='Backup wird vorbereitet …';
+      const saved=await window.Capacitor.nativePromise('Filesystem','writeFile',{path:fileName,data:json,directory:'CACHE',encoding:'utf8'});
+      await window.Capacitor.nativePromise('Share','share',{title:'Deutsch-C1-Backup',text:'Deutsch-C1-Datensicherung',files:[saved.uri],dialogTitle:'Backup speichern oder teilen'});
+      appToolStatus.textContent='Backup erstellt – wähle einen Speicherort oder eine App ✓';
+      return;
+    }catch(error){
+      appToolStatus.textContent='Backup konnte nicht exportiert werden. Bitte versuche es erneut.';
+      return;
+    }
+  }
+  const blob=new Blob([json],{type:'application/json'});
+  if('showSaveFilePicker'in window){
+    try{
+      const handle=await window.showSaveFilePicker({suggestedName:fileName,types:[{description:'Deutsch-C1-Backup',accept:{'application/json':['.json']}}]});
+      const writable=await handle.createWritable();
+      await writable.write(blob);
+      await writable.close();
+      appToolStatus.textContent='Backup am gewählten Ort gespeichert ✓';
+      return;
+    }catch(error){
+      if(error.name==='AbortError'){appToolStatus.textContent='Export abgebrochen';return}
+    }
+  }
+  const url=URL.createObjectURL(blob);
+  const link=document.createElement('a');
+  link.href=url;
+  link.download=fileName;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  appToolStatus.textContent='Backup im Download-Ordner gespeichert ✓';
+});
+const backupFile=document.querySelector('#backupFile');
+document.querySelector('#importBackup').addEventListener('click',async()=>{
+  if(isNativeAndroid&&window.Capacitor?.nativePromise){
+    try{
+      appToolStatus.textContent='Backup-Datei auswählen …';
+      const result=await window.Capacitor.nativePromise('FilePicker','pickFiles',{types:['application/json','application/octet-stream','text/plain'],limit:1,readData:true});
+      const file=result?.files?.[0];
+      if(!file){appToolStatus.textContent='Import abgebrochen';return}
+      let text='';
+      if(file.data)text=decodeBase64Utf8(file.data);
+      else if(file.path){
+        const loaded=await window.Capacitor.nativePromise('Filesystem','readFile',{path:file.path,encoding:'utf8'});
+        text=typeof loaded.data==='string'?loaded.data:'';
+      }
+      if(!text)throw new Error('empty file');
+      if(!restoreBackupText(text)){appToolStatus.textContent='Import abgebrochen';return}
+      appToolStatus.textContent='Backup importiert – App wird neu geladen …';
+      setTimeout(()=>location.reload(),700);
+    }catch(error){
+      const message=String(error?.message||error||'').toLowerCase();
+      appToolStatus.textContent=message.includes('cancel')||message.includes('abgebrochen')?'Import abgebrochen':'Diese Datei ist kein gültiges Deutsch-C1-Backup.';
+    }
+    return;
+  }
+  backupFile.click();
+});
+backupFile.addEventListener('change',async()=>{
+  const file=backupFile.files?.[0];
+  if(!file)return;
+  try{
+    if(!restoreBackupText(await file.text())){appToolStatus.textContent='Import abgebrochen';return}
+    appToolStatus.textContent='Backup importiert – App wird neu geladen …';
+    setTimeout(()=>location.reload(),700);
+  }catch(error){
+    appToolStatus.textContent='Diese Datei ist kein gültiges Deutsch-C1-Backup.';
+  }finally{
+    backupFile.value='';
+  }
+});
 if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{appToolStatus.textContent='Offline-Unterstützung konnte nicht aktiviert werden.'}));
 function syncTodayProgressFromSavedWork(){
   const events=progressEvents(),add=(area,id,units,minutes)=>{if(!events[id])events[id]={area,units,minutes}};

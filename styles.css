@@ -34,6 +34,11 @@ footer a{color:var(--green)}.article-plural{display:block;min-height:16px;color:
 .memory-review-head{display:flex;justify-content:space-between;gap:1rem;align-items:flex-start;margin-bottom:1rem}
 .memory-review-head h3{margin:.15rem 0 .35rem}.memory-review-head p{margin:0;color:#5f7068}
 .memory-source-date{white-space:nowrap;border-radius:999px;background:#e3f1e8;color:#0a684b;padding:.45rem .75rem;font-size:.82rem;font-weight:700}
+.memory-source-picker{display:grid;gap:.35rem;min-width:190px}
+.memory-source-picker label{font-size:.75rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#5f7068}
+.memory-source-picker input{width:100%;box-sizing:border-box;border:1px solid #bad0c2;border-radius:10px;background:white;color:#173b30;padding:.55rem .7rem;font:inherit}
+.memory-source-picker input:focus{outline:3px solid rgba(68,190,125,.18);border-color:#16815d}
+.memory-source-picker .memory-source-date{justify-self:start}
 .memory-topic{display:grid;gap:.3rem;background:#0b392d;color:white;border-radius:12px;padding:1rem;margin-bottom:1rem}
 .memory-topic span,.memory-reference article>span{font-size:.72rem;font-weight:800;letter-spacing:.09em;color:#8cdfa5}
 .memory-topic strong{font-size:1.05rem;line-height:1.45}

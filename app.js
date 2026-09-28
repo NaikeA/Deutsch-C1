@@ -55,6 +55,7 @@ const comparisonStatus=document.querySelector('#comparisonStatus');
 const memoryRewrite=document.querySelector('#memoryRewrite');
 const memoryStatus=document.querySelector('#memoryStatus');
 const memoryReference=document.querySelector('#memoryReference');
+const memorySourceSelect=document.querySelector('#memorySourceSelect');
 const previousDate=date=>{const value=new Date(date+'T12:00:00Z');value.setUTCDate(value.getUTCDate()-1);return value.toISOString().slice(0,10)};
 const formatEntryDate=date=>new Intl.DateTimeFormat('de-DE',{day:'2-digit',month:'2-digit',year:'numeric',timeZone:'UTC'}).format(new Date(date+'T12:00:00Z'));
 const promptIndexForDate=date=>{let hash=2166136261;for(const char of date){hash^=char.charCodeAt(0);hash=Math.imul(hash,16777619)}return(hash>>>0)%prompts.length};
@@ -89,28 +90,44 @@ function updateMemoryCount(markUnsaved=true){
   document.querySelector('#revealMemoryReference').disabled=!clean;
   if(markUnsaved)memoryStatus.textContent='Änderungen nicht gespeichert'
 }
-function loadMemoryReview(){
-  const current=writing[entryDate.value]||{};
-  const sourceDate=previousDate(entryDate.value);
+function renderMemorySource(sourceDate){
   const source=writing[sourceDate];
   const available=!!(source&&(source.text?.trim()||(source.comparisonPairs||[]).some(pair=>(pair.originalHtml||'').replace(/<[^>]*>/g,'').trim())));
-  document.querySelector('#memorySourceDate').textContent='Text vom '+formatEntryDate(sourceDate);
+  document.querySelector('#memorySourceDate').textContent=sourceDate?'Text vom '+formatEntryDate(sourceDate):'Kein Datum ausgewählt';
   document.querySelector('#memoryUnavailable').hidden=available;
+  document.querySelector('#memoryUnavailable').textContent=sourceDate?'Für dieses Datum gibt es noch keinen gespeicherten Schreibtext.':'Wähle zuerst ein Datum mit einem gespeicherten Schreibtext.';
   document.querySelector('#memoryExercise').hidden=!available;
   memoryReference.hidden=true;
-  document.querySelector('#revealMemoryReference').textContent='Gestern vergleichen';
-  memoryRewrite.value=current.memoryRewrite||'';
-  updateMemoryCount(false);
-  memoryStatus.textContent=current.memoryRewrite?'Gespeicherte Wiederholung':'Noch nicht gespeichert';
+  document.querySelector('#revealMemoryReference').textContent='Ausgewählten Text vergleichen';
   if(!available)return;
   const sourcePromptIndex=Number.isInteger(source.promptIndex)?source.promptIndex%prompts.length:promptIndexForDate(sourceDate);
   document.querySelector('#memoryTopic').textContent=prompts[sourcePromptIndex];
   document.querySelector('#memoryOriginalReference').innerHTML=memoryReferenceHtml(source,'original');
   document.querySelector('#memoryCorrectedReference').innerHTML=memoryReferenceHtml(source,'corrected')
 }
+function loadMemoryReview(){
+  const current=writing[entryDate.value]||{};
+  const requestedSource=current.memorySourceDate||previousDate(entryDate.value);
+  const sourceDate=requestedSource<entryDate.value?requestedSource:previousDate(entryDate.value);
+  memorySourceSelect.max=previousDate(entryDate.value);
+  const savedDates=Object.keys(writing).filter(date=>date<entryDate.value&&(writing[date]?.text?.trim()||(writing[date]?.comparisonPairs||[]).some(pair=>(pair.originalHtml||'').replace(/<[^>]*>/g,'').trim()))).sort();
+  memorySourceSelect.min=savedDates[0]||'';
+  memorySourceSelect.value=sourceDate;
+  memoryRewrite.value=current.memoryRewrite||'';
+  updateMemoryCount(false);
+  memoryStatus.textContent=current.memoryRewrite?'Gespeicherte Wiederholung':'Noch nicht gespeichert';
+  renderMemorySource(sourceDate)
+}
+memorySourceSelect.addEventListener('change',()=>{
+  const sourceDate=memorySourceSelect.value;
+  writing[entryDate.value]={...(writing[entryDate.value]||{}),memorySourceDate:sourceDate};
+  localStorage.setItem(WRITING_KEY,JSON.stringify(writing));
+  renderMemorySource(sourceDate);
+  if(memoryRewrite.value.trim())memoryStatus.textContent='Quelltext geändert – Wiederholung erneut prüfen'
+});
 memoryRewrite.addEventListener('input',()=>updateMemoryCount());
 document.querySelector('#saveMemoryRewrite').addEventListener('click',()=>{
-  writing[entryDate.value]={...(writing[entryDate.value]||{}),memoryRewrite:memoryRewrite.value.trim(),memorySourceDate:previousDate(entryDate.value),memorySavedAt:new Date().toISOString()};
+  writing[entryDate.value]={...(writing[entryDate.value]||{}),memoryRewrite:memoryRewrite.value.trim(),memorySourceDate:memorySourceSelect.value,memorySavedAt:new Date().toISOString()};
   localStorage.setItem(WRITING_KEY,JSON.stringify(writing));
   if(memoryRewrite.value.trim())recordDailyProgress('Schreiben',`writing-memory:${entryDate.value}`,2,10);
   memoryStatus.textContent='Gespeichert ✓'
@@ -120,7 +137,7 @@ document.querySelector('#clearMemoryRewrite').addEventListener('click',()=>{
 });
 document.querySelector('#revealMemoryReference').addEventListener('click',event=>{
   memoryReference.hidden=!memoryReference.hidden;
-  event.currentTarget.textContent=memoryReference.hidden?'Gestern vergleichen':'Vergleich ausblenden'
+  event.currentTarget.textContent=memoryReference.hidden?'Ausgewählten Text vergleichen':'Vergleich ausblenden'
 });
 
 paragraph.addEventListener('input',()=>updateCounts());

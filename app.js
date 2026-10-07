@@ -87,7 +87,7 @@ function memoryReferenceHtml(entry,type){
 function updateMemoryCount(markUnsaved=true){
   const clean=memoryRewrite.value.trim();
   document.querySelector('#memoryWordCount').textContent=clean?clean.split(/\s+/).length:0;
-  document.querySelector('#revealMemoryReference').disabled=!clean;
+  document.querySelectorAll('[data-memory-reference]').forEach(button=>button.disabled=!clean);
   if(markUnsaved)memoryStatus.textContent='Änderungen nicht gespeichert'
 }
 function renderMemorySource(sourceDate){
@@ -98,7 +98,13 @@ function renderMemorySource(sourceDate){
   document.querySelector('#memoryUnavailable').textContent=sourceDate?'Für dieses Datum gibt es noch keinen gespeicherten Schreibtext.':'Wähle zuerst ein Datum mit einem gespeicherten Schreibtext.';
   document.querySelector('#memoryExercise').hidden=!available;
   memoryReference.hidden=true;
-  document.querySelector('#revealMemoryReference').textContent='Ausgewählten Text vergleichen';
+  document.querySelector('#memoryOriginalArticle').hidden=true;
+  document.querySelector('#memoryCorrectedArticle').hidden=true;
+  document.querySelectorAll('[data-memory-reference]').forEach(button=>{
+    button.classList.remove('active');
+    button.setAttribute('aria-expanded','false');
+    button.textContent=button.dataset.memoryReference==='original'?'Meine frühere Fassung anzeigen':'Frühere korrigierte Fassung anzeigen'
+  });
   if(!available)return;
   const sourcePromptIndex=Number.isInteger(source.promptIndex)?source.promptIndex%prompts.length:promptIndexForDate(sourceDate);
   document.querySelector('#memoryTopic').textContent=prompts[sourcePromptIndex];
@@ -135,10 +141,19 @@ document.querySelector('#saveMemoryRewrite').addEventListener('click',()=>{
 document.querySelector('#clearMemoryRewrite').addEventListener('click',()=>{
   memoryRewrite.value='';updateMemoryCount();
 });
-document.querySelector('#revealMemoryReference').addEventListener('click',event=>{
-  memoryReference.hidden=!memoryReference.hidden;
-  event.currentTarget.textContent=memoryReference.hidden?'Ausgewählten Text vergleichen':'Vergleich ausblenden'
-});
+document.querySelectorAll('[data-memory-reference]').forEach(button=>button.addEventListener('click',()=>{
+  const original=button.dataset.memoryReference==='original';
+  const article=document.querySelector(original?'#memoryOriginalArticle':'#memoryCorrectedArticle');
+  article.hidden=!article.hidden;
+  button.classList.toggle('active',!article.hidden);
+  button.setAttribute('aria-expanded',String(!article.hidden));
+  button.textContent=article.hidden
+    ?(original?'Meine frühere Fassung anzeigen':'Frühere korrigierte Fassung anzeigen')
+    :(original?'Meine frühere Fassung ausblenden':'Frühere korrigierte Fassung ausblenden');
+  const originalHidden=document.querySelector('#memoryOriginalArticle').hidden;
+  const correctedHidden=document.querySelector('#memoryCorrectedArticle').hidden;
+  memoryReference.hidden=originalHidden&&correctedHidden
+}));
 
 paragraph.addEventListener('input',()=>updateCounts());
 entryDate.addEventListener('change',loadEntry);

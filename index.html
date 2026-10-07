@@ -12,7 +12,7 @@
   <title>Deutsch auf C1</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="app-icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=35">
+  <link rel="stylesheet" href="styles.css?v=36">
   <link rel="stylesheet" href="verb-count.css?v=16">
   <link rel="stylesheet" href="listening.css?v=19">
   <link rel="stylesheet" href="playback.css?v=24">
@@ -164,11 +164,11 @@
               <textarea id="memoryRewrite" lang="de" spellcheck="true" placeholder="Schreibe das ausgewählte Thema neu, ohne den früheren Text anzusehen …"></textarea>
               <div class="memory-review-actions">
                 <span><b id="memoryWordCount">0</b> Wörter · <span id="memoryStatus">Noch nicht gespeichert</span></span>
-                <div><button id="clearMemoryRewrite" class="text-btn" type="button">Leeren</button><button id="saveMemoryRewrite" class="save-btn" type="button">Wiederholung speichern</button><button id="revealMemoryReference" class="outline-btn" type="button">Ausgewählten Text vergleichen</button></div>
+                <div><button id="clearMemoryRewrite" class="text-btn" type="button">Leeren</button><button id="saveMemoryRewrite" class="save-btn" type="button">Wiederholung speichern</button><button class="memory-toggle-btn" data-memory-reference="original" type="button" aria-controls="memoryOriginalArticle" aria-expanded="false">Meine frühere Fassung anzeigen</button><button class="memory-toggle-btn" data-memory-reference="corrected" type="button" aria-controls="memoryCorrectedArticle" aria-expanded="false">Frühere korrigierte Fassung anzeigen</button></div>
               </div>
               <div id="memoryReference" class="memory-reference" hidden>
-                <article><span>MEINE FRÜHERE FASSUNG</span><div id="memoryOriginalReference"></div></article>
-                <article><span>FRÜHERE KORRIGIERTE FASSUNG</span><div id="memoryCorrectedReference"></div></article>
+                <article id="memoryOriginalArticle" hidden><span>MEINE FRÜHERE FASSUNG</span><div id="memoryOriginalReference"></div></article>
+                <article id="memoryCorrectedArticle" hidden><span>FRÜHERE KORRIGIERTE FASSUNG</span><div id="memoryCorrectedReference"></div></article>
               </div>
             </div>
           </section>
@@ -336,7 +336,7 @@
   <script src="expansions.js?v=2"></script>
   <script src="cases.js?v=5"></script>
   <script src="speech-controls.js?v=1"></script>\n  <script src="backup.js?v=2"></script>
-  <script src="app.js?v=66"></script>
+  <script src="app.js?v=67"></script>
   <script src="verb-review.js?v=3"></script>
 </body>
 </html>

@@ -76,13 +76,13 @@ for(const noun of nouns){
     const defArticle=definite[grammaticalCase][gender];
     const defAdj='wichtig'+adjectiveEndings.definite[grammaticalCase][gender];
     const nounForm=noun.forms[grammaticalCase];
-    add('articles',`art-def-${grammaticalCase}-${gender}`,noun.frame[grammaticalCase](`___ ${defAdj} ${nounForm}`),defArticle,`${caseLabel}, ${genderLabel}: bestimmter Artikel „${defArticle}“.`);
+    add('articles',`art-def-${grammaticalCase}-${gender}`,noun.frame[grammaticalCase](`___ ${defAdj} ${nounForm}`)+` (bestimmter Artikel)`,defArticle,`${caseLabel}, ${genderLabel}: bestimmter Artikel „${defArticle}“.`);
     add('groups',`group-def-${grammaticalCase}-${gender}`,noun.frame[grammaticalCase]('___')+` (bestimmt · wichtig · ${noun.forms.nom})`,`${defArticle} ${defAdj} ${nounForm}`,`Nominalgruppe im ${caseLabel}: Artikel + Adjektivendung + passende Nomenform.`);
     add('adjectives',`adj-def-${grammaticalCase}-${gender}`,noun.frame[grammaticalCase](`${defArticle} wichtig___ ${nounForm}`),adjectiveEndings.definite[grammaticalCase][gender],`Nach dem bestimmten Artikel lautet die Adjektivendung im ${caseLabel} ${genderLabel}: -${adjectiveEndings.definite[grammaticalCase][gender]}.`);
     if(gender!=='p'){
       const indArticle=indefinite[grammaticalCase][gender];
       const indAdj='wichtig'+adjectiveEndings.indefinite[grammaticalCase][gender];
-      add('articles',`art-ind-${grammaticalCase}-${gender}`,noun.frame[grammaticalCase](`___ ${indAdj} ${nounForm}`),indArticle,`${caseLabel}, ${genderLabel}: unbestimmter Artikel „${indArticle}“.`);
+      add('articles',`art-ind-${grammaticalCase}-${gender}`,noun.frame[grammaticalCase](`___ ${indAdj} ${nounForm}`)+` (unbestimmter Artikel)`,indArticle,`${caseLabel}, ${genderLabel}: unbestimmter Artikel „${indArticle}“.`);
       add('groups',`group-ind-${grammaticalCase}-${gender}`,noun.frame[grammaticalCase]('___')+` (unbestimmt · wichtig · ${noun.forms.nom})`,`${indArticle} ${indAdj} ${nounForm}`,`Nominalgruppe im ${caseLabel}: unbestimmter Artikel + gemischte Adjektivendung + Nomen.`);
       add('adjectives',`adj-ind-${grammaticalCase}-${gender}`,noun.frame[grammaticalCase](`${indArticle} wichtig___ ${nounForm}`),adjectiveEndings.indefinite[grammaticalCase][gender],`Nach dem unbestimmten Artikel lautet die Adjektivendung im ${caseLabel} ${genderLabel}: -${adjectiveEndings.indefinite[grammaticalCase][gender]}.`);
     }

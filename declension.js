@@ -176,11 +176,16 @@ document.querySelector('#checkDeclension').addEventListener('click',()=>{
   [...cards.children].forEach((card,index)=>{
     const item=list[index],input=card.querySelector('input');
     saved[item.id]={answer:input.value,checked:true};
-    if(mark(card,item,input.value))correct++
+    const isCorrect=mark(card,item,input.value);
+    if(isCorrect){
+      correct++;
+      if(dateInput.value===today()&&typeof window.recordDailyProgress==='function'){
+        window.recordDailyProgress('Grammatik',`declension:${dateInput.value}:${item.id}`,1,2)
+      }
+    }
   });
   save();
-  score.textContent=`${correct} von ${list.length} richtig`;
-  if(correct&&typeof window.recordDailyProgress==='function')window.recordDailyProgress('Grammatik',`declension:${dateInput.value}:${activeCategory}`,correct,Math.max(3,correct*2))
+  score.textContent=`${correct} von ${list.length} richtig`
 });
 document.querySelector('#clearDeclension').addEventListener('click',()=>{
   delete state[stateKey()];
@@ -189,4 +194,16 @@ document.querySelector('#clearDeclension').addEventListener('click',()=>{
 });
 render();
 window.DECLENSION_EXERCISE_COUNT=exercises.length;
+window.addEventListener('load',()=>{
+  if(typeof window.recordDailyProgress!=='function')return;
+  const lookup=new Map(exercises.map(item=>[item.id,item]));
+  Object.entries(state).filter(([key])=>key.startsWith(today()+'|')).forEach(([,saved])=>{
+    Object.entries(saved||{}).forEach(([id,entry])=>{
+      const item=lookup.get(id);
+      if(item&&entry?.checked&&normalize(entry.answer)===normalize(item.answer)){
+        window.recordDailyProgress('Grammatik',`declension:${today()}:${id}`,1,2)
+      }
+    })
+  })
+});
 })();

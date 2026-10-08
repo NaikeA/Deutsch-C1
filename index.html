@@ -19,6 +19,7 @@
   <link rel="stylesheet" href="noun-meanings.css?v=20">
   <link rel="stylesheet" href="vocabulary.css?v=1">
   <link rel="stylesheet" href="cases.css?v=2">
+  <link rel="stylesheet" href="declension.css?v=1">
 </head>
 <body>
   <header class="topbar">
@@ -34,6 +35,7 @@
       <button class="main-tab" data-view="verbs">Verben</button>
       <button class="main-tab" data-view="articles">Artikel</button>
       <button class="main-tab" data-view="cases">Akkusativ &amp; Dativ</button>
+      <button class="main-tab" data-view="declension">Deklination</button>
       <button class="main-tab" data-view="correction">Satzkorrektur</button>
       <button class="main-tab" data-view="lab-endings">Endungen</button>
       <button class="main-tab" data-view="lab-spelling">Rechtschreibung</button>
@@ -60,10 +62,11 @@
     </section>
 
     <section class="site-summary">
-      <div class="summary-head"><div><p class="kicker">INHALT DER WEBSITE</p><h2>Mein gesamtes Deutsch-Training</h2></div><div class="summary-total"><strong>8.591</strong><span>vorbereitete Lerninhalte</span></div></div>
+      <div class="summary-head"><div><p class="kicker">INHALT DER WEBSITE</p><h2>Mein gesamtes Deutsch-Training</h2></div><div class="summary-total"><strong>9.767</strong><span>vorbereitete Lerninhalte</span></div></div>
       <div class="summary-grid">
         <button type="button" class="summary-card" data-go-view="articles"><strong>1.000</strong><span>Substantive</span><small>10 pro Tag · Artikel und Plural</small></button>
         <button type="button" class="summary-card" data-go-view="cases"><strong>1.400</strong><span>Akkusativ &amp; Dativ</span><small>5–15 pro Tag · 7 Übungsarten</small></button>
+        <button type="button" class="summary-card" data-go-view="declension"><strong>1.176</strong><span>Deklination</span><small>2–10 pro Tag · 4 Übungsarten</small></button>
         <button type="button" class="summary-card" data-go-view="verbs"><strong>1.000</strong><span>Alltagsverben</span><small>1–10 pro Tag · 6 Personen · 3 Zeiten</small></button>
         <button type="button" class="summary-card" data-go-view="verbs"><strong>18.000</strong><span>Verbformen</span><small>Präsens, Präteritum und Perfekt</small></button>
         <button type="button" class="summary-card" data-go-view="correction"><strong>1.000</strong><span>Fehlersätze</span><small>2 pro Tag · mit Musterlösung</small></button>
@@ -76,7 +79,7 @@
         <button type="button" class="summary-card" data-go-view="writing"><strong>täglich</strong><span>Freies Schreiben</span><small>Absätze, Impulse und 7-Punkte-Check</small></button>
         <button type="button" class="summary-card" data-go-view="notes"><strong>täglich</strong><span>Persönliche Notizen</span><small>Eigene Gedanken automatisch speichern</small></button>
       </div>
-      <p class="summary-note">Die Zahl 8.591 zählt die vorbereiteten Wörter, Hörtexte und Übungen. Die 18.000 einzelnen Verbformen und deine eigenen Texte kommen zusätzlich dazu.</p>
+      <p class="summary-note">Die Zahl 9.767 zählt die vorbereiteten Wörter, Hörtexte und Übungen. Die 18.000 einzelnen Verbformen und deine eigenen Texte kommen zusätzlich dazu.</p>
       <div class="app-tools">
         <div><p class="kicker">APP & DATENSICHERUNG</p><h3>Auf Android installieren</h3><p>Installiere den Lerntrainer als eigenständige App. Sichere deine Einträge als Datei, um sie auf ein anderes Gerät zu übertragen.</p></div>
         <div class="app-tool-actions"><button id="installApp" type="button" hidden>App installieren</button><button id="exportBackup" class="outline-btn" type="button">Backup exportieren</button><button id="importBackup" class="outline-btn" type="button">Backup importieren</button><input id="backupFile" type="file" accept=".json,application/json,application/octet-stream,text/plain" hidden></div>
@@ -251,6 +254,26 @@
       <div class="case-actions"><span id="caseScore">Noch nicht geprüft</span><div><button id="clearCases" class="text-btn" type="button">Antworten leeren</button><button id="checkCases" class="case-check" type="button">Alle prüfen</button></div></div>
     </section>
 
+    <section hidden class="declension-gym" id="deklination">
+      <div class="declension-head">
+        <div><p class="kicker">1.176 ÜBUNGSKOMBINATIONEN · 2–10 PRO TAG</p><h2>Deklination sicher anwenden</h2><p>Ergänze die fehlenden Formen. Trainiere Artikel, vollständige Nominalgruppen, Possessivartikel und attributive Adjektive in Nominativ, Akkusativ, Dativ und Genitiv.</p></div>
+        <div class="declension-head-controls">
+          <label for="declensionCount">Übungen pro Tag<select id="declensionCount"><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5" selected>5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></label>
+          <div class="entry-date"><label for="declensionDate">Übung vom</label><input id="declensionDate" type="date"></div>
+        </div>
+      </div>
+      <div class="declension-tabs" role="tablist" aria-label="Deklinationsbereich">
+        <button class="declension-tab active" data-declension-category="mixed" type="button">Gemischt</button>
+        <button class="declension-tab" data-declension-category="articles" type="button">Artikel</button>
+        <button class="declension-tab" data-declension-category="groups" type="button">Nominalgruppe</button>
+        <button class="declension-tab" data-declension-category="possessives" type="button">Possessivartikel</button>
+        <button class="declension-tab" data-declension-category="adjectives" type="button">Adjektive als Attribute</button>
+      </div>
+      <div class="declension-progress"><span>Form in die Lücke schreiben</span><span id="declensionProgress">0 von 5 beantwortet</span></div>
+      <div id="declensionCards" class="declension-cards"></div>
+      <div class="declension-actions"><span id="declensionScore">Noch nicht geprüft</span><div><button id="clearDeclension" class="text-btn" type="button">Antworten leeren</button><button id="checkDeclension" class="declension-check" type="button">Alle prüfen</button></div></div>
+    </section>
+
     <section hidden class="correction-gym" id="satzkorrektur">
       <div class="correction-head">
         <div><p class="kicker">2 SÄTZE PRO TAG · 1.000 SÄTZE</p><h2>Fehler finden und korrigieren</h2><p>Schreibe jeden Satz richtig. Vergleiche deine Version anschließend mit der Musterlösung.</p></div>
@@ -336,7 +359,8 @@
   <script src="expansions.js?v=2"></script>
   <script src="cases.js?v=5"></script>
   <script src="speech-controls.js?v=1"></script>\n  <script src="backup.js?v=2"></script>
-  <script src="app.js?v=67"></script>
+  <script src="declension.js?v=1"></script>
+  <script src="app.js?v=68"></script>
   <script src="verb-review.js?v=3"></script>
 </body>
 </html>

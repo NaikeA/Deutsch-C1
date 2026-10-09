@@ -334,22 +334,22 @@ function verbTenseExamples(v){
   const finite=presentParts[0]||'';
   const past=finite&&pastParts[0]?replaceVerbForm(present,finite,pastParts[0]):present;
   let perfect=finite&&perfectParts[0]?replaceVerbForm(present,finite,perfectParts[0]):present;
+  const punctuation=(perfect.match(/[.!?]$/)||['.'])[0];
+  const body=perfect.replace(/[.!?]$/,'');
+  const clauseBreak=body.indexOf(',');
+  let mainClause=clauseBreak>=0?body.slice(0,clauseBreak):body;
+  const followingClause=clauseBreak>=0?body.slice(clauseBreak):'';
   const reflexiveWords=new Set(['mich','dich','sich','uns','euch']);
   if(presentParts.length>1&&!reflexiveWords.has(presentParts[1])){
     const particle=presentParts[presentParts.length-1];
-    const punctuation=(perfect.match(/[.!?]$/)||['.'])[0];
-    let body=perfect.replace(/[.!?]$/,'');
-    if(body.endsWith(' '+particle))body=body.slice(0,-particle.length-1);
-    perfect=body+punctuation
+    mainClause=mainClause.replace(new RegExp('\\s+'+particle+'\\s*$','i'),'')
   }
-  const punctuation=(perfect.match(/[.!?]$/)||['.'])[0];
-  let body=perfect.replace(/[.!?]$/,'');
   const cleanVerb=v.v.replace(/\s*\([^)]*\)\s*$/,'').replace(/^sich\s+/,'').trim();
   const modalWords=new Set(['können','müssen','dürfen','sollen','wollen']);
-  const remainder=body.slice(Math.max(0,body.indexOf(perfectParts[0])+perfectParts[0].length));
+  const remainder=mainClause.slice(Math.max(0,mainClause.indexOf(perfectParts[0])+perfectParts[0].length));
   const perfectEnd=modalWords.has(cleanVerb)&&/\b[A-Za-zÄÖÜäöüß]+en\b/.test(remainder)?cleanVerb:(perfectParts[perfectParts.length-1]||cleanVerb);
-  if(perfectEnd&&!body.endsWith(' '+perfectEnd))body+=' '+perfectEnd;
-  perfect=body+punctuation;
+  if(perfectEnd&&!mainClause.endsWith(' '+perfectEnd))mainClause+=' '+perfectEnd;
+  perfect=mainClause+followingClause+punctuation;
   return [present,past,perfect]
 }
 function renderVerbs(){const key=`${verbDate.value}-${verbPerson}`;const saved=verbState[key]||{};const box=document.querySelector('#verbCards');box.innerHTML='';dailyVerbs().forEach((v,i)=>{const values=saved[v.v]||['','',''];const tenseExamples=verbTenseExamples(v);const card=document.createElement('article');card.className='verb-card';card.innerHTML=`<div class="practice-word-head"><h3>${i+1}. ${v.v}</h3><button class="pronounce-word" type="button" aria-label="${esc(v.v)} anhören" title="Aussprache anhören">🔊</button></div><span class="meaning">${verbMeanings[v.v]||'English meaning unavailable'}</span>${['Präsens','Präteritum','Perfekt'].map((t,j)=>`<div class="verb-form-block"><label class="verb-field"><span>${t}</span><input data-form="${j}" autocomplete="off" value="${values[j]||''}" placeholder="${j===2?'Hilfsverb + Partizip':'Verbform'}"><small class="verb-answer"></small></label><details class="form-example"><summary>Beispielsatz</summary><div class="form-example-content"><p>${esc(tenseExamples[j])}</p><button class="pronounce-example" data-example="${j}" type="button" aria-label="${t}-Beispiel anhören" title="Beispielsatz anhören">🔊</button></div></details></div>`).join('')}${v.exampleNote?`<p class="verb-example-note">${esc(v.exampleNote)}</p>`:''}<button class="check-verb">Antwort prüfen</button>`;card.querySelectorAll('input').forEach((input,j)=>input.addEventListener('input',()=>{if(!verbState[key])verbState[key]={};verbState[key][v.v]=[...card.querySelectorAll('input')].map(x=>x.value);localStorage.setItem(VERB_KEY,JSON.stringify(verbState));input.classList.remove('correct','wrong');input.nextElementSibling.textContent=''}));card.querySelectorAll('.pronounce-example').forEach(button=>button.addEventListener('click',event=>speakPractice(tenseExamples[+button.dataset.example],event.currentTarget)));card.querySelector('.pronounce-word').addEventListener('click',event=>{const exampleMode=verbPronunciationMode.value==='example';if(exampleMode)card.querySelectorAll('.form-example').forEach(example=>example.open=true);speakPractice(exampleMode?tenseExamples.join(' '):v.v.replace(/\s*\([^)]*\)\s*$/,'').trim(),event.currentTarget)});card.querySelector('.check-verb').addEventListener('click',()=>checkVerb(card,v));box.append(card)});document.querySelector('#verbScore').textContent=`0 von ${+verbCount.value*3} Formen richtig`}

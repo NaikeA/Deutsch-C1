@@ -87,3 +87,32 @@ footer a{color:var(--green)}.article-plural{display:block;min-height:16px;color:
 .form-example-content{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;padding:0 8px 8px}
 .form-example-content p{margin:0;font-size:.78rem;line-height:1.45;overflow-wrap:anywhere}
 .verb-example-note{margin:9px 0 0;padding:8px;border-radius:7px;background:#f1f8f3;color:var(--muted);font-size:.72rem;line-height:1.45}
+
+
+/* Dative verbs reference */
+.dative-verbs-reference{max-width:1120px;margin:28px auto 60px;padding:34px;background:#fff;border:1px solid #d8e5dc;border-radius:24px}
+.dative-verbs-head{max-width:760px;margin-bottom:24px}
+.dative-verbs-head h2{margin:6px 0 10px;font-size:clamp(1.8rem,4vw,2.7rem)}
+.dative-verbs-head p{color:#526a60;line-height:1.65}
+.dative-rule-box{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:24px 0 32px}
+.dative-rule-box>div{display:grid;gap:6px;padding:18px;border-radius:16px;background:#f2f8f4;border:1px solid #cfe0d5}
+.dative-rule-box span{width:max-content;padding:4px 9px;border-radius:999px;background:#0a7c5b;color:#fff;font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em}
+.dative-rule-box strong{font-size:1.05rem}
+.dative-rule-box small{color:#587064}
+.dative-group-head{display:flex;align-items:center;justify-content:space-between;gap:18px;margin:8px 0 16px}
+.dative-group-head h3,.dative-group-head p{margin:0}
+.dative-group-head p{margin-top:4px;color:#64766e}
+.dative-group-head>strong{font-size:2rem;color:#0a7c5b}
+.dative-verbs-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.dative-verb-card{padding:16px;border:1px solid #d6e2da;border-radius:15px;background:#fbfdfb}
+.dative-verb-card>div{position:relative;padding-right:4px}
+.dative-verb-card h3{margin:0;color:#063d2f;font-size:1.08rem}
+.dative-verb-card span{display:block;margin-top:3px;color:#66786f;font-size:.85rem}
+.dative-verb-card small{display:inline-block;margin-top:8px;padding:3px 7px;border-radius:999px;background:#dff8bb;color:#285d17;font-size:.7rem;font-weight:800}
+.dative-verb-card p{margin:14px 0 0;padding-top:12px;border-top:1px solid #e0e9e3;line-height:1.5}
+.dative-warning{margin-top:28px;padding:20px;border-radius:16px;background:#fff7df;border:1px solid #ead38c}
+.dative-warning h3{margin:0 0 8px}
+.dative-warning p{margin:0 0 10px}
+.dative-warning li{margin:6px 0}
+@media(max-width:850px){.dative-verbs-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.dative-verbs-reference{padding:22px 16px}.dative-rule-box,.dative-verbs-grid{grid-template-columns:1fr}}

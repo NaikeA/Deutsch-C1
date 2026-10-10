@@ -116,3 +116,28 @@ footer a{color:var(--green)}.article-plural{display:block;min-height:16px;color:
 .dative-warning li{margin:6px 0}
 @media(max-width:850px){.dative-verbs-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){.dative-verbs-reference{padding:22px 16px}.dative-rule-box,.dative-verbs-grid{grid-template-columns:1fr}}
+
+
+/* Memory techniques for dative verbs */
+.dative-memory{margin-top:36px;padding-top:32px;border-top:2px solid #e1ebe5}
+.dative-memory-head{max-width:760px;margin-bottom:20px}
+.dative-memory-head h2{margin:5px 0 8px;font-size:clamp(1.55rem,3vw,2.15rem)}
+.dative-memory-head p{color:#566e63;line-height:1.6}
+.dative-memory-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.dative-memory-card{position:relative;padding:20px;border-radius:17px;background:#f6faf7;border:1px solid #d3e2d8}
+.dative-memory-card.wide{grid-column:1/-1}
+.dative-memory-card>span{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;background:#0a7c5b;color:#fff;font-weight:900;font-size:.78rem}
+.dative-memory-card h3{margin:12px 0 8px;color:#073d30}
+.dative-memory-card>p{margin:7px 0;line-height:1.55;color:#52695f}
+.dative-memory-card ul{margin:10px 0 0;padding-left:20px}
+.dative-memory-card li{margin:6px 0}
+.memory-transfer{margin-top:13px!important;padding:10px 12px;border-radius:10px;background:#e7f4eb;color:#174b38!important}
+.memory-groups{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}
+.memory-groups>div{padding:13px;border-radius:12px;background:#fff;border:1px solid #dbe7df}
+.memory-groups p{margin:5px 0 0;line-height:1.5;color:#52695f}
+.memory-contrast{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}
+.memory-contrast>div{padding:15px;border-radius:12px;background:#fff;border:1px solid #dbe7df}
+.memory-contrast>div:last-child{border-color:#92c7ac;background:#effaf3}
+.memory-contrast p{margin:7px 0}
+.memory-formula{margin-top:14px!important;padding:12px;border-radius:10px;background:#dff8bb;color:#285d17!important;font-weight:800;text-align:center}
+@media(max-width:600px){.dative-memory-grid,.memory-groups,.memory-contrast{grid-template-columns:1fr}.dative-memory-card.wide{grid-column:auto}}

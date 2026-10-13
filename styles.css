@@ -141,3 +141,11 @@ footer a{color:var(--green)}.article-plural{display:block;min-height:16px;color:
 .memory-contrast p{margin:7px 0}
 .memory-formula{margin-top:14px!important;padding:12px;border-radius:10px;background:#dff8bb;color:#285d17!important;font-weight:800;text-align:center}
 @media(max-width:600px){.dative-memory-grid,.memory-groups,.memory-contrast{grid-template-columns:1fr}.dative-memory-card.wide{grid-column:auto}}
+
+
+/* Seven-day verb and article review */
+.weekly-review-bar{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:18px 0;padding:13px 15px;border:1px solid #cfe0d5;border-radius:14px;background:#f4f9f6}
+.weekly-review-bar button{border:1px solid #0a7c5b;border-radius:999px;padding:9px 14px;background:#fff;color:#08684d;font-weight:800;cursor:pointer}
+.weekly-review-bar button:hover,.weekly-review-bar button.active{background:#0a7c5b;color:#fff}
+.weekly-review-bar span{color:#536a60;font-size:.9rem;font-weight:700}
+@media(max-width:600px){.weekly-review-bar{align-items:stretch;flex-direction:column}.weekly-review-bar button{width:100%}}

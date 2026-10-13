@@ -12,7 +12,7 @@
   <title>Deutsch auf C1</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="app-icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=38">
+  <link rel="stylesheet" href="styles.css?v=39">
   <link rel="stylesheet" href="verb-count.css?v=16">
   <link rel="stylesheet" href="listening.css?v=19">
   <link rel="stylesheet" href="playback.css?v=24">
@@ -234,6 +234,10 @@
         <label class="verb-count-picker" for="verbCount">Verben pro Tag <select id="verbCount" aria-label="Anzahl der Verben pro Tag"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></label>
         <label class="pronunciation-mode" for="verbPronunciationMode">Aussprache <select id="verbPronunciationMode"><option value="word">Wort</option><option value="example">Beispielsätze</option></select></label>
       </div>
+      <div class="weekly-review-bar">
+        <button type="button" id="reviewLastWeekVerbs">↶ Letzte Woche wiederholen</button>
+        <span id="weeklyVerbReviewStatus">Aktuelle Tagesverben</span>
+      </div>
       <div id="verbCards" class="verb-cards"></div>
       <div class="verb-summary"><span id="verbScore">Auswahl wird geladen …</span><button id="clearVerbs" class="text-btn">Diese Runde leeren</button></div>
       <div class="verb-review"><div class="verb-review-head"><h3>Ein früheres Verb pro Tag wiederholen</h3><p id="verbReviewStatus" aria-live="polite">Wiederholungen werden geladen …</p></div><div id="verbReviewCards" class="verb-review-cards"></div><p class="review-note">Schreibe eine Form und einen Satz aus deinem eigenen Alltag. Deine Selbsteinschätzung bestimmt, wann das Verb wiederkommt. Die Satzgrammatik wird nicht automatisch geprüft.</p></div>
@@ -245,6 +249,10 @@
         <div class="entry-date"><label for="articleDate">Übung vom</label><input id="articleDate" type="date"></div>
       </div>
       <div class="article-pronunciation"><label class="pronunciation-mode" for="articlePronunciationMode">Aussprache <select id="articlePronunciationMode"><option value="word">Artikel + Wort</option><option value="example">Beispielsatz</option></select></label><small>Die Aussprache verwendet die Stimme aus dem Hörverstehen.</small></div>
+      <div class="weekly-review-bar">
+        <button type="button" id="reviewLastWeekArticles">↶ Letzte Woche wiederholen</button>
+        <span id="weeklyArticleReviewStatus">Aktuelle Tageswörter</span>
+      </div>
       <div id="articleCards" class="article-cards"></div>
       <div class="article-actions"><span id="articleScore">Noch nicht geprüft</span><div><button id="clearArticles" class="text-btn">Antworten leeren</button><button id="checkArticles" class="article-check">Alle prüfen</button></div></div>
     </section>
@@ -476,7 +484,7 @@
   <script src="cases.js?v=5"></script>
   <script src="speech-controls.js?v=1"></script>\n  <script src="backup.js?v=2"></script>
   <script src="declension.js?v=3"></script>
-  <script src="app.js?v=71"></script>
+  <script src="app.js?v=72"></script>
   <script src="verb-review.js?v=3"></script>
 </body>
 </html>

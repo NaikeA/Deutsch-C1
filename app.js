@@ -2,7 +2,6 @@ const KEY='deutsch-c1-tracker-v1';
 const WRITING_KEY='deutsch-c1-writing-v1';
 const VERB_KEY='deutsch-c1-verbs-v1';
 const VERB_COUNT_KEY='deutsch-c1-verb-count-v1';
-const DAILY_DEFAULTS_KEY='deutsch-c1-daily-defaults-v1';
 const ARTICLE_KEY='deutsch-c1-articles-v1';
 const ARTICLE_MISTAKES_KEY='deutsch-c1-article-mistakes-v1';
 const CASE_KEY='deutsch-c1-cases-v1';
@@ -588,44 +587,6 @@ backupFile.addEventListener('change',async()=>{
   }
 });
 if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{appToolStatus.textContent='Offline-Unterstützung konnte nicht aktiviert werden.'}));
-const DEFAULT_DAILY_COUNTS={verbs:'2',cases:'5',declension:'5'};
-let dailyCounts={...DEFAULT_DAILY_COUNTS};
-try{dailyCounts={...dailyCounts,...JSON.parse(localStorage.getItem(DAILY_DEFAULTS_KEY)||'{}')}}catch(error){}
-const dailyCountConfigs=[
-  {name:'verbs',overview:document.querySelector('#defaultVerbCount'),section:document.querySelector('#verbCount'),storage:VERB_COUNT_KEY,allowed:['1','2','3','4','5','6','7','8','9','10']},
-  {name:'cases',overview:document.querySelector('#defaultCaseCount'),section:document.querySelector('#caseCount'),storage:CASE_COUNT_KEY,allowed:['5','10','15']},
-  {name:'declension',overview:document.querySelector('#defaultDeclensionCount'),section:document.querySelector('#declensionCount'),storage:'deutsch-c1-declension-count-v1',allowed:['2','3','4','5','6','7','8','9','10']}
-];
-const saveDailyCounts=message=>{
-  localStorage.setItem(DAILY_DEFAULTS_KEY,JSON.stringify(dailyCounts));
-  const status=document.querySelector('#dailyDefaultsStatus');
-  if(status&&message){status.textContent=message;clearTimeout(saveDailyCounts.timer);saveDailyCounts.timer=setTimeout(()=>status.textContent='Deine Auswahl gilt auf dieser Website und in der Android-App.',2200)}
-};
-dailyCountConfigs.forEach(config=>{
-  const value=config.allowed.includes(String(dailyCounts[config.name]))?String(dailyCounts[config.name]):DEFAULT_DAILY_COUNTS[config.name];
-  dailyCounts[config.name]=value;
-  config.overview.value=value;
-  config.section.value=value;
-  localStorage.setItem(config.storage,value);
-  config.section.dispatchEvent(new Event('change'));
-  config.overview.addEventListener('change',()=>{
-    const next=config.allowed.includes(config.overview.value)?config.overview.value:DEFAULT_DAILY_COUNTS[config.name];
-    dailyCounts[config.name]=next;
-    config.section.value=next;
-    localStorage.setItem(config.storage,next);
-    config.section.dispatchEvent(new Event('change'));
-    saveDailyCounts('Gespeichert ✓ Die tägliche Anzahl wurde sofort übernommen.');
-    render()
-  });
-  config.section.addEventListener('change',()=>{
-    if(!config.allowed.includes(config.section.value))return;
-    dailyCounts[config.name]=config.section.value;
-    config.overview.value=config.section.value;
-    saveDailyCounts()
-  })
-});
-saveDailyCounts();
-
 function syncTodayProgressFromSavedWork(){
   const events=progressEvents(),add=(area,id,units,minutes)=>{if(!events[id])events[id]={area,units,minutes}};
   Object.entries(articleState[day]||{}).forEach(([noun,answer])=>{if(answer)add('Wortschatz',`article:${day}:${noun}`,1,1)});

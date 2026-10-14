@@ -334,7 +334,7 @@ function replaceVerbForm(sentence,from,to){const index=sentence.indexOf(from);re
 function keepTimeWordCase(source,replacement){return source[0]===source[0].toUpperCase()?replacement[0].toUpperCase()+replacement.slice(1):replacement}
 function adaptExampleToPastTime(sentence){
   const replacements=[
-    [/\bübermorgen\b/gi,'vorgestern'],
+    [/übermorgen/gi,'vorgestern'],
     [/\bmorgen\b/gi,'gestern'],
     [/\bheute\b/gi,'gestern'],
     [/\bnächstes Jahr\b/gi,'letztes Jahr'],

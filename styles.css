@@ -149,3 +149,15 @@ footer a{color:var(--green)}.article-plural{display:block;min-height:16px;color:
 .weekly-review-bar button:hover,.weekly-review-bar button.active{background:#0a7c5b;color:#fff}
 .weekly-review-bar span{color:#536a60;font-size:.9rem;font-weight:700}
 @media(max-width:600px){.weekly-review-bar{align-items:stretch;flex-direction:column}.weekly-review-bar button{width:100%}}
+
+.daily-defaults{margin:0 0 28px;padding:26px 28px;background:linear-gradient(135deg,#f7fff2 0%,#eef8f3 100%);border:1px solid #cfe0d6}
+.daily-defaults-head{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:20px}
+.daily-defaults-head h2{margin:.2rem 0 .45rem}
+.daily-defaults-head p:last-child{max-width:720px;margin:0;color:#52685f}
+.daily-defaults-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.daily-defaults-grid label{display:grid;grid-template-columns:1fr auto;align-items:center;gap:3px 14px;padding:16px;border:1px solid #ceddd4;border-radius:14px;background:#fff}
+.daily-defaults-grid label span{font-weight:800;color:#103d31}
+.daily-defaults-grid label small{grid-column:1;color:#687b73;line-height:1.35}
+.daily-defaults-grid select{grid-column:2;grid-row:1 / span 2;min-width:74px;padding:10px 30px 10px 12px;border:1px solid #9fb8aa;border-radius:10px;background:#fff;color:#103d31;font:inherit;font-weight:800}
+.daily-defaults-status{margin:16px 0 0;color:#177150;font-weight:700;font-size:.92rem}
+@media (max-width:760px){.daily-defaults{padding:20px}.daily-defaults-head{display:block}.daily-defaults-head .badge{display:inline-block;margin-top:12px}.daily-defaults-grid{grid-template-columns:1fr}}

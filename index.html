@@ -12,7 +12,7 @@
   <title>Deutsch auf C1</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="app-icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=39">
+  <link rel="stylesheet" href="styles.css?v=40">
   <link rel="stylesheet" href="verb-count.css?v=16">
   <link rel="stylesheet" href="listening.css?v=19">
   <link rel="stylesheet" href="playback.css?v=24">
@@ -62,13 +62,26 @@
       </div>
     </section>
 
+    <section class="daily-defaults card" aria-labelledby="dailyDefaultsTitle">
+      <div class="daily-defaults-head">
+        <div><p class="kicker">MEINE STANDARDEINSTELLUNGEN</p><h2 id="dailyDefaultsTitle">Wie viel möchte ich täglich üben?</h2><p>Lege hier die Standardanzahl fest. Die Auswahl wird gespeichert und automatisch in den jeweiligen Übungen verwendet.</p></div>
+        <span class="badge">Automatisch gespeichert</span>
+      </div>
+      <div class="daily-defaults-grid">
+        <label for="defaultVerbCount"><span>Verben</span><small>Neue Verben und Wiederholung der Vorwoche</small><select id="defaultVerbCount"><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></label>
+        <label for="defaultCaseCount"><span>Akkusativ &amp; Dativ</span><small>Aufgaben pro gewählter Kategorie</small><select id="defaultCaseCount"><option value="5" selected>5</option><option value="10">10</option><option value="15">15</option></select></label>
+        <label for="defaultDeclensionCount"><span>Deklination</span><small>Aufgaben pro gewählter Übungsart</small><select id="defaultDeclensionCount"><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5" selected>5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></label>
+      </div>
+      <p id="dailyDefaultsStatus" class="daily-defaults-status" aria-live="polite">Deine Auswahl gilt auf dieser Website und in der Android-App.</p>
+    </section>
+
     <section class="site-summary">
       <div class="summary-head"><div><p class="kicker">INHALT DER WEBSITE</p><h2>Mein gesamtes Deutsch-Training</h2></div><div class="summary-total"><strong>9.806</strong><span>vorbereitete Lerninhalte</span></div></div>
       <div class="summary-grid">
         <button type="button" class="summary-card" data-go-view="articles"><strong>1.000</strong><span>Substantive</span><small>10 pro Tag · Artikel und Plural</small></button>
         <button type="button" class="summary-card" data-go-view="cases"><strong>1.400</strong><span>Akkusativ &amp; Dativ</span><small>5–15 pro Tag · 7 Übungsarten</small></button>
         <button type="button" class="summary-card" data-go-view="declension"><strong>1.176</strong><span>Deklination</span><small>2–10 pro Tag · 4 Übungsarten</small></button>
-        <button type="button" class="summary-card" data-go-view="verbs"><strong>1.000</strong><span>Alltagsverben</span><small>1–10 pro Tag · 6 Personen · 3 Zeiten</small></button>
+        <button type="button" class="summary-card" data-go-view="verbs"><strong>1.000</strong><span>Alltagsverben</span><small>Standard: 2 neue + 2 aus der Vorwoche</small></button>
         <button type="button" class="summary-card" data-go-view="verbs"><strong>18.000</strong><span>Verbformen</span><small>Präsens, Präteritum und Perfekt</small></button>
         <button type="button" class="summary-card" data-go-view="correction"><strong>1.000</strong><span>Fehlersätze</span><small>2 pro Tag · mit Musterlösung</small></button>
         <button type="button" id="openListeningOverview" class="summary-card" data-go-view="listening" aria-label="C1-Hörverstehen öffnen"><strong>191</strong><span>C1-Hörübungen</span><small>191 unterschiedliche Hörtexte · je 2 Fragen</small></button>
@@ -231,7 +244,7 @@
       <div class="person-picker" role="group" aria-label="Person auswählen">
         <span>Person</span>
         <button class="person active" data-person="0">ich</button><button class="person" data-person="1">du</button><button class="person" data-person="2">man</button><button class="person" data-person="3">wir</button><button class="person" data-person="4">ihr</button><button class="person" data-person="5">sie</button>
-        <label class="verb-count-picker" for="verbCount">Verben pro Tag <select id="verbCount" aria-label="Anzahl der Verben pro Tag"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></label>
+        <label class="verb-count-picker" for="verbCount">Verben pro Tag <select id="verbCount" aria-label="Anzahl der Verben pro Tag"><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></label>
         <label class="pronunciation-mode" for="verbPronunciationMode">Aussprache <select id="verbPronunciationMode"><option value="word">Wort</option><option value="example">Beispielsätze</option></select></label>
       </div>
       <div class="weekly-review-bar">
@@ -484,7 +497,7 @@
   <script src="cases.js?v=5"></script>
   <script src="speech-controls.js?v=1"></script>\n  <script src="backup.js?v=2"></script>
   <script src="declension.js?v=3"></script>
-  <script src="app.js?v=73"></script>
+  <script src="app.js?v=74"></script>
   <script src="verb-review.js?v=3"></script>
 </body>
 </html>

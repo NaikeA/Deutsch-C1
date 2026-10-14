@@ -2,6 +2,7 @@ const KEY='deutsch-c1-tracker-v1';
 const WRITING_KEY='deutsch-c1-writing-v1';
 const VERB_KEY='deutsch-c1-verbs-v1';
 const VERB_COUNT_KEY='deutsch-c1-verb-count-v1';
+const DAILY_DEFAULTS_KEY='deutsch-c1-daily-defaults-v1';
 const ARTICLE_KEY='deutsch-c1-articles-v1';
 const ARTICLE_MISTAKES_KEY='deutsch-c1-article-mistakes-v1';
 const CASE_KEY='deutsch-c1-cases-v1';
@@ -36,7 +37,7 @@ function recordDailyProgress(area,id,units=1,minutes=1){
 function dailyProgressSummary(){
   const totals={Grammatik:0,Sprechen:0,Schreiben:0,Hören:0,Wortschatz:0};let autoMinutes=0;
   Object.values(progressEvents()).forEach(event=>{if(event&&totals[event.area]!=null)totals[event.area]+=event.units||0;autoMinutes+=event?.minutes||0});
-  const grammarTarget=(+document.querySelector('#caseCount')?.value||5)+(+document.querySelector('#declensionCount')?.value||5);const targets={Grammatik:grammarTarget,Sprechen:+document.querySelector('#verbCount')?.value||5,Schreiben:4,Hören:2,Wortschatz:10};
+  const grammarTarget=(+document.querySelector('#caseCount')?.value||5)+(+document.querySelector('#declensionCount')?.value||5);const targets={Grammatik:grammarTarget,Sprechen:+document.querySelector('#verbCount')?.value||2,Schreiben:4,Hören:2,Wortschatz:10};
   const percentages=Object.fromEntries(Object.keys(totals).map(name=>[name,Math.min(100,Math.round(totals[name]/targets[name]*100))]));
   return{totals,percentages,autoMinutes}
 }
@@ -312,7 +313,7 @@ async function speakPractice(text,button){
 }
 const verbs=window.GERMAN_VERBS;
 const verbMeanings=window.GERMAN_VERB_MEANINGS||{};
-let verbPerson=0;const verbDate=document.querySelector('#verbDate');const verbCount=document.querySelector('#verbCount');const verbState=JSON.parse(localStorage.getItem(VERB_KEY)||'{}');verbDate.value=day;verbCount.value=localStorage.getItem(VERB_COUNT_KEY)||'5';
+let verbPerson=0;const verbDate=document.querySelector('#verbDate');const verbCount=document.querySelector('#verbCount');const verbState=JSON.parse(localStorage.getItem(VERB_KEY)||'{}');verbDate.value=day;verbCount.value=localStorage.getItem(VERB_COUNT_KEY)||'2';
 let weeklyVerbReview=false;
 const shiftPracticeDate=(date,days)=>{const value=new Date(date+'T12:00:00Z');value.setUTCDate(value.getUTCDate()+days);return value.toISOString().slice(0,10)};
 const verbExerciseDate=()=>weeklyVerbReview?shiftPracticeDate(verbDate.value,-7):verbDate.value;
@@ -476,7 +477,7 @@ function refreshInlineJournals(){
   })
 }
 refreshInlineJournals();
-const viewMap={overview:['.intro','.site-summary','.grid','.roadmap'],writing:['.writing-studio'],listening:['.listening-studio'],verbs:['.verb-gym'],articles:['.article-gym'],cases:['.case-gym'],declension:['.declension-gym'],correction:['.correction-gym'],notes:['.notes-studio'],'dative-verbs':['.dative-verbs-reference'],vocabulary:['.vocabulary-studio'],lab:['.error-lab'],'lab-endings':['.error-lab'],'lab-spelling':['.error-lab'],'lab-natural':['.error-lab'],'lab-connectors':['.error-lab'],grammar:['.grammar-reference']};
+const viewMap={overview:['.intro','.daily-defaults','.site-summary','.grid','.roadmap'],writing:['.writing-studio'],listening:['.listening-studio'],verbs:['.verb-gym'],articles:['.article-gym'],cases:['.case-gym'],declension:['.declension-gym'],correction:['.correction-gym'],notes:['.notes-studio'],'dative-verbs':['.dative-verbs-reference'],vocabulary:['.vocabulary-studio'],lab:['.error-lab'],'lab-endings':['.error-lab'],'lab-spelling':['.error-lab'],'lab-natural':['.error-lab'],'lab-connectors':['.error-lab'],grammar:['.grammar-reference']};
 const allViews=Object.values(viewMap).flatMap(selectors=>selectors.flatMap(s=>[...document.querySelectorAll(s)]));
 function showView(name){if(!viewMap[name])name='overview';if(name!=='listening'&&listeningUtterance)stopListening();if(name.startsWith('lab-')){activeLab=name.slice(4);document.querySelectorAll('.lab-tab').forEach(x=>x.classList.toggle('active',x.dataset.lab===activeLab));renderLab()}allViews.forEach(x=>x.hidden=true);viewMap[name].forEach(s=>document.querySelectorAll(s).forEach(x=>x.hidden=false));document.querySelectorAll('.main-tab').forEach(x=>{const on=x.dataset.view===name||(name==='lab'&&x.dataset.view===`lab-${activeLab}`);x.classList.toggle('active',on);x.setAttribute('aria-selected',on)});localStorage.setItem(VIEW_KEY,name);window.scrollTo({top:0,behavior:'smooth'})}
 document.querySelectorAll('[data-go-view]').forEach(card=>card.addEventListener('click',()=>{const labTarget=card.dataset.goLab;if(labTarget){activeLab=labTarget;document.querySelectorAll('.lab-tab').forEach(x=>x.classList.toggle('active',x.dataset.lab===labTarget));renderLab()}showView(card.dataset.goView)}));
@@ -587,6 +588,44 @@ backupFile.addEventListener('change',async()=>{
   }
 });
 if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{appToolStatus.textContent='Offline-Unterstützung konnte nicht aktiviert werden.'}));
+const DEFAULT_DAILY_COUNTS={verbs:'2',cases:'5',declension:'5'};
+let dailyCounts={...DEFAULT_DAILY_COUNTS};
+try{dailyCounts={...dailyCounts,...JSON.parse(localStorage.getItem(DAILY_DEFAULTS_KEY)||'{}')}}catch(error){}
+const dailyCountConfigs=[
+  {name:'verbs',overview:document.querySelector('#defaultVerbCount'),section:document.querySelector('#verbCount'),storage:VERB_COUNT_KEY,allowed:['1','2','3','4','5','6','7','8','9','10']},
+  {name:'cases',overview:document.querySelector('#defaultCaseCount'),section:document.querySelector('#caseCount'),storage:CASE_COUNT_KEY,allowed:['5','10','15']},
+  {name:'declension',overview:document.querySelector('#defaultDeclensionCount'),section:document.querySelector('#declensionCount'),storage:'deutsch-c1-declension-count-v1',allowed:['2','3','4','5','6','7','8','9','10']}
+];
+const saveDailyCounts=message=>{
+  localStorage.setItem(DAILY_DEFAULTS_KEY,JSON.stringify(dailyCounts));
+  const status=document.querySelector('#dailyDefaultsStatus');
+  if(status&&message){status.textContent=message;clearTimeout(saveDailyCounts.timer);saveDailyCounts.timer=setTimeout(()=>status.textContent='Deine Auswahl gilt auf dieser Website und in der Android-App.',2200)}
+};
+dailyCountConfigs.forEach(config=>{
+  const value=config.allowed.includes(String(dailyCounts[config.name]))?String(dailyCounts[config.name]):DEFAULT_DAILY_COUNTS[config.name];
+  dailyCounts[config.name]=value;
+  config.overview.value=value;
+  config.section.value=value;
+  localStorage.setItem(config.storage,value);
+  config.section.dispatchEvent(new Event('change'));
+  config.overview.addEventListener('change',()=>{
+    const next=config.allowed.includes(config.overview.value)?config.overview.value:DEFAULT_DAILY_COUNTS[config.name];
+    dailyCounts[config.name]=next;
+    config.section.value=next;
+    localStorage.setItem(config.storage,next);
+    config.section.dispatchEvent(new Event('change'));
+    saveDailyCounts('Gespeichert ✓ Die tägliche Anzahl wurde sofort übernommen.');
+    render()
+  });
+  config.section.addEventListener('change',()=>{
+    if(!config.allowed.includes(config.section.value))return;
+    dailyCounts[config.name]=config.section.value;
+    config.overview.value=config.section.value;
+    saveDailyCounts()
+  })
+});
+saveDailyCounts();
+
 function syncTodayProgressFromSavedWork(){
   const events=progressEvents(),add=(area,id,units,minutes)=>{if(!events[id])events[id]={area,units,minutes}};
   Object.entries(articleState[day]||{}).forEach(([noun,answer])=>{if(answer)add('Wortschatz',`article:${day}:${noun}`,1,1)});

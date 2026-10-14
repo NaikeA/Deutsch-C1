@@ -331,13 +331,35 @@ function verbExample(v){
   return sentence
 }
 function replaceVerbForm(sentence,from,to){const index=sentence.indexOf(from);return index<0?sentence:sentence.slice(0,index)+to+sentence.slice(index+from.length)}
+function keepTimeWordCase(source,replacement){return source[0]===source[0].toUpperCase()?replacement[0].toUpperCase()+replacement.slice(1):replacement}
+function adaptExampleToPastTime(sentence){
+  const replacements=[
+    [/\bübermorgen\b/gi,'vorgestern'],
+    [/\bmorgen\b/gi,'gestern'],
+    [/\bheute\b/gi,'gestern'],
+    [/\bnächstes Jahr\b/gi,'letztes Jahr'],
+    [/\bnächsten Monat\b/gi,'letzten Monat'],
+    [/\bnächste Woche\b/gi,'letzte Woche'],
+    [/\bnächsten (Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag|Sonntag)\b/gi,'letzten $1'],
+    [/\bdieses Jahr\b/gi,'letztes Jahr'],
+    [/\bdiesen Monat\b/gi,'letzten Monat'],
+    [/\bdiese Woche\b/gi,'letzte Woche'],
+    [/\bam kommenden Wochenende\b/gi,'am vergangenen Wochenende'],
+    [/\bin zwei Tagen\b/gi,'vor zwei Tagen'],
+    [/\bin drei Tagen\b/gi,'vor drei Tagen']
+  ];
+  return replacements.reduce((text,[pattern,replacement])=>text.replace(pattern,(match,...args)=>{
+    const expanded=replacement.replace(/\$(\d+)/g,(_,number)=>args[Number(number)-1]||'');
+    return keepTimeWordCase(match,expanded)
+  }),sentence)
+}
 function verbTenseExamples(v){
   const present=verbExample(v);
   const presentParts=String(v.pr[verbPerson]||'').trim().split(/\s+/);
   const pastParts=String(v.pa[verbPerson]||'').trim().split(/\s+/);
   const perfectParts=String(v.pe[verbPerson]||'').trim().split(/\s+/);
   const finite=presentParts[0]||'';
-  const past=finite&&pastParts[0]?replaceVerbForm(present,finite,pastParts[0]):present;
+  const past=adaptExampleToPastTime(finite&&pastParts[0]?replaceVerbForm(present,finite,pastParts[0]):present);
   let perfect=finite&&perfectParts[0]?replaceVerbForm(present,finite,perfectParts[0]):present;
   const punctuation=(perfect.match(/[.!?]$/)||['.'])[0];
   const body=perfect.replace(/[.!?]$/,'');
@@ -354,7 +376,7 @@ function verbTenseExamples(v){
   const remainder=mainClause.slice(Math.max(0,mainClause.indexOf(perfectParts[0])+perfectParts[0].length));
   const perfectEnd=modalWords.has(cleanVerb)&&/\b[A-Za-zÄÖÜäöüß]+en\b/.test(remainder)?cleanVerb:(perfectParts[perfectParts.length-1]||cleanVerb);
   if(perfectEnd&&!mainClause.endsWith(' '+perfectEnd))mainClause+=' '+perfectEnd;
-  perfect=mainClause+followingClause+punctuation;
+  perfect=adaptExampleToPastTime(mainClause+followingClause+punctuation);
   return [present,past,perfect]
 }
 function renderVerbs(){const key=verbStorageKey();const saved=verbState[key]||{};const box=document.querySelector('#verbCards');box.innerHTML='';dailyVerbs().forEach((v,i)=>{const values=saved[v.v]||['','',''];const tenseExamples=verbTenseExamples(v);const card=document.createElement('article');card.className='verb-card';card.innerHTML=`<div class="practice-word-head"><h3>${i+1}. ${v.v}</h3><button class="pronounce-word" type="button" aria-label="${esc(v.v)} anhören" title="Aussprache anhören">🔊</button></div><span class="meaning">${verbMeanings[v.v]||'English meaning unavailable'}</span>${['Präsens','Präteritum','Perfekt'].map((t,j)=>`<div class="verb-form-block"><label class="verb-field"><span>${t}</span><input data-form="${j}" autocomplete="off" value="${values[j]||''}" placeholder="${j===2?'Hilfsverb + Partizip':'Verbform'}"><small class="verb-answer"></small></label><details class="form-example"><summary>Beispielsatz</summary><div class="form-example-content"><p>${esc(tenseExamples[j])}</p><button class="pronounce-example" data-example="${j}" type="button" aria-label="${t}-Beispiel anhören" title="Beispielsatz anhören">🔊</button></div></details></div>`).join('')}${v.exampleNote?`<p class="verb-example-note">${esc(v.exampleNote)}</p>`:''}<button class="check-verb">Antwort prüfen</button>`;card.querySelectorAll('input').forEach((input,j)=>input.addEventListener('input',()=>{if(!verbState[key])verbState[key]={};verbState[key][v.v]=[...card.querySelectorAll('input')].map(x=>x.value);localStorage.setItem(VERB_KEY,JSON.stringify(verbState));input.classList.remove('correct','wrong');input.nextElementSibling.textContent=''}));card.querySelectorAll('.pronounce-example').forEach(button=>button.addEventListener('click',event=>speakPractice(tenseExamples[+button.dataset.example],event.currentTarget)));card.querySelector('.pronounce-word').addEventListener('click',event=>{const exampleMode=verbPronunciationMode.value==='example';if(exampleMode)card.querySelectorAll('.form-example').forEach(example=>example.open=true);speakPractice(exampleMode?tenseExamples.join(' '):v.v.replace(/\s*\([^)]*\)\s*$/,'').trim(),event.currentTarget)});card.querySelector('.check-verb').addEventListener('click',()=>checkVerb(card,v));box.append(card)});document.querySelector('#verbScore').textContent=`0 von ${+verbCount.value*3} Formen richtig`}

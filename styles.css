@@ -161,3 +161,11 @@ footer a{color:var(--green)}.article-plural{display:block;min-height:16px;color:
 .daily-defaults-grid select{grid-column:2;grid-row:1 / span 2;min-width:74px;padding:10px 30px 10px 12px;border:1px solid #9fb8aa;border-radius:10px;background:#fff;color:#103d31;font:inherit;font-weight:800}
 .daily-defaults-status{margin:16px 0 0;color:#177150;font-weight:700;font-size:.92rem}
 @media (max-width:760px){.daily-defaults{padding:20px}.daily-defaults-head{display:block}.daily-defaults-head .badge{display:inline-block;margin-top:12px}.daily-defaults-grid{grid-template-columns:1fr}}
+
+.practice-word-actions{display:flex;align-items:center;gap:7px}
+.bookmark-verb{display:grid;place-items:center;width:36px;height:36px;padding:0;border:1px solid #c8d9cf;border-radius:50%;background:#f6faf7;color:#6e8077;font-size:1.35rem;line-height:1;cursor:pointer}
+.bookmark-verb:hover,.bookmark-verb:focus-visible{border-color:#008b63;color:#008b63;outline:none}
+.bookmark-verb.active{border-color:#d19a00;background:#fff7d6;color:#b67b00}
+.verb-bookmark-empty{grid-column:1/-1;padding:28px;border:1px dashed #a9c3b5;border-radius:16px;background:#f7fbf8;text-align:center;color:#31584a}
+.verb-bookmark-empty b{display:block;margin-bottom:6px;color:#083d2f;font-size:1.05rem}
+.verb-bookmark-empty p{margin:0}

@@ -20,6 +20,7 @@
   <link rel="stylesheet" href="vocabulary.css?v=1">
   <link rel="stylesheet" href="cases.css?v=2">
   <link rel="stylesheet" href="declension.css?v=1">
+  <link rel="stylesheet" href="prepositions.css?v=1">
 </head>
 <body>
   <header class="topbar">
@@ -35,6 +36,7 @@
       <button class="main-tab" data-view="verbs">Verben</button>
       <button class="main-tab" data-view="articles">Artikel</button>
       <button class="main-tab" data-view="cases">Akkusativ &amp; Dativ</button>
+      <button class="main-tab" data-view="prepositions">Präpositionen</button>
       <button class="main-tab" data-view="declension">Deklination</button>
       <button class="main-tab" data-view="correction">Satzkorrektur</button>
       <button class="main-tab" data-view="lab-endings">Endungen</button>
@@ -71,16 +73,18 @@
         <label for="defaultVerbCount"><span>Verben</span><small>Neue Verben und Wiederholung der Vorwoche</small><select id="defaultVerbCount"><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></label>
         <label for="defaultCaseCount"><span>Akkusativ &amp; Dativ</span><small>Aufgaben pro gewählter Kategorie</small><select id="defaultCaseCount"><option value="5" selected>5</option><option value="10">10</option><option value="15">15</option></select></label>
         <label for="defaultDeclensionCount"><span>Deklination</span><small>Aufgaben pro gewählter Übungsart</small><select id="defaultDeclensionCount"><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5" selected>5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></label>
+        <label for="defaultPrepositionCount"><span>Präpositionen</span><small>Lückensätze pro gewählter Übungsart</small><select id="defaultPrepositionCount"><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5" selected>5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></label>
       </div>
       <p id="dailyDefaultsStatus" class="daily-defaults-status" aria-live="polite">Deine Auswahl gilt auf dieser Website und in der Android-App.</p>
     </section>
 
     <section class="site-summary">
-      <div class="summary-head"><div><p class="kicker">INHALT DER WEBSITE</p><h2>Mein gesamtes Deutsch-Training</h2></div><div class="summary-total"><strong>9.806</strong><span>vorbereitete Lerninhalte</span></div></div>
+      <div class="summary-head"><div><p class="kicker">INHALT DER WEBSITE</p><h2>Mein gesamtes Deutsch-Training</h2></div><div class="summary-total"><strong>9.886</strong><span>vorbereitete Lerninhalte</span></div></div>
       <div class="summary-grid">
         <button type="button" class="summary-card" data-go-view="articles"><strong>1.000</strong><span>Substantive</span><small>10 pro Tag · Artikel und Plural</small></button>
         <button type="button" class="summary-card" data-go-view="cases"><strong>1.400</strong><span>Akkusativ &amp; Dativ</span><small>5–15 pro Tag · 7 Übungsarten</small></button>
         <button type="button" class="summary-card" data-go-view="declension"><strong>1.176</strong><span>Deklination</span><small>2–10 pro Tag · 4 Übungsarten</small></button>
+        <button type="button" class="summary-card" data-go-view="prepositions"><strong>80</strong><span>Präpositionen</span><small>2–10 pro Tag · 4 Kasusbereiche</small></button>
         <button type="button" class="summary-card" data-go-view="verbs"><strong>1.000</strong><span>Alltagsverben</span><small>Standard: 2 neue + 2 aus der Vorwoche</small></button>
         <button type="button" class="summary-card" data-go-view="verbs"><strong>18.000</strong><span>Verbformen</span><small>Präsens, Präteritum und Perfekt</small></button>
         <button type="button" class="summary-card" data-go-view="correction"><strong>1.000</strong><span>Fehlersätze</span><small>2 pro Tag · mit Musterlösung</small></button>
@@ -94,7 +98,7 @@
         <button type="button" class="summary-card" data-go-view="writing"><strong>täglich</strong><span>Freies Schreiben</span><small>Absätze, Impulse und 7-Punkte-Check</small></button>
         <button type="button" class="summary-card" data-go-view="notes"><strong>täglich</strong><span>Persönliche Notizen</span><small>Eigene Gedanken automatisch speichern</small></button>
       </div>
-      <p class="summary-note">Die Zahl 9.767 zählt die vorbereiteten Wörter, Hörtexte und Übungen. Die 18.000 einzelnen Verbformen und deine eigenen Texte kommen zusätzlich dazu.</p>
+      <p class="summary-note">Die Zahl 9.886 zählt die vorbereiteten Wörter, Hörtexte und Übungen. Die 18.000 einzelnen Verbformen und deine eigenen Texte kommen zusätzlich dazu.</p>
       <div class="app-tools">
         <div><p class="kicker">APP & DATENSICHERUNG</p><h3>Auf Android installieren</h3><p>Installiere den Lerntrainer als eigenständige App. Sichere deine Einträge als Datei, um sie auf ein anderes Gerät zu übertragen.</p></div>
         <div class="app-tool-actions"><button id="installApp" type="button" hidden>App installieren</button><button id="exportBackup" class="outline-btn" type="button">Backup exportieren</button><button id="importBackup" class="outline-btn" type="button">Backup importieren</button><input id="backupFile" type="file" accept=".json,application/json,application/octet-stream,text/plain" hidden></div>
@@ -277,6 +281,26 @@
       <div class="case-progress"><span id="caseSetLabel">Gemischte Tagesübung</span><span id="caseProgressText">0 von 5 beantwortet</span></div>
       <div id="caseCards" class="case-cards"></div>
       <div class="case-actions"><span id="caseScore">Noch nicht geprüft</span><div><button id="clearCases" class="text-btn" type="button">Antworten leeren</button><button id="checkCases" class="case-check" type="button">Alle prüfen</button></div></div>
+    </section>
+
+    <section hidden class="preposition-gym" id="praepositionen">
+      <div class="preposition-head">
+        <div><p class="kicker">80 NATÜRLICHE LÜCKENSÄTZE · 2–10 PRO TAG</p><h2>Präpositionen und Kasus sicher anwenden</h2><p>Ergänze die passende Präposition – falls nötig zusammen mit dem richtigen Artikel. Trainiere Präpositionen mit Akkusativ, Dativ, Genitiv und Wechselpräpositionen.</p></div>
+        <div class="preposition-head-controls">
+          <label for="prepositionCount">Übungen pro Tag<select id="prepositionCount"><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5" selected>5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></label>
+          <div class="entry-date"><label for="prepositionDate">Übung vom</label><input id="prepositionDate" type="date"></div>
+        </div>
+      </div>
+      <div class="preposition-tabs" role="tablist" aria-label="Präpositionsbereich">
+        <button class="preposition-tab active" data-preposition-category="mixed" type="button">Gemischt</button>
+        <button class="preposition-tab" data-preposition-category="acc" type="button">Mit Akkusativ</button>
+        <button class="preposition-tab" data-preposition-category="dat" type="button">Mit Dativ</button>
+        <button class="preposition-tab" data-preposition-category="gen" type="button">Mit Genitiv</button>
+        <button class="preposition-tab" data-preposition-category="two" type="button">Akkusativ oder Dativ</button>
+      </div>
+      <div class="preposition-progress"><span>Präposition und gegebenenfalls Artikel ergänzen</span><span id="prepositionProgress">0 von 5 beantwortet</span></div>
+      <div id="prepositionCards" class="preposition-cards"></div>
+      <div class="preposition-actions"><span id="prepositionScore">Noch nicht geprüft</span><div><button id="clearPrepositions" class="text-btn" type="button">Antworten leeren</button><button id="checkPrepositions" class="preposition-check" type="button">Alle prüfen</button></div></div>
     </section>
 
     <section hidden class="declension-gym" id="deklination">
@@ -498,8 +522,9 @@
   <script src="cases.js?v=5"></script>
   <script src="speech-controls.js?v=1"></script>\n  <script src="backup.js?v=2"></script>
   <script src="declension.js?v=3"></script>
-  <script src="app.js?v=80"></script>
+  <script src="prepositions.js?v=1"></script>
+  <script src="app.js?v=81"></script>
   <script src="verb-review.js?v=3"></script>
-  <script src="daily-defaults.js?v=1"></script>
+  <script src="daily-defaults.js?v=2"></script>
 </body>
 </html>

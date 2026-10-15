@@ -38,7 +38,7 @@ function recordDailyProgress(area,id,units=1,minutes=1){
 function dailyProgressSummary(){
   const totals={Grammatik:0,Sprechen:0,Schreiben:0,Hören:0,Wortschatz:0};let autoMinutes=0;
   Object.values(progressEvents()).forEach(event=>{if(event&&totals[event.area]!=null)totals[event.area]+=event.units||0;autoMinutes+=event?.minutes||0});
-  const grammarTarget=(+document.querySelector('#caseCount')?.value||5)+(+document.querySelector('#declensionCount')?.value||5);const targets={Grammatik:grammarTarget,Sprechen:+document.querySelector('#verbCount')?.value||2,Schreiben:4,Hören:2,Wortschatz:10};
+  const grammarTarget=(+document.querySelector('#caseCount')?.value||5)+(+document.querySelector('#declensionCount')?.value||5)+(+document.querySelector('#prepositionCount')?.value||5);const targets={Grammatik:grammarTarget,Sprechen:+document.querySelector('#verbCount')?.value||2,Schreiben:4,Hören:2,Wortschatz:10};
   const percentages=Object.fromEntries(Object.keys(totals).map(name=>[name,Math.min(100,Math.round(totals[name]/targets[name]*100))]));
   return{totals,percentages,autoMinutes}
 }
@@ -604,7 +604,7 @@ function refreshInlineJournals(){
   })
 }
 refreshInlineJournals();
-const viewMap={overview:['.intro','.daily-defaults','.site-summary','.grid','.roadmap'],writing:['.writing-studio'],listening:['.listening-studio'],verbs:['.verb-gym'],articles:['.article-gym'],cases:['.case-gym'],declension:['.declension-gym'],correction:['.correction-gym'],notes:['.notes-studio'],'dative-verbs':['.dative-verbs-reference'],vocabulary:['.vocabulary-studio'],lab:['.error-lab'],'lab-endings':['.error-lab'],'lab-spelling':['.error-lab'],'lab-natural':['.error-lab'],'lab-connectors':['.error-lab'],grammar:['.grammar-reference']};
+const viewMap={overview:['.intro','.daily-defaults','.site-summary','.grid','.roadmap'],writing:['.writing-studio'],listening:['.listening-studio'],verbs:['.verb-gym'],articles:['.article-gym'],cases:['.case-gym'],prepositions:['.preposition-gym'],declension:['.declension-gym'],correction:['.correction-gym'],notes:['.notes-studio'],'dative-verbs':['.dative-verbs-reference'],vocabulary:['.vocabulary-studio'],lab:['.error-lab'],'lab-endings':['.error-lab'],'lab-spelling':['.error-lab'],'lab-natural':['.error-lab'],'lab-connectors':['.error-lab'],grammar:['.grammar-reference']};
 const allViews=Object.values(viewMap).flatMap(selectors=>selectors.flatMap(s=>[...document.querySelectorAll(s)]));
 function showView(name){if(!viewMap[name])name='overview';if(name!=='listening'&&listeningUtterance)stopListening();if(name.startsWith('lab-')){activeLab=name.slice(4);document.querySelectorAll('.lab-tab').forEach(x=>x.classList.toggle('active',x.dataset.lab===activeLab));renderLab()}allViews.forEach(x=>x.hidden=true);viewMap[name].forEach(s=>document.querySelectorAll(s).forEach(x=>x.hidden=false));document.querySelectorAll('.main-tab').forEach(x=>{const on=x.dataset.view===name||(name==='lab'&&x.dataset.view===`lab-${activeLab}`);x.classList.toggle('active',on);x.setAttribute('aria-selected',on)});localStorage.setItem(VIEW_KEY,name);window.scrollTo({top:0,behavior:'smooth'})}
 document.querySelectorAll('[data-go-view]').forEach(card=>card.addEventListener('click',()=>{const labTarget=card.dataset.goLab;if(labTarget){activeLab=labTarget;document.querySelectorAll('.lab-tab').forEach(x=>x.classList.toggle('active',x.dataset.lab===labTarget));renderLab()}showView(card.dataset.goView)}));

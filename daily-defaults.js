@@ -5,7 +5,8 @@ const status=document.querySelector('#dailyDefaultsStatus');
 const configurations=[
   {name:'verbs',overview:'#defaultVerbCount',exercise:'#verbCount',storage:'deutsch-c1-verb-count-v1',fallback:'2'},
   {name:'cases',overview:'#defaultCaseCount',exercise:'#caseCount',storage:'deutsch-c1-case-count-v1',fallback:'5'},
-  {name:'declension',overview:'#defaultDeclensionCount',exercise:'#declensionCount',storage:'deutsch-c1-declension-count-v1',fallback:'5'}
+  {name:'declension',overview:'#defaultDeclensionCount',exercise:'#declensionCount',storage:'deutsch-c1-declension-count-v1',fallback:'5'},
+  {name:'prepositions',overview:'#defaultPrepositionCount',exercise:'#prepositionCount',storage:'deutsch-c1-preposition-count-v1',fallback:'5'}
 ];
 let preferences={};
 try{preferences=JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}')||{}}catch(error){preferences={}}

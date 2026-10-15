@@ -1,6 +1,7 @@
 const KEY='deutsch-c1-tracker-v1';
 const WRITING_KEY='deutsch-c1-writing-v1';
 const VERB_KEY='deutsch-c1-verbs-v1';
+const VERB_BOOKMARKS_KEY='deutsch-c1-verb-bookmarks-v1';
 const VERB_COUNT_KEY='deutsch-c1-verb-count-v1';
 const ARTICLE_KEY='deutsch-c1-articles-v1';
 const ARTICLE_MISTAKES_KEY='deutsch-c1-article-mistakes-v1';
@@ -314,12 +315,21 @@ async function speakPractice(text,button){
 const verbs=window.GERMAN_VERBS;
 const verbMeanings=window.GERMAN_VERB_MEANINGS||{};
 let verbPerson=0;const verbDate=document.querySelector('#verbDate');const verbCount=document.querySelector('#verbCount');const verbState=JSON.parse(localStorage.getItem(VERB_KEY)||'{}');verbDate.value=day;verbCount.value=localStorage.getItem(VERB_COUNT_KEY)||'2';
+let verbBookmarks=new Set();
+try{verbBookmarks=new Set(JSON.parse(localStorage.getItem(VERB_BOOKMARKS_KEY)||'[]'))}catch(error){verbBookmarks=new Set()}
 let weeklyVerbReview=false;
+let bookmarkedVerbReview=false;
 const shiftPracticeDate=(date,days)=>{const value=new Date(date+'T12:00:00Z');value.setUTCDate(value.getUTCDate()+days);return value.toISOString().slice(0,10)};
 const verbExerciseDate=()=>weeklyVerbReview?shiftPracticeDate(verbDate.value,-7):verbDate.value;
-const verbStorageKey=()=>weeklyVerbReview?`${verbDate.value}-weekly-${verbExerciseDate()}-${verbPerson}`:`${verbDate.value}-${verbPerson}`;
+const verbStorageKey=()=>bookmarkedVerbReview?`${verbDate.value}-bookmarks-${verbPerson}`:weeklyVerbReview?`${verbDate.value}-weekly-${verbExerciseDate()}-${verbPerson}`:`${verbDate.value}-${verbPerson}`;
 const norm=s=>s.trim().toLocaleLowerCase('de-DE').replace(/\s+/g,' ');
-function dailyVerbs(){const n=Math.floor(new Date(verbExerciseDate()+'T12:00:00Z').getTime()/86400000);const start=(((n%verbs.length)+verbs.length)%verbs.length);return Array.from({length:+verbCount.value},(_,i)=>verbs[(start*5+i)%verbs.length])}
+function saveVerbBookmarks(){localStorage.setItem(VERB_BOOKMARKS_KEY,JSON.stringify([...verbBookmarks]))}
+function dailyVerbs(){
+  if(bookmarkedVerbReview)return verbs.filter(verb=>verbBookmarks.has(verb.v));
+  const n=Math.floor(new Date(verbExerciseDate()+'T12:00:00Z').getTime()/86400000);
+  const start=(((n%verbs.length)+verbs.length)%verbs.length);
+  return Array.from({length:+verbCount.value},(_,i)=>verbs[(start*5+i)%verbs.length])
+}
 function verbAnswers(v){return[v.pr[verbPerson],v.pa[verbPerson],v.pe[verbPerson]]}
 function verbExample(v){
   let sentence=v.examples?.[verbPerson]||v.example||'';
@@ -379,18 +389,113 @@ function verbTenseExamples(v){
   perfect=adaptExampleToPastTime(mainClause+followingClause+punctuation);
   return [present,past,perfect]
 }
-function renderVerbs(){const key=verbStorageKey();const saved=verbState[key]||{};const box=document.querySelector('#verbCards');box.innerHTML='';dailyVerbs().forEach((v,i)=>{const values=saved[v.v]||['','',''];const tenseExamples=verbTenseExamples(v);const card=document.createElement('article');card.className='verb-card';card.innerHTML=`<div class="practice-word-head"><h3>${i+1}. ${v.v}</h3><button class="pronounce-word" type="button" aria-label="${esc(v.v)} anhören" title="Aussprache anhören">🔊</button></div><span class="meaning">${verbMeanings[v.v]||'English meaning unavailable'}</span>${['Präsens','Präteritum','Perfekt'].map((t,j)=>`<div class="verb-form-block"><label class="verb-field"><span>${t}</span><input data-form="${j}" autocomplete="off" value="${values[j]||''}" placeholder="${j===2?'Hilfsverb + Partizip':'Verbform'}"><small class="verb-answer"></small></label><details class="form-example"><summary>Beispielsatz</summary><div class="form-example-content"><p>${esc(tenseExamples[j])}</p><button class="pronounce-example" data-example="${j}" type="button" aria-label="${t}-Beispiel anhören" title="Beispielsatz anhören">🔊</button></div></details></div>`).join('')}${v.exampleNote?`<p class="verb-example-note">${esc(v.exampleNote)}</p>`:''}<button class="check-verb">Antwort prüfen</button>`;card.querySelectorAll('input').forEach((input,j)=>input.addEventListener('input',()=>{if(!verbState[key])verbState[key]={};verbState[key][v.v]=[...card.querySelectorAll('input')].map(x=>x.value);localStorage.setItem(VERB_KEY,JSON.stringify(verbState));input.classList.remove('correct','wrong');input.nextElementSibling.textContent=''}));card.querySelectorAll('.pronounce-example').forEach(button=>button.addEventListener('click',event=>speakPractice(tenseExamples[+button.dataset.example],event.currentTarget)));card.querySelector('.pronounce-word').addEventListener('click',event=>{const exampleMode=verbPronunciationMode.value==='example';if(exampleMode)card.querySelectorAll('.form-example').forEach(example=>example.open=true);speakPractice(exampleMode?tenseExamples.join(' '):v.v.replace(/\s*\([^)]*\)\s*$/,'').trim(),event.currentTarget)});card.querySelector('.check-verb').addEventListener('click',()=>checkVerb(card,v));box.append(card)});document.querySelector('#verbScore').textContent=`0 von ${+verbCount.value*3} Formen richtig`}
-function checkVerb(card,v){const answers=verbAnswers(v),inputs=[...card.querySelectorAll('input')];inputs.forEach((input,i)=>{const ok=norm(input.value)===norm(answers[i]);input.classList.toggle('correct',ok);input.classList.toggle('wrong',!ok);input.nextElementSibling.textContent=ok?'':`Richtig: ${answers[i]}`});if(inputs.every(input=>input.value.trim())){recordDailyProgress('Sprechen',`${weeklyVerbReview?'verb-weekly-review':'verb'}:${verbDate.value}:${verbExerciseDate()}:${verbPerson}:${v.v}`,1,3);window.dispatchEvent(new CustomEvent('verb-practised',{detail:{date:verbDate.value,name:v.v}}))}const correct=document.querySelectorAll('.verb-card input.correct').length;document.querySelector('#verbScore').textContent=`${correct} von ${+verbCount.value*3} Formen richtig`}
+function updateVerbBookmarkButton(button,name){
+  const bookmarked=verbBookmarks.has(name);
+  button.classList.toggle('active',bookmarked);
+  button.textContent=bookmarked?'★':'☆';
+  button.setAttribute('aria-pressed',String(bookmarked));
+  button.setAttribute('aria-label',bookmarked?`${name} nicht mehr merken`:`${name} als schwierig merken`);
+  button.title=bookmarked?'Lesezeichen entfernen':'Verb als schwierig merken'
+}
+function renderVerbs(){
+  const key=verbStorageKey();
+  const saved=verbState[key]||{};
+  const box=document.querySelector('#verbCards');
+  const items=dailyVerbs();
+  box.innerHTML='';
+  if(bookmarkedVerbReview&&!items.length){
+    box.innerHTML='<div class="verb-bookmark-empty"><b>Noch keine Verben gemerkt</b><p>Öffne die täglichen Verben und tippe bei einem schwierigen Verb auf ☆.</p></div>';
+    document.querySelector('#verbScore').textContent='Keine gemerkten Verben';
+    updateVerbPracticeModeUi();
+    return
+  }
+  items.forEach((v,i)=>{
+    const values=saved[v.v]||['','',''];
+    const tenseExamples=verbTenseExamples(v);
+    const card=document.createElement('article');
+    card.className='verb-card';
+    card.innerHTML=`<div class="practice-word-head"><h3>${i+1}. ${v.v}</h3><div class="practice-word-actions"><button class="bookmark-verb" type="button"></button><button class="pronounce-word" type="button" aria-label="${esc(v.v)} anhören" title="Aussprache anhören">🔊</button></div></div><span class="meaning">${verbMeanings[v.v]||'English meaning unavailable'}</span>${['Präsens','Präteritum','Perfekt'].map((t,j)=>`<div class="verb-form-block"><label class="verb-field"><span>${t}</span><input data-form="${j}" autocomplete="off" value="${values[j]||''}" placeholder="${j===2?'Hilfsverb + Partizip':'Verbform'}"><small class="verb-answer"></small></label><details class="form-example"><summary>Beispielsatz</summary><div class="form-example-content"><p>${esc(tenseExamples[j])}</p><button class="pronounce-example" data-example="${j}" type="button" aria-label="${t}-Beispiel anhören" title="Beispielsatz anhören">🔊</button></div></details></div>`).join('')}${v.exampleNote?`<p class="verb-example-note">${esc(v.exampleNote)}</p>`:''}<button class="check-verb">Antwort prüfen</button>`;
+    const bookmarkButton=card.querySelector('.bookmark-verb');
+    updateVerbBookmarkButton(bookmarkButton,v.v);
+    bookmarkButton.addEventListener('click',()=>{
+      if(verbBookmarks.has(v.v))verbBookmarks.delete(v.v);else verbBookmarks.add(v.v);
+      saveVerbBookmarks();
+      if(bookmarkedVerbReview)renderVerbs();else{updateVerbBookmarkButton(bookmarkButton,v.v);updateVerbPracticeModeUi()}
+    });
+    card.querySelectorAll('input').forEach((input,j)=>input.addEventListener('input',()=>{
+      if(!verbState[key])verbState[key]={};
+      verbState[key][v.v]=[...card.querySelectorAll('input')].map(x=>x.value);
+      localStorage.setItem(VERB_KEY,JSON.stringify(verbState));
+      input.classList.remove('correct','wrong');
+      input.nextElementSibling.textContent=''
+    }));
+    card.querySelectorAll('.pronounce-example').forEach(button=>button.addEventListener('click',event=>speakPractice(tenseExamples[+button.dataset.example],event.currentTarget)));
+    card.querySelector('.pronounce-word').addEventListener('click',event=>{
+      const exampleMode=verbPronunciationMode.value==='example';
+      if(exampleMode)card.querySelectorAll('.form-example').forEach(example=>example.open=true);
+      speakPractice(exampleMode?tenseExamples.join(' '):v.v.replace(/\s*\([^)]*\)\s*$/,'').trim(),event.currentTarget)
+    });
+    card.querySelector('.check-verb').addEventListener('click',()=>checkVerb(card,v));
+    box.append(card)
+  });
+  document.querySelector('#verbScore').textContent=`0 von ${items.length*3} Formen richtig`;
+  updateVerbPracticeModeUi()
+}
+function checkVerb(card,v){
+  const answers=verbAnswers(v),inputs=[...card.querySelectorAll('input')];
+  inputs.forEach((input,i)=>{
+    const ok=norm(input.value)===norm(answers[i]);
+    input.classList.toggle('correct',ok);
+    input.classList.toggle('wrong',!ok);
+    input.nextElementSibling.textContent=ok?'':`Richtig: ${answers[i]}`
+  });
+  if(inputs.every(input=>input.value.trim())){
+    const mode=bookmarkedVerbReview?'verb-bookmark-review':weeklyVerbReview?'verb-weekly-review':'verb';
+    recordDailyProgress('Sprechen',`${mode}:${verbDate.value}:${verbExerciseDate()}:${verbPerson}:${v.v}`,1,3);
+    window.dispatchEvent(new CustomEvent('verb-practised',{detail:{date:verbDate.value,name:v.v}}))
+  }
+  const correct=document.querySelectorAll('.verb-card input.correct').length;
+  const total=document.querySelectorAll('.verb-card input').length;
+  document.querySelector('#verbScore').textContent=`${correct} von ${total} Formen richtig`
+}
 window.addEventListener('verb-review-completed',event=>{const {date,name}=event.detail||{};if(date===day&&name)recordDailyProgress('Sprechen',`verb-review:${date}:${name}`,1,3)});
 document.querySelectorAll('.person').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.person').forEach(x=>x.classList.remove('active'));btn.classList.add('active');verbPerson=+btn.dataset.person;renderVerbs()}));
-function updateWeeklyVerbReviewUi(){
-  const button=document.querySelector('#reviewLastWeekVerbs'),status=document.querySelector('#weeklyVerbReviewStatus');
-  button.classList.toggle('active',weeklyVerbReview);
-  button.textContent=weeklyVerbReview?'Heutige Verben anzeigen':'↶ Letzte Woche wiederholen';
-  status.textContent=weeklyVerbReview?`Wiederholung vom ${formatEntryDate(verbExerciseDate())}`:'Aktuelle Tagesverben'
+function updateVerbPracticeModeUi(){
+  const weeklyButton=document.querySelector('#reviewLastWeekVerbs');
+  const bookmarkButton=document.querySelector('#reviewBookmarkedVerbs');
+  const status=document.querySelector('#weeklyVerbReviewStatus');
+  weeklyButton.classList.toggle('active',weeklyVerbReview);
+  bookmarkButton.classList.toggle('active',bookmarkedVerbReview);
+  weeklyButton.textContent=weeklyVerbReview?'Heutige Verben anzeigen':'↶ Letzte Woche wiederholen';
+  bookmarkButton.textContent=bookmarkedVerbReview?'Heutige Verben anzeigen':`★ Gemerkte Verben üben (${verbBookmarks.size})`;
+  if(bookmarkedVerbReview)status.textContent=`${verbBookmarks.size} gemerkte${verbBookmarks.size===1?'s Verb':' Verben'}`;
+  else if(weeklyVerbReview)status.textContent=`Wiederholung vom ${formatEntryDate(verbExerciseDate())}`;
+  else status.textContent='Aktuelle Tagesverben'
 }
-document.querySelector('#reviewLastWeekVerbs').addEventListener('click',()=>{weeklyVerbReview=!weeklyVerbReview;updateWeeklyVerbReviewUi();renderVerbs()});
-verbDate.addEventListener('change',()=>{weeklyVerbReview=false;updateWeeklyVerbReviewUi();renderVerbs()});verbCount.addEventListener('change',()=>{localStorage.setItem(VERB_COUNT_KEY,verbCount.value);renderVerbs()});document.querySelector('#clearVerbs').addEventListener('click',()=>{delete verbState[verbStorageKey()];localStorage.setItem(VERB_KEY,JSON.stringify(verbState));renderVerbs()});updateWeeklyVerbReviewUi();renderVerbs();
+document.querySelector('#reviewLastWeekVerbs').addEventListener('click',()=>{
+  const activate=!weeklyVerbReview;
+  weeklyVerbReview=activate;
+  bookmarkedVerbReview=false;
+  updateVerbPracticeModeUi();
+  renderVerbs()
+});
+document.querySelector('#reviewBookmarkedVerbs').addEventListener('click',()=>{
+  const activate=!bookmarkedVerbReview;
+  bookmarkedVerbReview=activate;
+  weeklyVerbReview=false;
+  updateVerbPracticeModeUi();
+  renderVerbs()
+});
+verbDate.addEventListener('change',()=>{
+  weeklyVerbReview=false;
+  bookmarkedVerbReview=false;
+  updateVerbPracticeModeUi();
+  renderVerbs()
+});
+verbCount.addEventListener('change',()=>{localStorage.setItem(VERB_COUNT_KEY,verbCount.value);renderVerbs()});
+document.querySelector('#clearVerbs').addEventListener('click',()=>{delete verbState[verbStorageKey()];localStorage.setItem(VERB_KEY,JSON.stringify(verbState));renderVerbs()});
+updateVerbPracticeModeUi();
+renderVerbs();
 const nouns=window.GERMAN_NOUNS;
 const nounMeanings=window.GERMAN_NOUN_MEANINGS||{};
 const nounExamples=window.GERMAN_NOUN_EXAMPLES||{};

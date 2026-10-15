@@ -1,0 +1,24 @@
+.preposition-gym{margin:1.4rem 0 2rem;padding:clamp(1rem,2.5vw,2rem);border-radius:24px;background:#f8fbf8;border:1px solid #d5e3da}
+.preposition-head{display:flex;justify-content:space-between;gap:1.5rem;align-items:flex-start}
+.preposition-head h2{margin:.25rem 0 .5rem;font-size:clamp(1.55rem,3vw,2.25rem)}
+.preposition-head p{margin:0;max-width:760px;color:#50645c}
+.preposition-head-controls{display:flex;gap:1rem;align-items:flex-end;flex-wrap:wrap}
+.preposition-head-controls label{display:grid;gap:.35rem;font-size:.78rem;color:#486158}
+.preposition-head-controls select,.preposition-head-controls input{min-height:42px;padding:.55rem .7rem;border:1px solid #bfd2c7;border-radius:10px;background:#fff;color:#173f33}
+.preposition-tabs{display:flex;flex-wrap:wrap;gap:.5rem;margin:1.35rem 0 .8rem}
+.preposition-tab{border:1px solid #c9dbd0;border-radius:999px;background:#fff;color:#3e5d52;padding:.65rem .9rem;font-weight:700;cursor:pointer}
+.preposition-tab.active{background:#087b5d;color:#fff;border-color:#087b5d}
+.preposition-progress{display:flex;justify-content:space-between;gap:1rem;color:#557068;font-size:.9rem;margin:.8rem 0}
+.preposition-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.8rem}
+.preposition-card{background:#fff;border:1px solid #d5e3da;border-radius:18px;padding:1rem;display:flex;flex-direction:column;gap:.75rem;min-height:245px}
+.preposition-meta{margin:0;color:#007a5a;font-size:.72rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.preposition-card h3{margin:0;font-size:1.02rem;line-height:1.45}
+.preposition-card input{width:100%;box-sizing:border-box;padding:.7rem .8rem;border:1px solid #cbdad2;border-radius:10px;font:inherit}
+.preposition-card.correct input{border-color:#00946c;background:#e9f9f3}.preposition-card.wrong input{border-color:#d65050;background:#fff1f1}
+.preposition-feedback{margin:0;font-weight:750}.preposition-card.correct .preposition-feedback{color:#007553}.preposition-card.wrong .preposition-feedback{color:#b72f2f}
+.preposition-rule{margin-top:auto;background:#e8ffd4;border-radius:10px;padding:.7rem;display:grid;gap:.25rem;font-size:.88rem;line-height:1.4}.preposition-rule[hidden]{display:none}
+.preposition-rule b{color:#006d50}
+.preposition-actions{display:flex;justify-content:space-between;gap:1rem;align-items:center;margin-top:1rem}.preposition-actions>div{display:flex;gap:.6rem;flex-wrap:wrap}
+.preposition-check{border:0;border-radius:10px;background:#087b5d;color:#fff;padding:.72rem 1rem;font-weight:750;cursor:pointer}
+@media(max-width:900px){.preposition-cards{grid-template-columns:repeat(2,minmax(0,1fr))}.preposition-head{flex-direction:column}}
+@media(max-width:620px){.preposition-cards{grid-template-columns:1fr}.preposition-head-controls{width:100%}.preposition-progress,.preposition-actions{align-items:flex-start;flex-direction:column}}

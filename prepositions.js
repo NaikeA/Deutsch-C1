@@ -16,7 +16,19 @@ const cueFromPhrase=phrase=>{
  const words=String(phrase).match(/\b[A-ZÄÖÜ][A-Za-zÄÖÜäöüß-]*/g)||[];
  return words.join(' / ')||String(phrase).replace(/^(durch|für|gegen|ohne|um|aus|außer|bei|gegenüber|mit|nach|seit|von|zu|außerhalb|aufgrund|innerhalb|statt|trotz|während|wegen|an|auf|hinter|in|neben|über|unter|vor|zwischen)\s+/i,'')
 };
-const withCue=(prompt,phrase)=>prompt.replace(/\.$/,` (Stichwort: ${cueFromPhrase(phrase)}).`);
+const articleType=phrase=>{
+ const first=String(phrase).trim().split(/\s+/)[0].toLocaleLowerCase('de-DE');
+ if(['am','ans','beim','im','ins','vom','zum','zur'].includes(first))return 'bestimmter Artikel';
+ const withoutPreposition=String(phrase).replace(/^(durch|für|gegen|ohne|um|aus|außer|bei|gegenüber|mit|nach|seit|von|zu|außerhalb|aufgrund|innerhalb|statt|trotz|während|wegen)\s+/i,'');
+ const determiner=withoutPreposition.trim().split(/\s+/)[0].toLocaleLowerCase('de-DE');
+ if(/^(der|die|das|den|dem|des)$/.test(determiner))return 'bestimmter Artikel';
+ if(/^(ein|eine|einen|einem|einer|eines)$/.test(determiner))return 'unbestimmter Artikel';
+ if(/^dies/.test(determiner))return 'Demonstrativartikel';
+ if(/^(mein|dein|sein|ihr|unser|euer)/.test(determiner))return 'Possessivartikel';
+ if(/^(alle|allen|aller|jed|kein|mehrer|zahlreich)/.test(determiner))return 'Artikelwort: '+determiner;
+ return 'ohne Artikel';
+};
+const withCue=(prompt,phrase)=>prompt.replace(/\.$/,` (Stichwort: ${cueFromPhrase(phrase)} · ${articleType(phrase)}).`);
 const generate=(category,configs,target)=>{
  const generated=[];
  for(const config of configs){

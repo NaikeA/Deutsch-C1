@@ -13,8 +13,12 @@ const add=(category,prompt,answer,explanation,accepted=[])=>{
 };
 const sentence=(stem,context)=>stem.replace(/[.!?]$/,'')+(context||'')+'.';
 const cueFromPhrase=phrase=>{
- const words=String(phrase).match(/\b[A-ZÄÖÜ][A-Za-zÄÖÜäöüß-]*/g)||[];
- return words.join(' / ')||String(phrase).replace(/^(durch|für|gegen|ohne|um|aus|außer|bei|gegenüber|mit|nach|seit|von|zu|außerhalb|aufgrund|innerhalb|statt|trotz|während|wegen|an|auf|hinter|in|neben|über|unter|vor|zwischen)\s+/i,'')
+ let value=String(phrase).trim();
+ value=value.replace(/^(durch|für|gegen|ohne|um|aus|außer|bei|mit|nach|seit|von|zu|außerhalb|aufgrund|innerhalb|statt|trotz|während|wegen|an|auf|hinter|in|neben|über|unter|vor|zwischen)\s+/i,'');
+ value=value.replace(/^(am|ans|beim|im|ins|vom|zum|zur)\s+/i,'');
+ value=value.replace(/^(der|die|das|den|dem|des|ein|eine|einen|einem|einer|eines|dieser|diese|dieses|diesen|diesem|meine?|meinen|meinem|meiner|meines|deine?|deinen|deinem|deiner|deines|seine?|seinen|seinem|seiner|seines|ihre?|ihren|ihrem|ihrer|ihres|unsere?|unseren|unserem|unserer|unseres|eure?|euren|eurem|eurer|eures|alle|allen|aller|jede?|jeden|jedem|jeder|jedes|keine?|keinen|keinem|keiner|keines)\s+/i,'');
+ value=value.replace(/\s+gegenüber$/i,'');
+ return value;
 };
 const articleType=phrase=>{
  const first=String(phrase).trim().split(/\s+/)[0].toLocaleLowerCase('de-DE');
@@ -23,12 +27,17 @@ const articleType=phrase=>{
  const determiner=withoutPreposition.trim().split(/\s+/)[0].toLocaleLowerCase('de-DE');
  if(/^(der|die|das|den|dem|des)$/.test(determiner))return 'bestimmter Artikel';
  if(/^(ein|eine|einen|einem|einer|eines)$/.test(determiner))return 'unbestimmter Artikel';
- if(/^dies/.test(determiner))return 'Demonstrativartikel';
- if(/^(mein|dein|sein|ihr|unser|euer)/.test(determiner))return 'Possessivartikel';
+ if(/^dies/.test(determiner))return 'Demonstrativartikel: dies-';
+ if(/^mein/.test(determiner))return 'Possessivartikel: mein-';
+ if(/^dein/.test(determiner))return 'Possessivartikel: dein-';
+ if(/^sein/.test(determiner))return 'Possessivartikel: sein-';
+ if(/^ihr/.test(determiner))return 'Possessivartikel: ihr-';
+ if(/^unser/.test(determiner))return 'Possessivartikel: unser-';
+ if(/^euer/.test(determiner))return 'Possessivartikel: euer-';
  if(/^(alle|allen|aller|jed|kein|mehrer|zahlreich)/.test(determiner))return 'Artikelwort: '+determiner;
  return 'ohne Artikel';
 };
-const withCue=(prompt,phrase)=>prompt.replace(/\.$/,` (Stichwort: ${cueFromPhrase(phrase)} · ${articleType(phrase)}).`);
+const withCue=(prompt,phrase)=>prompt.replace(/\.$/,` (Vorgegebene Wörter: ${cueFromPhrase(phrase)} · ${articleType(phrase)}).`);
 const generate=(category,configs,target)=>{
  const generated=[];
  for(const config of configs){

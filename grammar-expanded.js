@@ -68,6 +68,81 @@ const topics={
 <tr><td>Akkusativ</td><td>einen / keinen</td><td>eine / keine</td><td>ein / kein</td></tr>
 <tr><td>Dativ</td><td>einem / keinem</td><td>einer / keiner</td><td>einem / keinem</td></tr>
 <tr><td>Genitiv</td><td>eines / keines</td><td>einer / keiner</td><td>eines / keines</td></tr></table>
+<h3>Possessivartikel: alle Personen</h3>
+<p>Der Possessivartikel richtet sich zuerst nach der Person, die etwas besitzt. Seine Endung richtet sich anschließend nach <b>Kasus, Genus und Numerus des folgenden Nomens</b>. Possessivartikel werden wie <i>ein</i> dekliniert.</p>
+<table><tr><th>Person</th><th>Grundform</th><th>Beispiel</th></tr>
+<tr><td>ich</td><td><b>mein-</b></td><td>mein Projekt</td></tr>
+<tr><td>du</td><td><b>dein-</b></td><td>dein Projekt</td></tr>
+<tr><td>er</td><td><b>sein-</b></td><td>sein Projekt</td></tr>
+<tr><td>sie (Singular)</td><td><b>ihr-</b></td><td>ihr Projekt</td></tr>
+<tr><td>es</td><td><b>sein-</b></td><td>sein Projekt</td></tr>
+<tr><td>wir</td><td><b>unser-</b></td><td>unser Projekt</td></tr>
+<tr><td>ihr</td><td><b>euer-</b></td><td>euer Projekt</td></tr>
+<tr><td>sie (Plural)</td><td><b>ihr-</b></td><td>ihr Projekt</td></tr>
+<tr><td>Sie (höflich)</td><td><b>Ihr-</b></td><td>Ihr Projekt</td></tr></table>
+
+<h3>Nominativ</h3>
+<table><tr><th>Person</th><th>Maskulin</th><th>Feminin</th><th>Neutrum</th><th>Plural</th></tr>
+<tr><td>ich</td><td>mein</td><td>meine</td><td>mein</td><td>meine</td></tr>
+<tr><td>du</td><td>dein</td><td>deine</td><td>dein</td><td>deine</td></tr>
+<tr><td>er</td><td>sein</td><td>seine</td><td>sein</td><td>seine</td></tr>
+<tr><td>sie</td><td>ihr</td><td>ihre</td><td>ihr</td><td>ihre</td></tr>
+<tr><td>es</td><td>sein</td><td>seine</td><td>sein</td><td>seine</td></tr>
+<tr><td>wir</td><td>unser</td><td>unsere</td><td>unser</td><td>unsere</td></tr>
+<tr><td>ihr</td><td>euer</td><td>eure</td><td>euer</td><td>eure</td></tr>
+<tr><td>sie</td><td>ihr</td><td>ihre</td><td>ihr</td><td>ihre</td></tr>
+<tr><td>Sie</td><td>Ihr</td><td>Ihre</td><td>Ihr</td><td>Ihre</td></tr></table>
+
+<h3>Akkusativ</h3>
+<table><tr><th>Person</th><th>Maskulin</th><th>Feminin</th><th>Neutrum</th><th>Plural</th></tr>
+<tr><td>ich</td><td>meinen</td><td>meine</td><td>mein</td><td>meine</td></tr>
+<tr><td>du</td><td>deinen</td><td>deine</td><td>dein</td><td>deine</td></tr>
+<tr><td>er</td><td>seinen</td><td>seine</td><td>sein</td><td>seine</td></tr>
+<tr><td>sie</td><td>ihren</td><td>ihre</td><td>ihr</td><td>ihre</td></tr>
+<tr><td>es</td><td>seinen</td><td>seine</td><td>sein</td><td>seine</td></tr>
+<tr><td>wir</td><td>unseren</td><td>unsere</td><td>unser</td><td>unsere</td></tr>
+<tr><td>ihr</td><td>euren</td><td>eure</td><td>euer</td><td>eure</td></tr>
+<tr><td>sie</td><td>ihren</td><td>ihre</td><td>ihr</td><td>ihre</td></tr>
+<tr><td>Sie</td><td>Ihren</td><td>Ihre</td><td>Ihr</td><td>Ihre</td></tr></table>
+
+<h3>Dativ</h3>
+<table><tr><th>Person</th><th>Maskulin</th><th>Feminin</th><th>Neutrum</th><th>Plural</th></tr>
+<tr><td>ich</td><td>meinem</td><td>meiner</td><td>meinem</td><td>meinen</td></tr>
+<tr><td>du</td><td>deinem</td><td>deiner</td><td>deinem</td><td>deinen</td></tr>
+<tr><td>er</td><td>seinem</td><td>seiner</td><td>seinem</td><td>seinen</td></tr>
+<tr><td>sie</td><td>ihrem</td><td>ihrer</td><td>ihrem</td><td>ihren</td></tr>
+<tr><td>es</td><td>seinem</td><td>seiner</td><td>seinem</td><td>seinen</td></tr>
+<tr><td>wir</td><td>unserem</td><td>unserer</td><td>unserem</td><td>unseren</td></tr>
+<tr><td>ihr</td><td>eurem</td><td>eurer</td><td>eurem</td><td>euren</td></tr>
+<tr><td>sie</td><td>ihrem</td><td>ihrer</td><td>ihrem</td><td>ihren</td></tr>
+<tr><td>Sie</td><td>Ihrem</td><td>Ihrer</td><td>Ihrem</td><td>Ihren</td></tr></table>
+<p><b>Dativ Plural:</b> Das Nomen erhält zusätzlich meistens <b>-n</b>: mit meinen Kollegen, mit unseren Kindern.</p>
+
+<h3>Genitiv</h3>
+<table><tr><th>Person</th><th>Maskulin</th><th>Feminin</th><th>Neutrum</th><th>Plural</th></tr>
+<tr><td>ich</td><td>meines</td><td>meiner</td><td>meines</td><td>meiner</td></tr>
+<tr><td>du</td><td>deines</td><td>deiner</td><td>deines</td><td>deiner</td></tr>
+<tr><td>er</td><td>seines</td><td>seiner</td><td>seines</td><td>seiner</td></tr>
+<tr><td>sie</td><td>ihres</td><td>ihrer</td><td>ihres</td><td>ihrer</td></tr>
+<tr><td>es</td><td>seines</td><td>seiner</td><td>seines</td><td>seiner</td></tr>
+<tr><td>wir</td><td>unseres</td><td>unserer</td><td>unseres</td><td>unserer</td></tr>
+<tr><td>ihr</td><td>eures</td><td>eurer</td><td>eures</td><td>eurer</td></tr>
+<tr><td>sie</td><td>ihres</td><td>ihrer</td><td>ihres</td><td>ihrer</td></tr>
+<tr><td>Sie</td><td>Ihres</td><td>Ihrer</td><td>Ihres</td><td>Ihrer</td></tr></table>
+
+<h3>Beispiele mit allen Personen</h3>
+<ul>
+<li>Ich spreche mit <b>meinem Kollegen</b>.</li>
+<li>Du sprichst mit <b>deiner Kollegin</b>.</li>
+<li>Er arbeitet an <b>seinem Projekt</b>.</li>
+<li>Sie präsentiert <b>ihre Ergebnisse</b>.</li>
+<li>Das Unternehmen ändert <b>seine Strategie</b>.</li>
+<li>Wir sprechen mit <b>unseren Kunden</b>.</li>
+<li>Ihr besprecht <b>eure Aufgaben</b>.</li>
+<li>Sie präsentieren <b>ihre Ergebnisse</b>.</li>
+<li>Sie besprechen <b>Ihre Entscheidung</b>. (höfliche Anrede)</li>
+</ul>
+<p><b>Besonderheit bei „euer“:</b> Sobald eine Endung hinzukommt, fällt meistens das zweite <i>e</i> weg: euer, aber <b>eure, euren, eurem, eurer, eures</b>.</p>
 <h3>Wann welcher Artikel?</h3>
 <ul><li><b>bestimmt:</b> etwas ist bekannt oder wurde bereits erwähnt – Ich habe einen Bericht gelesen. <b>Der Bericht</b> war hilfreich.</li><li><b>unbestimmt:</b> etwas wird erstmals genannt – Ich brauche <b>einen Termin</b>.</li><li><b>kein Artikel:</b> allgemeine Begriffe, Berufe nach <i>sein</i>, Stoffe oder Plural unbestimmt – Sie ist <b>Ingenieurin</b>. Wir brauchen <b>Informationen</b>.</li></ul>
 <h3>Genus-Hinweise</h3>

@@ -8,7 +8,7 @@
     return values
   };
   const add=(category,prompt,options,answer,explanation)=>{
-    const id=`case-natural-v2-${exercises.length+1}`;
+    const id=`case-natural-v3-${exercises.length+1}`;
     exercises.push({id,category,prompt,options:shuffledOptions(options,`${id}|${category}|${prompt}`),answer,explanation})
   };
   const nouns=[
@@ -76,33 +76,60 @@ const caseRule=direction?'Die neue Zielposition verlangt hier den Akkusativ':'Di
 const coordination=second?` Beide Bezugspunkte stehen im selben Fall: ${answer} ${scene[1]} und ${bareArticles[kase][scene[5][0]]} ${scene[5][1]}.`:'';
 add('Wo oder wohin?',prompt,[answer,'den','dem','der','die','das'],answer,`${caseRule}: ${scene[2]} ${answer} ${scene[1]}${second}.${coordination}`);
   }
-  const transferVerbs=['gebe','schicke','zeige','erkläre','bringe','empfehle','leihe','sende','überreiche','verkaufe'];
-  const transferObjects={
-    gebe:[['m','Bericht'],['n','Dokument'],['m','Schlüssel']],
-    schicke:[['f','E-Mail'],['m','Bericht'],['n','Dokument'],['f','Rechnung']],
-    zeige:[['m','Bericht'],['m','Plan'],['n','Ergebnis'],['n','Dokument']],
-    erkläre:[['m','Plan'],['m','Vorschlag'],['n','Ergebnis']],
-    bringe:[['m','Schlüssel'],['n','Dokument'],['m','Bericht']],
-    empfehle:[['n','Buch'],['n','Angebot'],['m','Vorschlag']],
-    leihe:[['m','Schlüssel'],['n','Buch']],
-    sende:[['f','E-Mail'],['m','Bericht'],['f','Rechnung']],
-    überreiche:[['m','Bericht'],['n','Dokument'],['m','Schlüssel'],['f','Rechnung']],
-    verkaufe:[['n','Fahrrad'],['n','Buch']]
-  };
+  const transferFrames=[
+    ['gebe heute',[['m','Bericht'],['n','Dokument'],['m','Schlüssel'],['f','Information']]],
+    ['schicke morgen',[['f','E-Mail'],['m','Bericht'],['n','Dokument'],['f','Rechnung']]],
+    ['zeige gleich',[['m','Plan'],['n','Ergebnis'],['n','Dokument'],['f','Auswertung']]],
+    ['erkläre ausführlich',[['m','Vorschlag'],['n','Ergebnis'],['f','Änderung'],['n','Verfahren']]],
+    ['bringe später',[['m','Schlüssel'],['n','Dokument'],['m','Bericht'],['f','Unterlage']]],
+    ['empfehle gern',[['n','Buch'],['n','Angebot'],['m','Vorschlag'],['f','Lösung']]],
+    ['leihe für das Wochenende',[['m','Schlüssel'],['n','Buch'],['n','Fahrrad'],['f','Bohrmaschine']]],
+    ['sende nach dem Gespräch',[['f','E-Mail'],['m','Bericht'],['f','Rechnung'],['n','Protokoll']]],
+    ['überreiche persönlich',[['m','Bericht'],['n','Dokument'],['m','Schlüssel'],['f','Urkunde']]],
+    ['verkaufe günstig',[['n','Fahrrad'],['n','Buch'],['m','Computer'],['f','Lampe']]],
+    ['biete zur Unterstützung',[['f','Hilfe'],['f','Beratung'],['n','Gespräch'],['f','Lösung']]],
+    ['verspreche für morgen',[['f','Antwort'],['f','Rückmeldung'],['n','Ergebnis'],['f','Entscheidung']]],
+    ['erzähle später',[['f','Geschichte'],['n','Erlebnis'],['f','Neuigkeit'],['n','Beispiel']]],
+    ['schreibe heute noch',[['f','Nachricht'],['f','E-Mail'],['f','Antwort'],['n','Protokoll']]],
+    ['lese im Meeting vor',[['m','Bericht'],['n','Protokoll'],['f','Nachricht'],['n','Ergebnis']]],
+    ['leite sofort weiter',[['f','E-Mail'],['m','Bericht'],['f','Anfrage'],['n','Dokument']]],
+    ['präsentiere morgen',[['n','Ergebnis'],['m','Plan'],['f','Lösung'],['n','Konzept']]],
+    ['erstatte vollständig',[['m','Betrag'],['f','Gebühr'],['f','Anzahlung'],['n','Geld']]]
+  ];
   for(let i=0;i<200;i++){
-    const recipient=adultPeople[(i*5)%adultPeople.length],verb=transferVerbs[i%transferVerbs.length],choices=transferObjects[verb],object=choices[Math.floor(i/transferVerbs.length)%choices.length];
+    const recipient=adultPeople[(i*5)%adultPeople.length],frame=transferFrames[i%transferFrames.length],objects=frame[1],object=objects[Math.floor(i/transferFrames.length)%objects.length];
     const dat=`${bareArticles.dat[recipient[0]]} ${nounForm(recipient,'dat')}`,acc=`${bareArticles.acc[object[0]]} ${object[1]}`,answer=`${dat} ${acc}`;
-    add('Zwei Objekte',`Ich ${verb} ___ . Wähle Dativperson + Akkusativsache.`,[answer,`${bareArticles.acc[recipient[0]]} ${nounForm(recipient,'acc')} ${bareArticles.dat[object[0]]} ${object[1]}`,`${acc} ${bareArticles.acc[recipient[0]]} ${nounForm(recipient,'acc')}`,`${dat} ${bareArticles.dat[object[0]]} ${object[1]}`],answer,`Die Person steht im Dativ (${dat}); die Sache steht im Akkusativ (${acc}).`);
+    const wrongPerson=`${bareArticles.acc[recipient[0]]} ${nounForm(recipient,'acc')}`,wrongThing=`${bareArticles.dat[object[0]]} ${object[1]}`;
+    add('Zwei Objekte',`Ich ${frame[0]} ___ . Ergänze zuerst die Person und danach die Sache.`,[answer,`${wrongPerson} ${acc}`,`${dat} ${wrongThing}`,`${acc} ${wrongPerson}`],answer,`Wer etwas erhält, steht im Dativ: ${dat}. Die übertragene Sache steht im Akkusativ: ${acc}.`);
   }
+
+  const correctionDative=[
+    ['helfen','Ich helfe',''],['danken','Ich danke',''],['folgen','Ich folge',''],['vertrauen','Ich vertraue',''],['gehören','Das gehört',''],['gratulieren','Ich gratuliere',''],['antworten','Ich antworte',''],['zuhören','Ich höre',' zu'],['widersprechen','Ich widerspreche',''],['begegnen','Ich begegne',''],['fehlen','Das fehlt',''],['zustimmen','Ich stimme',' zu']
+  ];
+  const correctionAccusative=[
+    ['sehen','Ich sehe',''],['besuchen','Ich besuche',''],['fragen','Ich frage',''],['anrufen','Ich rufe',' an'],['treffen','Ich treffe',''],['unterstützen','Ich unterstütze',''],['brauchen','Ich brauche',''],['kennen','Ich kenne',''],['verstehen','Ich verstehe',''],['informieren','Ich informiere',''],['beobachten','Ich beobachte','']
+  ];
   for(let i=0;i<140;i++){
-    const dat=i%2===0,noun=people[(i*13)%people.length],kase=dat?'dat':'acc',correctArticle=bareArticles[kase][noun[0]],wrongArticle=bareArticles[dat?'acc':'dat'][noun[0]],form=nounForm(noun,kase);
-    const correct=dat?`Ich helfe ${correctArticle} ${form}.`:`Ich besuche ${correctArticle} ${form}.`;const wrong=dat?`Ich helfe ${wrongArticle} ${form}.`:`Ich besuche ${wrongArticle} ${form}.`;
-    add('Fehler korrigieren',`Korrigiere den Kasus (gemeint ist genau eine Person): „${wrong}“`,[correct,wrong,dat?`Ich helfe die ${form}.`:`Ich besuche dem ${form}.`],correct,dat?`„helfen“ verlangt den Dativ. Deshalb: ${correct}`:`„besuchen“ verlangt den Akkusativ. Deshalb: ${correct}`);
+    const dat=i%2===0,list=dat?correctionDative:correctionAccusative,verb=list[Math.floor(i/2)%list.length],noun=adultPeople[(i*13)%adultPeople.length],kase=dat?'dat':'acc';
+    const correctArticle=bareArticles[kase][noun[0]],wrongArticle=bareArticles[dat?'acc':'dat'][noun[0]],form=nounForm(noun,kase);
+    const correct=`${verb[1]} ${correctArticle} ${form}${verb[2]}.`,wrong=`${verb[1]} ${wrongArticle} ${form}${verb[2]}.`;
+    const distractorArticle=noun[0]==='m'?'die':'den';
+    const distractor=`${verb[1]} ${distractorArticle} ${form}${verb[2]}.`;
+    add('Fehler korrigieren',`Korrigiere den Kasusfehler: „${wrong}“`,[correct,wrong,distractor],correct,`„${verb[0]}“ verlangt ${dat?'den Dativ':'den Akkusativ'}. Richtig ist: ${correct}`);
   }
-  const dialogueVerbs=[['geschickt','schicke'],['gezeigt','zeige'],['erklärt','erkläre'],['gebracht','bringe'],['empfohlen','empfehle'],['gegeben','gebe'],['geliehen','leihe']];
+
+  const dativeDialogues=[
+    ['Wem hast du geholfen?','Ich habe','geholfen.'],['Wem hast du gedankt?','Ich habe','gedankt.'],['Wem hast du geantwortet?','Ich habe','geantwortet.'],['Wem hast du zugehört?','Ich habe','zugehört.'],['Wem hast du widersprochen?','Ich habe','widersprochen.'],['Wem hast du vertraut?','Ich habe','vertraut.'],['Wem hast du gratuliert?','Ich habe','gratuliert.'],['Wem hast du zugestimmt?','Ich habe','zugestimmt.'],['Wem bist du begegnet?','Ich bin','begegnet.'],['Wem bist du gefolgt?','Ich bin','gefolgt.']
+  ];
+  const accusativeDialogues=[
+    ['Wen hast du gesehen?','Ich habe','gesehen.'],['Wen hast du besucht?','Ich habe','besucht.'],['Wen hast du gefragt?','Ich habe','gefragt.'],['Wen hast du angerufen?','Ich habe','angerufen.'],['Wen hast du getroffen?','Ich habe','getroffen.'],['Wen hast du unterstützt?','Ich habe','unterstützt.'],['Wen hast du gebraucht?','Ich habe','gebraucht.'],['Wen hast du informiert?','Ich habe','informiert.'],['Wen hast du beobachtet?','Ich habe','beobachtet.'],['Wen hast du verstanden?','Ich habe','verstanden.']
+  ];
   for(let i=0;i<140;i++){
-    const noun=adultPeople[(i*17)%adultPeople.length],verb=dialogueVerbs[i%dialogueVerbs.length],present=verb[1],choices=transferObjects[present]||[['n','Dokument']],object=choices[Math.floor(i/dialogueVerbs.length)%choices.length];const dat=`${bareArticles.dat[noun[0]]} ${nounForm(noun,'dat')}`,acc=`${bareArticles.acc[object[0]]} ${object[1]}`;const answer=`${dat} ${acc}`;
-    add('Alltagsdialoge',`A: Wem hast du etwas ${verb[0]}? B: Ich habe ___ ${verb[0]}.`,[answer,`${bareArticles.acc[noun[0]]} ${nounForm(noun,'acc')} ${acc}`,`${dat} ${bareArticles.dat[object[0]]} ${object[1]}`,`${acc} ${bareArticles.acc[noun[0]]} ${nounForm(noun,'acc')}`],answer,`Auf „wem?“ folgt der Dativ (${dat}); die übertragene Sache steht im Akkusativ (${acc}).`);
+    const dat=i%2===0,list=dat?dativeDialogues:accusativeDialogues,dialogue=list[Math.floor(i/2)%list.length],noun=adultPeople[(i*17)%adultPeople.length],kase=dat?'dat':'acc';
+    const correctObject=`${bareArticles[kase][noun[0]]} ${nounForm(noun,kase)}`,wrongCase=dat?'acc':'dat',wrongObject=`${bareArticles[wrongCase][noun[0]]} ${nounForm(noun,wrongCase)}`;
+    const answer=`${dialogue[1]} ${correctObject} ${dialogue[2]}`;
+    const wrong=`${dialogue[1]} ${wrongObject} ${dialogue[2]}`;
+    add('Alltagsdialoge',`A: ${dialogue[0]} B: ___`,[answer,wrong,`${correctObject} ${dialogue[2]}`,`${dialogue[1]} die ${nounForm(noun,kase)} ${dialogue[2]}`],answer,`Die Frage „${dat?'wem':'wen'}?“ verlangt ${dat?'den Dativ':'den Akkusativ'}: ${correctObject}.`);
   }
   window.GERMAN_CASE_EXERCISES=exercises.slice(0,1400);
 })();

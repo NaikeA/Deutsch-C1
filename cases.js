@@ -8,7 +8,7 @@
     return values
   };
   const add=(category,prompt,options,answer,explanation)=>{
-    const id=`case-natural-v3-${exercises.length+1}`;
+    const id=`case-natural-v4-${exercises.length+1}`;
     exercises.push({id,category,prompt,options:shuffledOptions(options,`${id}|${category}|${prompt}`),answer,explanation})
   };
   const nouns=[
@@ -27,7 +27,7 @@ const thingAdjectives={Projekt:['neu','interessant','wichtig','geplant'],Team:['
     const noun=articleNouns[i%articleNouns.length],adj=(thingAdjectives[noun[1]]||personAdjectives)[Math.floor(i/articleNouns.length)%4],kase=i%2?'dat':'acc',kind=Math.floor(i/2)%2?'ind':'def';
     const answer=phrase(noun,adj,kind,kase);const otherCase=kase==='acc'?'dat':'acc';const altKind=kind==='def'?'ind':'def';
     const englishArticle=kind==='def'?'the':/^[aeiou]/i.test(noun[2])?'an':'a';
-    const isPerson=people.includes(noun);const prompt=(kase==='acc'?(isPerson?'Ich treffe heute ___.':'Ich sehe mir heute ___ an.'):(isPerson?'Ich spreche heute mit ___.':'Ich beschäftige mich heute mit ___.'))+` Übersetze die Nominalgruppe mit ${kind==='def'?'bestimmtem':'unbestimmtem'} Artikel: (${englishArticle} ${noun[2]}).`;
+    const isPerson=people.includes(noun);const prompt=(kase==='acc'?(isPerson?'Ich treffe heute ___.':'Ich sehe mir heute ___ an.'):(isPerson?'Ich spreche heute mit ___.':'Ich beschäftige mich heute mit ___.'))+` Bilde die Nominalgruppe mit ${kind==='def'?'bestimmtem':'unbestimmtem'} Artikel. Adjektiv: „${adj}“; Nomen: „${noun[1]}“ (${englishArticle} ${noun[2]}).`;
     const articleHint=kind==='def'?'„the“ verlangt hier den bestimmten Artikel.':'„a/an“ verlangt hier den unbestimmten Artikel.';
     add('Artikel & Endungen',prompt,[answer,phrase(noun,adj,kind,otherCase),phrase(noun,adj,altKind,kase),phrase(noun,adj,altKind,otherCase)],answer,kase==='dat'?`Die Präposition „mit“ verlangt den Dativ. ${articleHint} Richtig ist: ${answer}.`:`„treffen“ und „sich etwas ansehen“ verlangen hier ein Akkusativobjekt. ${articleHint} Richtig ist: ${answer}.`);
   }
@@ -41,9 +41,30 @@ const thingAdjectives={Projekt:['neu','interessant','wichtig','geplant'],Team:['
     add('Verben & Kasus',prompt,opts,answer,dat?`„${verb[0]}“ verlangt den Dativ: ${answer}.`:`„${verb[0]}“ verlangt den Akkusativ: ${answer}.`);
   }
   const pronouns={acc:{m:'ihn',f:'sie',n:'es'},dat:{m:'ihm',f:'ihr',n:'ihm'}};
+  const pronounFrames={
+    dat:[
+      ['helfen',object=>`Ich helfe ${object} bei der Vorbereitung.`],
+      ['danken',object=>`Ich danke ${object} für die schnelle Antwort.`],
+      ['antworten',object=>`Ich antworte ${object} noch heute.`],
+      ['zuhören',object=>`Ich höre ${object} aufmerksam zu.`],
+      ['vertrauen',object=>`Ich vertraue ${object} in dieser Angelegenheit.`],
+      ['widersprechen',object=>`Ich widerspreche ${object} höflich.`]
+    ],
+    acc:[
+      ['sehen',object=>`Ich sehe ${object} am Eingang.`],
+      ['besuchen',object=>`Ich besuche ${object} am Wochenende.`],
+      ['fragen',object=>`Ich frage ${object} nach dem Termin.`],
+      ['anrufen',object=>`Ich rufe ${object} am Nachmittag an.`],
+      ['treffen',object=>`Ich treffe ${object} nach der Arbeit.`],
+      ['unterstützen',object=>`Ich unterstütze ${object} bei dem Projekt.`]
+    ]
+  };
   for(let i=0;i<200;i++){
-    const noun=adultPeople[(i*11)%adultPeople.length],kase=i%2?'dat':'acc';const article=bareArticles[kase][noun[0]],form=nounForm(noun,kase);const answer=pronouns[kase][noun[0]];const sentence=kase==='dat'?`Ich helfe ${article} ${form}.`:`Ich sehe ${article} ${form}.`;
-    add('Pronomen',`${sentence} Ersetze „${article} ${form}“ durch ein Pronomen.`,['ihn','ihm','sie','ihr','es'].sort(()=>.5-(i%3)/3),answer,kase==='dat'?`Das Dativpronomen für dieses Nomen ist „${answer}“: Ich helfe ${answer}.`:`Das Akkusativpronomen ist „${answer}“: Ich sehe ${answer}.`);
+    const noun=adultPeople[(i*11)%adultPeople.length],kase=i%2?'dat':'acc';
+    const article=bareArticles[kase][noun[0]],form=nounForm(noun,kase),object=`${article} ${form}`;
+    const answer=pronouns[kase][noun[0]],frame=pronounFrames[kase][Math.floor(i/2)%pronounFrames[kase].length];
+    const sentence=frame[1](object),solution=frame[1](answer);
+    add('Pronomen',`${sentence} Ersetze „${object}“ durch ein Pronomen.`,['ihn','ihm','sie','ihr','es'],answer,`„${frame[0]}“ verlangt hier den ${kase==='dat'?'Dativ':'Akkusativ'}. Richtig ist: ${solution}`);
   }
   // Curated scene pairs: prepositions are never combined blindly with places.
   const scenes=[

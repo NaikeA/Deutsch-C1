@@ -2,6 +2,7 @@ const KEY='deutsch-c1-tracker-v1';
 const WRITING_KEY='deutsch-c1-writing-v1';
 const VERB_KEY='deutsch-c1-verbs-v1';
 const VERB_BOOKMARKS_KEY='deutsch-c1-verb-bookmarks-v1';
+const VERB_BOOKMARK_COUNT_KEY='deutsch-c1-verb-bookmark-count-v1';
 const VERB_COUNT_KEY='deutsch-c1-verb-count-v1';
 const ARTICLE_KEY='deutsch-c1-articles-v1';
 const ARTICLE_MISTAKES_KEY='deutsch-c1-article-mistakes-v1';
@@ -314,7 +315,7 @@ async function speakPractice(text,button){
 }
 const verbs=window.GERMAN_VERBS;
 const verbMeanings=window.GERMAN_VERB_MEANINGS||{};
-let verbPerson=0;const verbDate=document.querySelector('#verbDate');const verbCount=document.querySelector('#verbCount');const verbState=JSON.parse(localStorage.getItem(VERB_KEY)||'{}');verbDate.value=day;verbCount.value=localStorage.getItem(VERB_COUNT_KEY)||'2';
+let verbPerson=0;const verbDate=document.querySelector('#verbDate');const verbCount=document.querySelector('#verbCount');const bookmarkVerbCount=document.querySelector('#bookmarkVerbCount');const bookmarkVerbCountPicker=document.querySelector('#bookmarkVerbCountPicker');const verbState=JSON.parse(localStorage.getItem(VERB_KEY)||'{}');verbDate.value=day;verbCount.value=localStorage.getItem(VERB_COUNT_KEY)||'2';bookmarkVerbCount.value=localStorage.getItem(VERB_BOOKMARK_COUNT_KEY)||'all';
 let verbBookmarks=new Set();
 try{verbBookmarks=new Set(JSON.parse(localStorage.getItem(VERB_BOOKMARKS_KEY)||'[]'))}catch(error){verbBookmarks=new Set()}
 let weeklyVerbReview=false;
@@ -325,7 +326,11 @@ const verbStorageKey=()=>bookmarkedVerbReview?`${verbDate.value}-bookmarks-${ver
 const norm=s=>s.trim().toLocaleLowerCase('de-DE').replace(/\s+/g,' ');
 function saveVerbBookmarks(){localStorage.setItem(VERB_BOOKMARKS_KEY,JSON.stringify([...verbBookmarks]))}
 function dailyVerbs(){
-  if(bookmarkedVerbReview)return verbs.filter(verb=>verbBookmarks.has(verb.v));
+  if(bookmarkedVerbReview){
+    const bookmarked=verbs.filter(verb=>verbBookmarks.has(verb.v));
+    const requested=bookmarkVerbCount.value==='all'?bookmarked.length:Math.max(2,Math.min(10,+bookmarkVerbCount.value||2));
+    return bookmarked.slice(0,requested)
+  }
   const n=Math.floor(new Date(verbExerciseDate()+'T12:00:00Z').getTime()/86400000);
   const start=(((n%verbs.length)+verbs.length)%verbs.length);
   return Array.from({length:+verbCount.value},(_,i)=>verbs[(start*5+i)%verbs.length])
@@ -466,9 +471,13 @@ function updateVerbPracticeModeUi(){
   const status=document.querySelector('#weeklyVerbReviewStatus');
   weeklyButton.classList.toggle('active',weeklyVerbReview);
   bookmarkButton.classList.toggle('active',bookmarkedVerbReview);
+  bookmarkVerbCountPicker.hidden=!bookmarkedVerbReview;
   weeklyButton.textContent=weeklyVerbReview?'Heutige Verben anzeigen':'↶ Letzte Woche wiederholen';
   bookmarkButton.textContent=bookmarkedVerbReview?'Heutige Verben anzeigen':`★ Gemerkte Verben üben (${verbBookmarks.size})`;
-  if(bookmarkedVerbReview)status.textContent=`${verbBookmarks.size} gemerkte${verbBookmarks.size===1?'s Verb':' Verben'}`;
+  if(bookmarkedVerbReview){
+    const shown=bookmarkVerbCount.value==='all'?verbBookmarks.size:Math.min(verbBookmarks.size,+bookmarkVerbCount.value||2);
+    status.textContent=bookmarkVerbCount.value==='all'?`Alle ${verbBookmarks.size} gemerkten Verben`:`${shown} von ${verbBookmarks.size} gemerkten Verben`;
+  }
   else if(weeklyVerbReview)status.textContent=`Wiederholung vom ${formatEntryDate(verbExerciseDate())}`;
   else status.textContent='Aktuelle Tagesverben'
 }
@@ -493,6 +502,7 @@ verbDate.addEventListener('change',()=>{
   renderVerbs()
 });
 verbCount.addEventListener('change',()=>{localStorage.setItem(VERB_COUNT_KEY,verbCount.value);renderVerbs()});
+bookmarkVerbCount.addEventListener('change',()=>{localStorage.setItem(VERB_BOOKMARK_COUNT_KEY,bookmarkVerbCount.value);if(bookmarkedVerbReview)renderVerbs()});
 document.querySelector('#clearVerbs').addEventListener('click',()=>{delete verbState[verbStorageKey()];localStorage.setItem(VERB_KEY,JSON.stringify(verbState));renderVerbs()});
 updateVerbPracticeModeUi();
 renderVerbs();

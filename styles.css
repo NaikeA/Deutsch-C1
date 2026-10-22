@@ -148,6 +148,9 @@ footer a{color:var(--green)}.article-plural{display:block;min-height:16px;color:
 .weekly-review-bar button{border:1px solid #0a7c5b;border-radius:999px;padding:9px 14px;background:#fff;color:#08684d;font-weight:800;cursor:pointer}
 .weekly-review-bar button:hover,.weekly-review-bar button.active{background:#0a7c5b;color:#fff}
 .weekly-review-bar span{color:#536a60;font-size:.9rem;font-weight:700}
+.bookmark-count-picker{display:flex;align-items:center;gap:8px;color:#31584a;font-size:.9rem;font-weight:800}
+.bookmark-count-picker[hidden]{display:none}
+.bookmark-count-picker select{min-width:76px;border:1px solid #a9c3b5;border-radius:9px;padding:8px 28px 8px 10px;background:#fff;color:#083d2f;font:inherit;cursor:pointer}
 @media(max-width:600px){.weekly-review-bar{align-items:stretch;flex-direction:column}.weekly-review-bar button{width:100%}}
 
 .daily-defaults{margin:0 0 28px;padding:26px 28px;background:linear-gradient(135deg,#f7fff2 0%,#eef8f3 100%);border:1px solid #cfe0d6}

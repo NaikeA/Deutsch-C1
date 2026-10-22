@@ -12,7 +12,7 @@
   <title>Deutsch auf C1</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="app-icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=41">
+  <link rel="stylesheet" href="styles.css?v=42">
   <link rel="stylesheet" href="verb-count.css?v=16">
   <link rel="stylesheet" href="listening.css?v=19">
   <link rel="stylesheet" href="playback.css?v=24">
@@ -254,6 +254,14 @@
       <div class="weekly-review-bar">
         <button type="button" id="reviewLastWeekVerbs">↶ Letzte Woche wiederholen</button>
         <button type="button" id="reviewBookmarkedVerbs">★ Gemerkte Verben üben (0)</button>
+        <label id="bookmarkVerbCountPicker" class="bookmark-count-picker" for="bookmarkVerbCount" hidden>Anzahl
+          <select id="bookmarkVerbCount" aria-label="Anzahl gemerkter Verben">
+            <option value="all" selected>Alle</option>
+            <option value="2">2</option><option value="3">3</option><option value="4">4</option>
+            <option value="5">5</option><option value="6">6</option><option value="7">7</option>
+            <option value="8">8</option><option value="9">9</option><option value="10">10</option>
+          </select>
+        </label>
         <span id="weeklyVerbReviewStatus">Aktuelle Tagesverben</span>
       </div>
       <div id="verbCards" class="verb-cards"></div>
@@ -714,7 +722,7 @@
   <script src="declension.js?v=3"></script>
   <script src="prepositions.js?v=6"></script>
   <script src="grammar-expanded.js?v=2"></script>
-  <script src="app.js?v=81"></script>
+  <script src="app.js?v=82"></script>
   <script src="verb-review.js?v=3"></script>
   <script src="daily-defaults.js?v=2"></script>
 </body>

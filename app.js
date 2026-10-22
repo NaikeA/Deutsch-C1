@@ -318,6 +318,15 @@ const verbMeanings=window.GERMAN_VERB_MEANINGS||{};
 let verbPerson=0;const verbDate=document.querySelector('#verbDate');const verbCount=document.querySelector('#verbCount');const bookmarkVerbCount=document.querySelector('#bookmarkVerbCount');const bookmarkVerbCountPicker=document.querySelector('#bookmarkVerbCountPicker');const verbState=JSON.parse(localStorage.getItem(VERB_KEY)||'{}');verbDate.value=day;verbCount.value=localStorage.getItem(VERB_COUNT_KEY)||'2';bookmarkVerbCount.value=localStorage.getItem(VERB_BOOKMARK_COUNT_KEY)||'all';
 let verbBookmarks=new Set();
 try{verbBookmarks=new Set(JSON.parse(localStorage.getItem(VERB_BOOKMARKS_KEY)||'[]'))}catch(error){verbBookmarks=new Set()}
+const verbNames=new Set(verbs.map(verb=>verb.v));
+const legacyVerbContext=/\s+\((?:im Alltag|im Beruf|im Gespräch|im Team|bei Terminen|unterwegs)\)$/;
+verbBookmarks=new Set([...verbBookmarks].map(name=>{
+  if(verbNames.has(name))return name;
+  const migrated=String(name).replace(legacyVerbContext,'');
+  return verbNames.has(migrated)?migrated:null
+}).filter(Boolean));
+localStorage.setItem(VERB_BOOKMARKS_KEY,JSON.stringify([...verbBookmarks]));
+const validBookmarkedVerbs=()=>verbs.filter(verb=>verbBookmarks.has(verb.v));
 let weeklyVerbReview=false;
 let bookmarkedVerbReview=false;
 const shiftPracticeDate=(date,days)=>{const value=new Date(date+'T12:00:00Z');value.setUTCDate(value.getUTCDate()+days);return value.toISOString().slice(0,10)};
@@ -327,7 +336,7 @@ const norm=s=>s.trim().toLocaleLowerCase('de-DE').replace(/\s+/g,' ');
 function saveVerbBookmarks(){localStorage.setItem(VERB_BOOKMARKS_KEY,JSON.stringify([...verbBookmarks]))}
 function dailyVerbs(){
   if(bookmarkedVerbReview){
-    const bookmarked=verbs.filter(verb=>verbBookmarks.has(verb.v));
+    const bookmarked=validBookmarkedVerbs();
     const requested=bookmarkVerbCount.value==='all'?bookmarked.length:Math.max(2,Math.min(10,+bookmarkVerbCount.value||2));
     return bookmarked.slice(0,requested)
   }
@@ -473,10 +482,11 @@ function updateVerbPracticeModeUi(){
   bookmarkButton.classList.toggle('active',bookmarkedVerbReview);
   bookmarkVerbCountPicker.hidden=!bookmarkedVerbReview;
   weeklyButton.textContent=weeklyVerbReview?'Heutige Verben anzeigen':'↶ Letzte Woche wiederholen';
-  bookmarkButton.textContent=bookmarkedVerbReview?'Heutige Verben anzeigen':`★ Gemerkte Verben üben (${verbBookmarks.size})`;
+  const validBookmarkCount=validBookmarkedVerbs().length;
+  bookmarkButton.textContent=bookmarkedVerbReview?'Heutige Verben anzeigen':`★ Gemerkte Verben üben (${validBookmarkCount})`;
   if(bookmarkedVerbReview){
-    const shown=bookmarkVerbCount.value==='all'?verbBookmarks.size:Math.min(verbBookmarks.size,+bookmarkVerbCount.value||2);
-    status.textContent=bookmarkVerbCount.value==='all'?`Alle ${verbBookmarks.size} gemerkten Verben`:`${shown} von ${verbBookmarks.size} gemerkten Verben`;
+    const shown=bookmarkVerbCount.value==='all'?validBookmarkCount:Math.min(validBookmarkCount,+bookmarkVerbCount.value||2);
+    status.textContent=bookmarkVerbCount.value==='all'?`Alle ${validBookmarkCount} gemerkten Verben`:`${shown} von ${validBookmarkCount} gemerkten Verben`;
   }
   else if(weeklyVerbReview)status.textContent=`Wiederholung vom ${formatEntryDate(verbExerciseDate())}`;
   else status.textContent='Aktuelle Tagesverben'

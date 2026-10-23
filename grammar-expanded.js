@@ -175,22 +175,82 @@ const topics={
 <p><b>Achtung:</b> Hinweise haben Ausnahmen. Der sicherste Weg ist, Artikel und Plural mitzulernen.</p>
 `,
 '06':`
-<p>Die Adjektivendung zeigt Genus, Kasus und Numerus – besonders dann, wenn der Artikel diese Information nicht vollständig zeigt.</p>
-<h3>Das Grundprinzip</h3>
-<ul><li><b>Bestimmter Artikel:</b> Der Artikel zeigt fast alles; das Adjektiv hat meist <b>-e</b> oder <b>-en</b>.</li><li><b>Ein-Wort:</b> Das Adjektiv ergänzt die fehlende Information.</li><li><b>Ohne Artikel:</b> Das Adjektiv trägt die starke Kasusendung.</li></ul>
-<h3>Nach bestimmtem Artikel</h3>
-<table><tr><th>Form</th><th>Beispiel</th></tr>
-<tr><td>Nom. Singular</td><td>der neu<b>e</b> Kollege, die neu<b>e</b> Kollegin, das neu<b>e</b> Projekt</td></tr>
-<tr><td>Akk. maskulin</td><td>den neu<b>en</b> Kollegen</td></tr>
-<tr><td>alle Dativ-/Genitivformen und Plural</td><td>mit dem neu<b>en</b> Kollegen; die neu<b>en</b> Projekte</td></tr></table>
-<h3>Nach ein, kein, mein …</h3>
-<ul><li>ein neu<b>er</b> Kollege / eine neu<b>e</b> Kollegin / ein neu<b>es</b> Projekt</li><li>einen neu<b>en</b> Kollegen</li><li>mit einem neu<b>en</b> Kollegen</li><li>meine neu<b>en</b> Aufgaben</li></ul>
-<h3>Ohne Artikel</h3>
-<ul><li>frisch<b>er</b> Kaffee, kalt<b>es</b> Wasser, neu<b>e</b> Informationen</li><li>mit frisch<b>em</b> Kaffee, bei kalt<b>em</b> Wetter</li></ul>
-<h3>Schnelle Methode</h3>
-<ol><li>Kasus bestimmen.</li><li>Genus und Numerus bestimmen.</li><li>Artikeltyp erkennen.</li><li>Endung aus der passenden Gruppe wählen.</li></ol>
-<p class="wrong-example">Nicht: mit einem interessantem Projekt.</p><p>Richtig: mit einem interessant<b>en</b> Projekt.</p>
-<p><b>Merke:</b> Nach <i>dem, der, den, einem, einer</i> steht das Adjektiv fast immer auf <b>-en</b>.</p>
+<p><b>Adjektivendungen hängen von vier Informationen ab:</b> Kasus, Genus, Numerus und Artikeltyp. Entscheide immer in dieser Reihenfolge, statt eine Endung zu erraten.</p>
+
+<h3>Die Vier-Schritte-Methode</h3>
+<ol>
+<li><b>Kasus bestimmen:</b> Nominativ, Akkusativ, Dativ oder Genitiv.</li>
+<li><b>Genus und Numerus bestimmen:</b> maskulin, feminin, neutral oder Plural.</li>
+<li><b>Artikeltyp erkennen:</b> bestimmter Artikel, Ein-Wort/Possessivartikel oder kein Artikel.</li>
+<li><b>Adjektivendung einsetzen:</b> Verwende die passende der drei Tabellen.</li>
+</ol>
+<table><tr><th>Kasus</th><th>Typische Funktion</th><th>Frage</th><th>Beispiel</th></tr>
+<tr><td>Nominativ</td><td>Subjekt</td><td>wer/was?</td><td><b>Der neue Kollege</b> kommt.</td></tr>
+<tr><td>Akkusativ</td><td>direktes Objekt</td><td>wen/was?</td><td>Ich sehe <b>den neuen Kollegen</b>.</td></tr>
+<tr><td>Dativ</td><td>indirektes Objekt</td><td>wem?</td><td>Ich helfe <b>dem neuen Kollegen</b>.</td></tr>
+<tr><td>Genitiv</td><td>Zugehörigkeit</td><td>wessen?</td><td>Das Büro <b>des neuen Kollegen</b>.</td></tr></table>
+
+<h3>1. Nach bestimmtem Artikel: der, die, das</h3>
+<p>Der Artikel zeigt Kasus und Genus bereits deutlich. Deshalb erhält das Adjektiv nur <b>-e</b> oder <b>-en</b>.</p>
+<table><tr><th>Fall</th><th>Maskulin</th><th>Feminin</th><th>Neutrum</th><th>Plural</th></tr>
+<tr><td>Nominativ</td><td>der neu<b>e</b> Kollege</td><td>die neu<b>e</b> Kollegin</td><td>das neu<b>e</b> Team</td><td>die neu<b>en</b> Kollegen</td></tr>
+<tr><td>Akkusativ</td><td>den neu<b>en</b> Kollegen</td><td>die neu<b>e</b> Kollegin</td><td>das neu<b>e</b> Team</td><td>die neu<b>en</b> Kollegen</td></tr>
+<tr><td>Dativ</td><td>dem neu<b>en</b> Kollegen</td><td>der neu<b>en</b> Kollegin</td><td>dem neu<b>en</b> Team</td><td>den neu<b>en</b> Kollegen</td></tr>
+<tr><td>Genitiv</td><td>des neu<b>en</b> Kollegen</td><td>der neu<b>en</b> Kollegin</td><td>des neu<b>en</b> Teams</td><td>der neu<b>en</b> Kollegen</td></tr></table>
+<p><b>Kurzregel:</b> Nach einem bestimmten Artikel steht fast immer <b>-en</b>. Nur Nominativ Singular sowie Akkusativ Feminin und Neutrum haben <b>-e</b>.</p>
+
+<h3>2. Nach ein, kein und Possessivartikeln</h3>
+<p>Zu dieser Gruppe gehören <b>ein, kein, mein, dein, sein, ihr, unser, euer und Ihr</b>. Sie folgen demselben Grundmuster.</p>
+<table><tr><th>Fall</th><th>Maskulin</th><th>Feminin</th><th>Neutrum</th><th>Plural*</th></tr>
+<tr><td>Nominativ</td><td>mein neu<b>er</b> Kollege</td><td>meine neu<b>e</b> Kollegin</td><td>mein neu<b>es</b> Team</td><td>meine neu<b>en</b> Kollegen</td></tr>
+<tr><td>Akkusativ</td><td>meinen neu<b>en</b> Kollegen</td><td>meine neu<b>e</b> Kollegin</td><td>mein neu<b>es</b> Team</td><td>meine neu<b>en</b> Kollegen</td></tr>
+<tr><td>Dativ</td><td>meinem neu<b>en</b> Kollegen</td><td>meiner neu<b>en</b> Kollegin</td><td>meinem neu<b>en</b> Team</td><td>meinen neu<b>en</b> Kollegen</td></tr>
+<tr><td>Genitiv</td><td>meines neu<b>en</b> Kollegen</td><td>meiner neu<b>en</b> Kollegin</td><td>meines neu<b>en</b> Teams</td><td>meiner neu<b>en</b> Kollegen</td></tr></table>
+<p><small>* <i>ein</i> hat keinen Plural. Die Pluralspalte gilt für <i>kein</i> und die Possessivartikel.</small></p>
+<p><b>Einfachste Kurzregel:</b> Verwende <b>-en</b> bei allen Pluralformen, allen Dativ- und Genitivformen sowie im Akkusativ Maskulin. Merke dir nur die kleine Ausnahmegruppe:</p>
+<table><tr><th>Fall</th><th>Maskulin</th><th>Feminin</th><th>Neutrum</th></tr>
+<tr><td>Nominativ</td><td>neu<b>er</b></td><td>neu<b>e</b></td><td>neu<b>es</b></td></tr>
+<tr><td>Akkusativ</td><td>neu<b>en</b></td><td>neu<b>e</b></td><td>neu<b>es</b></td></tr></table>
+<p>Die vollständigen Tabellen für <b>mein, dein, sein, ihr, unser, euer und Ihr</b> findest du im vorherigen Grammatikthema „Artikel und Nominalgruppen“.</p>
+
+<h3>3. Ohne Artikel</h3>
+<p>Ohne Artikel muss das Adjektiv Kasus und Genus deutlich anzeigen. Deshalb verwendet es überwiegend die starken Endungen.</p>
+<table><tr><th>Fall</th><th>Maskulin</th><th>Feminin</th><th>Neutrum</th><th>Plural</th></tr>
+<tr><td>Nominativ</td><td>frisch<b>er</b> Kaffee</td><td>neu<b>e</b> Technik</td><td>kalt<b>es</b> Wasser</td><td>neu<b>e</b> Kollegen</td></tr>
+<tr><td>Akkusativ</td><td>frisch<b>en</b> Kaffee</td><td>neu<b>e</b> Technik</td><td>kalt<b>es</b> Wasser</td><td>neu<b>e</b> Kollegen</td></tr>
+<tr><td>Dativ</td><td>mit frisch<b>em</b> Kaffee</td><td>mit neu<b>er</b> Technik</td><td>mit kalt<b>em</b> Wasser</td><td>mit neu<b>en</b> Kollegen</td></tr>
+<tr><td>Genitiv</td><td>wegen stark<b>en</b> Regens</td><td>wegen neu<b>er</b> Technik</td><td>wegen kalt<b>en</b> Wetters</td><td>wegen neu<b>er</b> Regeln</td></tr></table>
+
+<h3>Singular und Plural schnell unterscheiden</h3>
+<ul>
+<li><b>Plural mit Artikel, kein oder Possessivartikel:</b> Das Adjektiv hat immer <b>-en</b>: die/meine/keine neu<b>en</b> Kollegen.</li>
+<li><b>Nominativ und Akkusativ Plural ohne Artikel:</b> Das Adjektiv hat <b>-e</b>: Neu<b>e</b> Kollegen beginnen heute. Wir suchen erfahren<b>e</b> Ingenieure.</li>
+<li><b>Dativ Plural:</b> Das Adjektiv hat <b>-en</b>, und das Nomen erhält meistens zusätzlich <b>-n</b>: mit neu<b>en</b> Kollege<b>n</b>.</li>
+</ul>
+
+<h3>Wichtige Sonderregeln</h3>
+<h4>Adjektiv nach sein, werden und bleiben</h4>
+<p>Steht das Adjektiv nicht direkt vor dem Nomen, erhält es <b>keine Endung</b>: Das Projekt ist <b>neu</b>. Die Aufgabe wird <b>schwierig</b>. Die Bedingungen bleiben <b>unklar</b>.</p>
+
+<h4>Schwache maskuline Nomen</h4>
+<p>Einige maskuline Nomen erhalten außer im Nominativ Singular zusätzlich <b>-n</b> oder <b>-en</b>. Das ist eine Nomenendung, nicht die Adjektivendung:</p>
+<ul><li>der neue Kollege → den/dem/des neuen <b>Kollegen</b></li><li>der Kunde → den Kunden</li><li>der Mensch → dem Menschen</li><li>der Experte → mit einem Experten</li></ul>
+
+<h4>Substantivierte Adjektive und Partizipien</h4>
+<p>Wörter wie <i>Mitarbeitende, Deutsche, Arbeitslose</i> und <i>Reisende</i> werden selbst wie Adjektive dekliniert:</p>
+<ul><li>der neu<b>e</b> Mitarbeitend<b>e</b></li><li>ein neu<b>er</b> Mitarbeitend<b>er</b></li><li>unsere neu<b>en</b> Mitarbeitend<b>en</b></li></ul>
+<p><b>Beispiel:</b> Es geht um <b>unsere neuen Mitarbeitenden</b>. <i>um</i> verlangt Akkusativ; nach dem Possessivartikel im Plural erhalten beide folgenden Wörter <b>-en</b>.</p>
+
+<h4>Besonderheit bei euer</h4>
+<p>Sobald eine Endung hinzukommt, fällt meistens das zweite <i>e</i> weg: <b>euer</b> Team, aber <b>eure, euren, eurem, eurer, eures</b>.</p>
+
+<h4>Mehrere Adjektive</h4>
+<p>Mehrere gleichgeordnete Adjektive erhalten dieselbe Endung: ein neu<b>es</b>, interessant<b>es</b> Projekt; mit einem neu<b>en</b>, interessant<b>en</b> Projekt.</p>
+
+<h3>Notfallregel beim Sprechen</h3>
+<p>Steht bereits ein Artikel vor dem Adjektiv, ist <b>-en</b> sehr häufig richtig: im Plural, im Dativ, im Genitiv und im Akkusativ Maskulin. Prüfe anschließend nur, ob deine Wortgruppe zu einer der wenigen <b>-e/-er/-es</b>-Formen im Nominativ oder Akkusativ Singular gehört.</p>
+<p class="wrong-example">Nicht: mit einem interessantem Projekt.</p>
+<p>Richtig: mit einem interessant<b>en</b> Projekt.</p>
 `,
 '08':`
 <p>Die Zeitform richtet sich nach Zeit, Textsorte und Kommunikationssituation. Im Gespräch dominiert das <b>Perfekt</b>; in schriftlichen Berichten und Erzählungen wird häufiger das <b>Präteritum</b> verwendet.</p>

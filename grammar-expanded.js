@@ -1,5 +1,26 @@
 (()=>{
 'use strict';
+const possessiveOwners=[
+  ['ich','mein','mein'],['du','dein','dein'],['er / es','sein','sein'],
+  ['sie (Singular / Plural)','ihr','ihr'],['wir','unser','unser'],
+  ['ihr','euer','eur'],['Sie (höflich)','Ihr','Ihr']
+];
+const possessiveCases=[
+  ['Nominativ',['','e','','e'],['er','e','es','en'],['Kollege','Kollegin','Team','Kollegen']],
+  ['Akkusativ',['en','e','','e'],['en','e','es','en'],['Kollegen','Kollegin','Team','Kollegen']],
+  ['Dativ',['em','er','em','en'],['en','en','en','en'],['Kollegen','Kollegin','Team','Kollegen']],
+  ['Genitiv',['es','er','es','er'],['en','en','en','en'],['Kollegen','Kollegin','Teams','Kollegen']]
+];
+const possessiveAdjectiveTables=possessiveOwners.map(([person,base,endingStem])=>{
+  const rows=possessiveCases.map(([caseName,articleEndings,adjectiveEndings,nouns])=>{
+    const cells=nouns.map((noun,index)=>{
+      const article=articleEndings[index]?endingStem+articleEndings[index]:base;
+      return `<td>${article} neu<b>${adjectiveEndings[index]}</b> ${noun}</td>`
+    }).join('');
+    return `<tr><td>${caseName}</td>${cells}</tr>`
+  }).join('');
+  return `<details class="possessive-full-table"><summary>${base} — ${person}</summary><div><table><tr><th>Fall</th><th>Maskulin</th><th>Feminin</th><th>Neutrum</th><th>Plural</th></tr>${rows}</table></div></details>`
+}).join('');
 const topics={
 '01':`
 <p><b>Im deutschen Hauptsatz steht das konjugierte Verb immer auf Position 2.</b> Position bedeutet Satzglied, nicht einzelnes Wort.</p>
@@ -130,6 +151,10 @@ const topics={
 <tr><td>sie</td><td>ihres</td><td>ihrer</td><td>ihres</td><td>ihrer</td></tr>
 <tr><td>Sie</td><td>Ihres</td><td>Ihrer</td><td>Ihres</td><td>Ihrer</td></tr></table>
 
+<h3>Possessivartikel mit attributivem Adjektiv</h3>
+<p>Öffne den gewünschten Possessivartikel. Die fett markierten Buchstaben zeigen jeweils die <b>Adjektivendung</b>. Das Muster entspricht der Deklination nach einem <i>ein-Wort</i>.</p>
+<div class="possessive-table-list">${possessiveAdjectiveTables}</div>
+<p><b>Wichtig:</b> Im Dativ Plural erhält auch das Nomen meistens ein zusätzliches <b>-n</b>. Deshalb heißt es: <i>mit meinen neuen Kollegen</i>.</p>
 <h3>Beispiele mit allen Personen</h3>
 <ul>
 <li>Ich spreche mit <b>meinem Kollegen</b>.</li>

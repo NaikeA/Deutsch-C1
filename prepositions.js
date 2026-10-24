@@ -37,7 +37,18 @@ const articleType=phrase=>{
  if(/^(alle|allen|aller|jed|kein|mehrer|zahlreich)/.test(determiner))return 'Artikelwort: '+determiner;
  return 'ohne Artikel';
 };
-const withCue=(prompt,phrase)=>prompt.replace(/\.$/,` (Vorgegebene Wörter: ${cueFromPhrase(phrase)} · ${articleType(phrase)}).`);
+const pluralNounHeads=new Set([
+ 'behörden','beteiligten','beschwerden','erfahrungen','ergebnissen','erkenntnisse','experten',
+ 'kollegen','kosten','meetings','mitarbeitenden','nachbarn','praktikanten','ressourcen',
+ 'rückfragen','rückmeldungen','schwierigkeiten','sitzungen','spezialisten','städte','tests',
+ 'verhandlungen','werkzeugen','wochen','wohnungen'
+]);
+const grammaticalNumber=phrase=>{
+ const clean=String(phrase).replace(/\s+gegenüber$/i,'').trim();
+ const head=clean.split(/\s+/).pop().toLocaleLowerCase('de-DE');
+ return pluralNounHeads.has(head)?'Plural':'Singular';
+};
+const withCue=(prompt,phrase)=>prompt.replace(/\.$/,` (Vorgegebene Wörter: ${cueFromPhrase(phrase)} · ${articleType(phrase)} · ${grammaticalNumber(phrase)}).`);
 const acceptedAlternatives=phrase=>{
  const alternatives=[];
  if(/^aufgrund\s+/i.test(phrase))alternatives.push(phrase.replace(/^aufgrund/i,'wegen'));
@@ -78,7 +89,7 @@ const datConfigs=[
  {stems:['Wir bearbeiten die Aufgabe ___','Ich bespreche das Problem ___','Sie arbeitet eng ___ zusammen','Das Team prüft die Ergebnisse ___','Die Analyse wird ___ durchgeführt'],phrases:['mit einer bewährten Methode','mit meiner erfahrenen Kollegin','mit unserem Entwicklungsteam','mit einem sicheren Programm','mit den verfügbaren Werkzeugen','mit einem externen Spezialisten'],contexts:[', ohne unnötige Verzögerung',', unter realistischen Bedingungen',', noch vor dem Termin',', im täglichen Arbeitsablauf'],explanation:'„mit“ steht immer mit Dativ.'},
  {stems:['___ gehen wir nach Hause','___ beginnt die Auswertung','___ änderte das Team den Plan','___ brauche ich eine Pause','___ erhalten Sie eine Bestätigung'],phrases:['nach dem Gespräch','nach der Besprechung','nach einem langen Arbeitstag','nach unserer gemeinsamen Prüfung','nach den ersten Ergebnissen','nach meiner Rückkehr'],contexts:[', wie vereinbart',', am selben Tag',', ohne weitere Verzögerung',', in aller Ruhe'],explanation:'„nach“ steht immer mit Dativ.'},
  {stems:['Er arbeitet ___ hier','Wir kennen uns ___','Die Anlage läuft ___ störungsfrei','Sie wartet ___ auf eine Antwort','Das Verfahren gilt ___'],phrases:['seit einem Jahr','seit der letzten Besprechung','seit meinem Studienabschluss','seit mehreren Wochen','seit dem vergangenen Montag','seit den ersten Tests'],contexts:[', ohne Unterbrechung',', in derselben Abteilung',', zu unserer Zufriedenheit',', unter realen Bedingungen'],explanation:'„seit“ steht immer mit Dativ und bezeichnet einen Beginn in der Vergangenheit, der bis heute reicht.'},
- {stems:['Die Nachricht kommt ___','Wir haben die Daten ___ erhalten','Der Vorschlag stammt ___','Die Rückmeldung wurde ___ übermittelt','Diese Einschätzung kommt ___'],phrases:['von meiner Chefin','von der Personalabteilung','von einem externen Partner','von unserer Forschungsgruppe','von den zuständigen Kollegen','vom verantwortlichen Projektleiter'],contexts:[', noch am selben Tag',', wie erwartet',', für die nächste Projektphase',', nach sorgfältiger Abstimmung'],explanation:'„von“ steht immer mit Dativ. „von dem“ wird meist zu „vom“.'},
+ {stems:['Die Nachricht kommt ___','Wir haben die Daten ___ erhalten','Der Vorschlag stammt ___','Die Rückmeldung wurde ___ übermittelt','Diese Einschätzung kommt ___'],phrases:['von meiner Chefin','von der Personalabteilung','von einem externen Partner','von unserer Forschungsgruppe','von den zuständigen Kollegen','vom verantwortlichen Projektleiter'],contexts:[', noch am selben Tag',', wie erwartet',', für die nächste Projektphase',', nach sorgfältiger Abstimmung'],explanation:'„von“ steht immer mit Dativ. Singular: „von dem“ wird meist zu „vom“. Plural: „von den“, zum Beispiel „von den Kollegen“.'},
  {stems:['Ich gehe ___','Wir fahren ___','Sie kommt ___','Er fährt ___','Meine Kollegin geht ___'],phrases:['zum Arzt','zur Arbeit','zu meiner Freundin','zu einem wichtigen Kundentermin','zu unserer Niederlassung','zu den neuen Nachbarn'],contexts:[', am frühen Morgen',', direkt nach dem Frühstück',', wie vereinbart',', noch vor Mittag'],explanation:'„zu“ steht immer mit Dativ. „zu dem“ wird zu „zum“, „zu der“ zu „zur“.'}
 ];
 const datTargets=[112,111,111,111,111,111,111,111,111];

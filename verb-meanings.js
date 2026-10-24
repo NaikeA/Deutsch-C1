@@ -249,7 +249,7 @@ window.GERMAN_VERB_MEANINGS={
   "singen": "sing",
   "sitzen": "sit",
   "sollen": "should; be supposed to",
-  "sondern": "separate; sort out",
+  "aussondern": "separate out; sort out; discard",
   "sorgen": "take care of; ensure; worry",
   "spielen": "play",
   "sprechen": "speak",

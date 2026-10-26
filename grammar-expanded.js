@@ -236,10 +236,47 @@ const topics={
 <p>Einige maskuline Nomen erhalten außer im Nominativ Singular zusätzlich <b>-n</b> oder <b>-en</b>. Das ist eine Nomenendung, nicht die Adjektivendung:</p>
 <ul><li>der neue Kollege → den/dem/des neuen <b>Kollegen</b></li><li>der Kunde → den Kunden</li><li>der Mensch → dem Menschen</li><li>der Experte → mit einem Experten</li></ul>
 
-<h4>Substantivierte Adjektive und Partizipien</h4>
-<p>Wörter wie <i>Mitarbeitende, Deutsche, Arbeitslose</i> und <i>Reisende</i> werden selbst wie Adjektive dekliniert:</p>
-<ul><li>der neu<b>e</b> Mitarbeitend<b>e</b></li><li>ein neu<b>er</b> Mitarbeitend<b>er</b></li><li>unsere neu<b>en</b> Mitarbeitend<b>en</b></li></ul>
-<p><b>Beispiel:</b> Es geht um <b>unsere neuen Mitarbeitenden</b>. <i>um</i> verlangt Akkusativ; nach dem Possessivartikel im Plural erhalten beide folgenden Wörter <b>-en</b>.</p>
+<h3>Substantivierte Adjektive und Partizipien</h3>
+<p>Ein <b>substantiviertes Adjektiv</b> ist ein Adjektiv, das wie ein Nomen verwendet wird. Das eigentliche Nomen wird weggelassen:</p>
+<p><b>die vorgesetzte Person → die Vorgesetzte</b><br><b>der deutsche Mann → der Deutsche</b></p>
+<p>Das Wort übernimmt die Funktion eines Nomens und wird deshalb <b>großgeschrieben</b>. Seine Endung folgt aber weiterhin den Regeln der <b>Adjektivdeklination</b>. Kasus, Genus, Numerus und Artikel bestimmen die Form.</p>
+
+<h4>Vorgesetzte nach bestimmtem Artikel</h4>
+<table><tr><th>Kasus</th><th>Maskulin Singular</th><th>Feminin Singular</th><th>Plural</th></tr>
+<tr><td>Nominativ</td><td>der Vorgesetzt<b>e</b></td><td>die Vorgesetzt<b>e</b></td><td>die Vorgesetzt<b>en</b></td></tr>
+<tr><td>Akkusativ</td><td>den Vorgesetzt<b>en</b></td><td>die Vorgesetzt<b>e</b></td><td>die Vorgesetzt<b>en</b></td></tr>
+<tr><td>Dativ</td><td>dem Vorgesetzt<b>en</b></td><td>der Vorgesetzt<b>en</b></td><td>den Vorgesetzt<b>en</b></td></tr>
+<tr><td>Genitiv</td><td>des Vorgesetzt<b>en</b></td><td>der Vorgesetzt<b>en</b></td><td>der Vorgesetzt<b>en</b></td></tr></table>
+
+<h4>Vorgesetzte nach Possessivartikel</h4>
+<table><tr><th>Kasus</th><th>Maskulin Singular</th><th>Feminin Singular</th><th>Plural</th></tr>
+<tr><td>Nominativ</td><td>mein Vorgesetzt<b>er</b></td><td>meine Vorgesetzt<b>e</b></td><td>meine Vorgesetzt<b>en</b></td></tr>
+<tr><td>Akkusativ</td><td>meinen Vorgesetzt<b>en</b></td><td>meine Vorgesetzt<b>e</b></td><td>meine Vorgesetzt<b>en</b></td></tr>
+<tr><td>Dativ</td><td>meinem Vorgesetzt<b>en</b></td><td>meiner Vorgesetzt<b>en</b></td><td>meinen Vorgesetzt<b>en</b></td></tr>
+<tr><td>Genitiv</td><td>meines Vorgesetzt<b>en</b></td><td>meiner Vorgesetzt<b>en</b></td><td>meiner Vorgesetzt<b>en</b></td></tr></table>
+
+<p><b>Beispiel aus der Übung:</b> Außer <b>meiner direkten Vorgesetzten</b> waren alle pünktlich.</p>
+<ul>
+<li><b>außer</b> verlangt hier den Dativ.</li>
+<li><b>meiner</b> zeigt Feminin Singular und Dativ.</li>
+<li><b>direkten</b> erhält die Adjektivendung <b>-en</b>.</li>
+<li><b>Vorgesetzten</b> ist ein substantiviertes Adjektiv und erhält ebenfalls <b>-en</b>.</li>
+</ul>
+
+<h4>Weitere häufige Beispiele</h4>
+<ul>
+<li>der/die <b>Deutsche</b></li>
+<li>der/die <b>Arbeitslose</b></li>
+<li>der/die <b>Angestellte</b></li>
+<li>der/die <b>Bekannte</b></li>
+<li>der/die <b>Verwandte</b></li>
+<li>der/die <b>Kranke</b></li>
+<li>der/die <b>Jugendliche</b></li>
+<li>der/die <b>Reisende</b></li>
+<li>der/die <b>Mitarbeitende</b></li>
+</ul>
+<p><b>Merksatz:</b> Wie ein Nomen großschreiben, aber die Endung wie bei einem Adjektiv bilden.</p>
+<p><b>Pluralbeispiel:</b> Es geht um <b>unsere neuen Mitarbeitenden</b>. <i>um</i> verlangt Akkusativ; nach dem Possessivartikel im Plural erhalten beide folgenden Wörter <b>-en</b>.</p>
 
 <h4>Besonderheit bei euer</h4>
 <p>Sobald eine Endung hinzukommt, fällt meistens das zweite <i>e</i> weg: <b>euer</b> Team, aber <b>eure, euren, eurem, eurer, eures</b>.</p>

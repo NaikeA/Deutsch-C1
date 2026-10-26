@@ -44,6 +44,8 @@ const pluralNounHeads=new Set([
  'verhandlungen','werkzeugen','wochen','wohnungen'
 ]);
 const dativePrepositions=new Set(['aus','außer','bei','gegenüber','mit','nach','seit','von','zu']);
+const accusativePrepositions=new Set(['durch','für','gegen','ohne','um']);
+const weakMasculineHeads=new Set(['kollegen','kunden','praktikanten','experten','partner','berater','dienstleister','vorgesetzten','projektleiter']);
 const grammaticalNumber=phrase=>{
  let value=String(phrase).trim();
  let preposition='';
@@ -68,6 +70,11 @@ const grammaticalNumber=phrase=>{
 
  // “den” is plural after a dative preposition, but masculine singular after an accusative preposition.
  if(first==='den')return dativePrepositions.has(preposition)?'Plural':'Singular';
+
+ // With weak masculine nouns, -en can mark accusative singular: meinen Kollegen.
+ if(accusativePrepositions.has(preposition)
+   && /^(meinen|deinen|seinen|ihren|unseren|euren|diesen)$/.test(first)
+   && weakMasculineHeads.has(head))return 'Singular';
 
  // In the dative, possessive/demonstrative article endings identify number reliably.
  if(dativePrepositions.has(preposition)){

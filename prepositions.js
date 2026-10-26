@@ -43,9 +43,39 @@ const pluralNounHeads=new Set([
  'rückfragen','rückmeldungen','schwierigkeiten','sitzungen','spezialisten','städte','tests',
  'verhandlungen','werkzeugen','wochen','wohnungen'
 ]);
+const dativePrepositions=new Set(['aus','außer','bei','gegenüber','mit','nach','seit','von','zu']);
 const grammaticalNumber=phrase=>{
- const clean=String(phrase).replace(/\s+gegenüber$/i,'').trim();
- const head=clean.split(/\s+/).pop().toLocaleLowerCase('de-DE');
+ let value=String(phrase).trim();
+ let preposition='';
+ const leading=value.match(/^(durch|für|gegen|ohne|um|aus|außer|bei|mit|nach|seit|von|zu|außerhalb|aufgrund|innerhalb|statt|trotz|während|wegen|an|auf|hinter|in|neben|über|unter|vor|zwischen)\s+/i);
+ if(leading){
+  preposition=leading[1].toLocaleLowerCase('de-DE');
+  value=value.slice(leading[0].length);
+ }else if(/\s+gegenüber$/i.test(value)){
+  preposition='gegenüber';
+  value=value.replace(/\s+gegenüber$/i,'');
+ }
+ const words=value.trim().split(/\s+/);
+ const first=(words[0]||'').toLocaleLowerCase('de-DE');
+ const head=(words[words.length-1]||'').toLocaleLowerCase('de-DE');
+
+ // These contractions and article forms are unambiguously singular.
+ if(/^(am|ans|beim|im|ins|vom|zum|zur|dem|des|einem|einer|eines|einen)$/.test(first))return 'Singular';
+
+ // Quantity words always identify a plural noun group.
+ if(/^(alle|allen|aller|beide|beiden|beider|mehrere|mehreren|mehrerer|zahlreiche|zahlreichen|zahlreicher)$/.test(first))return 'Plural';
+ if(/^\d+$/.test(first)&&Number(first)!==1)return 'Plural';
+
+ // “den” is plural after a dative preposition, but masculine singular after an accusative preposition.
+ if(first==='den')return dativePrepositions.has(preposition)?'Plural':'Singular';
+
+ // In the dative, possessive/demonstrative article endings identify number reliably.
+ if(dativePrepositions.has(preposition)){
+  if(/^(meinem|meiner|deinem|deiner|seinem|seiner|ihrem|ihrer|unserem|unserer|eurem|eurer|diesem|dieser)$/.test(first))return 'Singular';
+  if(/^(meinen|deinen|seinen|ihren|unseren|euren|diesen)$/.test(first))return 'Plural';
+ }
+
+ // Remaining forms such as “die”, “der”, “meine” or articleless groups need the noun itself.
  return pluralNounHeads.has(head)?'Plural':'Singular';
 };
 const withCue=(prompt,phrase)=>prompt.replace(/\.$/,` (Vorgegebene Wörter: ${cueFromPhrase(phrase)} · ${articleType(phrase)} · ${grammaticalNumber(phrase)}).`);

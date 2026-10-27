@@ -9,7 +9,7 @@ const items=[];
 const categoryCounts={acc:0,dat:0,gen:0,two:0};
 const add=(category,prompt,answer,explanation,accepted=[])=>{
  const number=++categoryCounts[category];
- items.push({id:`prep-v2-${category}-${number}`,category,prompt,answer,accepted:[answer,...accepted],explanation})
+ items.push({id:`prep-${category==='two'?'v3':'v2'}-${category}-${number}`,category,prompt,answer,accepted:[answer,...accepted],explanation})
 };
 const sentence=(stem,context)=>stem.replace(/[.!?]$/,'')+(context||'')+'.';
 const cueFromPhrase=phrase=>{
@@ -37,55 +37,181 @@ const articleType=phrase=>{
  if(/^(alle|allen|aller|jed|kein|mehrer|zahlreich)/.test(determiner))return 'Artikelwort: '+determiner;
  return 'ohne Artikel';
 };
-const pluralNounHeads=new Set([
- 'behörden','beteiligten','beschwerden','erfahrungen','ergebnissen','erkenntnisse','experten',
- 'kollegen','kosten','meetings','mitarbeitenden','nachbarn','praktikanten','ressourcen',
- 'rückfragen','rückmeldungen','schwierigkeiten','sitzungen','spezialisten','städte','tests',
- 'verhandlungen','werkzeugen','wochen','wohnungen'
+// Explicit number metadata for every curated phrase; do not infer number from -en.
+const phraseMetadata=new Map([
+ ["durch den Park",{"number":"Singular"}],
+ ["durch die Altstadt",{"number":"Singular"}],
+ ["durch das Museum",{"number":"Singular"}],
+ ["durch den Tunnel",{"number":"Singular"}],
+ ["durch die Halle",{"number":"Singular"}],
+ ["durch den Haupteingang",{"number":"Singular"}],
+ ["durch die schmale Gasse",{"number":"Singular"}],
+ ["durch das offene Tor",{"number":"Singular"}],
+ ["durch den langen Korridor",{"number":"Singular"}],
+ ["durch die Fußgängerzone",{"number":"Singular"}],
+ ["für den neuen Kunden",{"number":"Singular"}],
+ ["für die nächste Besprechung",{"number":"Singular"}],
+ ["für das gesamte Team",{"number":"Singular"}],
+ ["für meinen Kollegen",{"number":"Singular"}],
+ ["für unsere Abteilung",{"number":"Singular"}],
+ ["für die Geschäftsleitung",{"number":"Singular"}],
+ ["für das kommende Quartal",{"number":"Singular"}],
+ ["für einen erfolgreichen Start",{"number":"Singular"}],
+ ["für die internationale Gruppe",{"number":"Singular"}],
+ ["für alle Beteiligten",{"number":"Plural"}],
+ ["gegen den Vorschlag",{"number":"Singular"}],
+ ["gegen die neue Regelung",{"number":"Singular"}],
+ ["gegen das aktuelle Modell",{"number":"Singular"}],
+ ["gegen einen übereilten Beschluss",{"number":"Singular"}],
+ ["gegen unnötige Bürokratie",{"number":"Singular"}],
+ ["gegen den geplanten Stellenabbau",{"number":"Singular"}],
+ ["gegen die bisherige Vorgehensweise",{"number":"Singular"}],
+ ["gegen eine vorschnelle Entscheidung",{"number":"Singular"}],
+ ["gegen den vorgelegten Entwurf",{"number":"Singular"}],
+ ["gegen diese Änderung",{"number":"Singular"}],
+ ["ohne deine Unterstützung",{"number":"Singular"}],
+ ["ohne den schriftlichen Auftrag",{"number":"Singular"}],
+ ["ohne eine klare Begründung",{"number":"Singular"}],
+ ["ohne das erforderliche Werkzeug",{"number":"Singular"}],
+ ["ohne meinen erfahrenen Kollegen",{"number":"Singular"}],
+ ["ohne zusätzliche Ressourcen",{"number":"Plural"}],
+ ["ohne unnötige Verzögerung",{"number":"Singular"}],
+ ["ohne fremde Hilfe",{"number":"Singular"}],
+ ["ohne vorherige Ankündigung",{"number":"Singular"}],
+ ["ohne weitere Unterbrechung",{"number":"Singular"}],
+ ["um den neuen Auftrag",{"number":"Singular"}],
+ ["um die offene Stelle",{"number":"Singular"}],
+ ["um das technische Problem",{"number":"Singular"}],
+ ["um einen passenden Termin",{"number":"Singular"}],
+ ["um die weitere Finanzierung",{"number":"Singular"}],
+ ["um unsere neuen Mitarbeitenden",{"number":"Plural"}],
+ ["um eine schnelle Entscheidung",{"number":"Singular"}],
+ ["um den nächsten Projektschritt",{"number":"Singular"}],
+ ["um eine gerechte Lösung",{"number":"Singular"}],
+ ["um das gemeinsame Ziel",{"number":"Singular"}],
+ ["aus dem aktuellen Bericht",{"number":"Singular"}],
+ ["aus der internen Datenbank",{"number":"Singular"}],
+ ["aus dem Forschungslabor",{"number":"Singular"}],
+ ["aus der letzten Besprechung",{"number":"Singular"}],
+ ["aus einem anerkannten Fachartikel",{"number":"Singular"}],
+ ["aus unserer Dokumentation",{"number":"Singular"}],
+ ["außer dem neuen Kollegen",{"number":"Singular"}],
+ ["außer der Projektleiterin",{"number":"Singular"}],
+ ["außer einem externen Berater",{"number":"Singular"}],
+ ["außer meiner direkten Vorgesetzten",{"number":"Singular","gender":"Feminin"}],
+ ["außer den beiden Praktikanten",{"number":"Plural"}],
+ ["außer unserem technischen Experten",{"number":"Singular"}],
+ ["bei einem internationalen Unternehmen",{"number":"Singular"}],
+ ["bei der Personalabteilung",{"number":"Singular"}],
+ ["bei unserem wichtigsten Kunden",{"number":"Singular"}],
+ ["bei einem erfahrenen Kollegen",{"number":"Singular"}],
+ ["bei den zuständigen Behörden",{"number":"Plural"}],
+ ["bei einem externen Dienstleister",{"number":"Singular"}],
+ ["dem Bahnhof gegenüber",{"number":"Singular"}],
+ ["der Stadtbibliothek gegenüber",{"number":"Singular"}],
+ ["einem großen Park gegenüber",{"number":"Singular"}],
+ ["unserem Bürogebäude gegenüber",{"number":"Singular"}],
+ ["den neuen Wohnungen gegenüber",{"number":"Plural"}],
+ ["meiner früheren Schule gegenüber",{"number":"Singular"}],
+ ["mit einer bewährten Methode",{"number":"Singular"}],
+ ["mit meiner erfahrenen Kollegin",{"number":"Singular"}],
+ ["mit unserem Entwicklungsteam",{"number":"Singular"}],
+ ["mit einem sicheren Programm",{"number":"Singular"}],
+ ["mit den verfügbaren Werkzeugen",{"number":"Plural"}],
+ ["mit einem externen Spezialisten",{"number":"Singular"}],
+ ["nach dem Gespräch",{"number":"Singular"}],
+ ["nach der Besprechung",{"number":"Singular"}],
+ ["nach einem langen Arbeitstag",{"number":"Singular"}],
+ ["nach unserer gemeinsamen Prüfung",{"number":"Singular"}],
+ ["nach den ersten Ergebnissen",{"number":"Plural"}],
+ ["nach meiner Rückkehr",{"number":"Singular"}],
+ ["seit einem Jahr",{"number":"Singular"}],
+ ["seit der letzten Besprechung",{"number":"Singular"}],
+ ["seit meinem Studienabschluss",{"number":"Singular"}],
+ ["seit mehreren Wochen",{"number":"Plural"}],
+ ["seit dem vergangenen Montag",{"number":"Singular"}],
+ ["seit den ersten Tests",{"number":"Plural"}],
+ ["von meiner Chefin",{"number":"Singular"}],
+ ["von der Personalabteilung",{"number":"Singular"}],
+ ["von einem externen Partner",{"number":"Singular"}],
+ ["von unserer Forschungsgruppe",{"number":"Singular"}],
+ ["von den zuständigen Kollegen",{"number":"Plural"}],
+ ["vom verantwortlichen Projektleiter",{"number":"Singular"}],
+ ["zum Arzt",{"number":"Singular"}],
+ ["zur Arbeit",{"number":"Singular"}],
+ ["zu meiner Freundin",{"number":"Singular"}],
+ ["zu einem wichtigen Kundentermin",{"number":"Singular"}],
+ ["zu unserer Niederlassung",{"number":"Singular"}],
+ ["zu den neuen Nachbarn",{"number":"Plural"}],
+ ["außerhalb des Firmengeländes",{"number":"Singular"}],
+ ["außerhalb der regulären Arbeitszeit",{"number":"Singular"}],
+ ["außerhalb eines geschlossenen Bereichs",{"number":"Singular"}],
+ ["außerhalb unserer Zuständigkeit",{"number":"Singular"}],
+ ["außerhalb der großen Städte",{"number":"Plural"}],
+ ["außerhalb des historischen Zentrums",{"number":"Singular"}],
+ ["außerhalb des vereinbarten Zeitrahmens",{"number":"Singular"}],
+ ["außerhalb der Europäischen Union",{"number":"Singular"}],
+ ["außerhalb des Gebäudes",{"number":"Singular"}],
+ ["aufgrund des technischen Fehlers",{"number":"Singular"}],
+ ["aufgrund der neuen Erkenntnisse",{"number":"Plural"}],
+ ["aufgrund eines kurzfristigen Ausfalls",{"number":"Singular"}],
+ ["aufgrund unserer bisherigen Erfahrungen",{"number":"Plural"}],
+ ["aufgrund der hohen Kosten",{"number":"Plural"}],
+ ["aufgrund des engen Zeitplans",{"number":"Singular"}],
+ ["aufgrund einer gesetzlichen Änderung",{"number":"Singular"}],
+ ["aufgrund des starken Verkehrs",{"number":"Singular"}],
+ ["aufgrund zahlreicher Rückmeldungen",{"number":"Plural"}],
+ ["innerhalb eines Tages",{"number":"Singular"}],
+ ["innerhalb der nächsten Woche",{"number":"Singular"}],
+ ["innerhalb des vereinbarten Zeitraums",{"number":"Singular"}],
+ ["innerhalb eines Monats",{"number":"Singular"}],
+ ["innerhalb der nächsten zwei Wochen",{"number":"Plural"}],
+ ["innerhalb einer klaren Frist",{"number":"Singular"}],
+ ["innerhalb des ersten Quartals",{"number":"Singular"}],
+ ["innerhalb weniger Stunden",{"number":"Plural"}],
+ ["innerhalb eines Jahres",{"number":"Singular"}],
+ ["statt des persönlichen Treffens",{"number":"Singular"}],
+ ["statt der geplanten Reise",{"number":"Singular"}],
+ ["statt eines langen Berichts",{"number":"Singular"}],
+ ["statt unserer bisherigen Methode",{"number":"Singular"}],
+ ["statt der alten Software",{"number":"Singular"}],
+ ["statt des ursprünglichen Entwurfs",{"number":"Singular"}],
+ ["statt einer komplizierten Lösung",{"number":"Singular"}],
+ ["statt des gedruckten Formulars",{"number":"Singular"}],
+ ["statt zusätzlicher Sitzungen",{"number":"Plural"}],
+ ["trotz des schlechten Wetters",{"number":"Singular"}],
+ ["trotz der großen Schwierigkeiten",{"number":"Plural"}],
+ ["trotz eines technischen Problems",{"number":"Singular"}],
+ ["trotz unserer begrenzten Ressourcen",{"number":"Plural"}],
+ ["trotz der hohen Arbeitsbelastung",{"number":"Singular"}],
+ ["trotz des engen Zeitplans",{"number":"Singular"}],
+ ["trotz einer kurzfristigen Änderung",{"number":"Singular"}],
+ ["trotz des starken Widerstands",{"number":"Singular"}],
+ ["trotz zahlreicher Rückfragen",{"number":"Plural"}],
+ ["während des Meetings",{"number":"Singular"}],
+ ["während der gesamten Reise",{"number":"Singular"}],
+ ["während eines wichtigen Gesprächs",{"number":"Singular"}],
+ ["während unserer gemeinsamen Arbeit",{"number":"Singular"}],
+ ["während der ersten Projektphase",{"number":"Singular"}],
+ ["während des laufenden Betriebs",{"number":"Singular"}],
+ ["während einer kurzen Unterbrechung",{"number":"Singular"}],
+ ["während des vergangenen Jahres",{"number":"Singular"}],
+ ["während der Verhandlungen",{"number":"Plural"}],
+ ["wegen des schlechten Wetters",{"number":"Singular"}],
+ ["wegen der kurzfristigen Absage",{"number":"Singular"}],
+ ["wegen eines technischen Fehlers",{"number":"Singular"}],
+ ["wegen unserer begrenzten Zeit",{"number":"Singular"}],
+ ["wegen der hohen Kosten",{"number":"Plural"}],
+ ["wegen des fehlenden Dokuments",{"number":"Singular"}],
+ ["wegen einer unerwarteten Änderung",{"number":"Singular"}],
+ ["wegen des starken Verkehrs",{"number":"Singular"}],
+ ["wegen zahlreicher Beschwerden",{"number":"Plural"}]
 ]);
-const dativePrepositions=new Set(['aus','außer','bei','gegenüber','mit','nach','seit','von','zu']);
-const accusativePrepositions=new Set(['durch','für','gegen','ohne','um']);
-const weakMasculineHeads=new Set(['kollegen','kunden','praktikanten','experten','partner','berater','dienstleister','vorgesetzten','projektleiter']);
-const grammaticalNumber=phrase=>{
- let value=String(phrase).trim();
- let preposition='';
- const leading=value.match(/^(durch|für|gegen|ohne|um|aus|außer|bei|mit|nach|seit|von|zu|außerhalb|aufgrund|innerhalb|statt|trotz|während|wegen|an|auf|hinter|in|neben|über|unter|vor|zwischen)\s+/i);
- if(leading){
-  preposition=leading[1].toLocaleLowerCase('de-DE');
-  value=value.slice(leading[0].length);
- }else if(/\s+gegenüber$/i.test(value)){
-  preposition='gegenüber';
-  value=value.replace(/\s+gegenüber$/i,'');
- }
- const words=value.trim().split(/\s+/);
- const first=(words[0]||'').toLocaleLowerCase('de-DE');
- const head=(words[words.length-1]||'').toLocaleLowerCase('de-DE');
-
- // These contractions and article forms are unambiguously singular.
- if(/^(am|ans|beim|im|ins|vom|zum|zur|dem|des|einem|einer|eines|einen)$/.test(first))return 'Singular';
-
- // Quantity words always identify a plural noun group.
- if(/^(alle|allen|aller|beide|beiden|beider|mehrere|mehreren|mehrerer|zahlreiche|zahlreichen|zahlreicher)$/.test(first))return 'Plural';
- if(/^\d+$/.test(first)&&Number(first)!==1)return 'Plural';
-
- // “den” is plural after a dative preposition, but masculine singular after an accusative preposition.
- if(first==='den')return dativePrepositions.has(preposition)?'Plural':'Singular';
-
- // With weak masculine nouns, -en can mark accusative singular: meinen Kollegen.
- if(accusativePrepositions.has(preposition)
-   && /^(meinen|deinen|seinen|ihren|unseren|euren|diesen)$/.test(first)
-   && weakMasculineHeads.has(head))return 'Singular';
-
- // In the dative, possessive/demonstrative article endings identify number reliably.
- if(dativePrepositions.has(preposition)){
-  if(/^(meinem|meiner|deinem|deiner|seinem|seiner|ihrem|ihrer|unserem|unserer|eurem|eurer|diesem|dieser)$/.test(first))return 'Singular';
-  if(/^(meinen|deinen|seinen|ihren|unseren|euren|diesen)$/.test(first))return 'Plural';
- }
-
- // Remaining forms such as “die”, “der”, “meine” or articleless groups need the noun itself.
- return pluralNounHeads.has(head)?'Plural':'Singular';
+const withCue=(prompt,phrase)=>{
+ const metadata=phraseMetadata.get(phrase);
+ if(!metadata)throw new Error('Missing grammar metadata: '+phrase);
+ return prompt.replace(/\.$/,` (Vorgegebene Wörter: ${cueFromPhrase(phrase)} · ${articleType(phrase)} · ${metadata.number}${metadata.gender?' · '+metadata.gender:''}).`);
 };
-const withCue=(prompt,phrase)=>prompt.replace(/\.$/,` (Vorgegebene Wörter: ${cueFromPhrase(phrase)} · ${articleType(phrase)} · ${grammaticalNumber(phrase)}).`);
 const acceptedAlternatives=phrase=>{
  const alternatives=[];
  if(/^aufgrund\s+/i.test(phrase))alternatives.push(phrase.replace(/^aufgrund/i,'wegen'));
@@ -158,14 +284,24 @@ const articleGap=(stem,phrase,prep,kase)=>{
  let rest=phrase,answer='',accepted=[];
  const contractions={am:['an','dem'],ans:['an','das'],im:['in','dem'],ins:['in','das']};
  const first=rest.split(' ')[0];
- if(contractions[first]){answer=contractions[first][1];rest=rest.split(' ').slice(1).join(' ')}
- else{rest=rest.replace(new RegExp('^'+prep+'\\s+','i'),'');const parts=rest.split(' ');answer=parts.shift();rest=parts.join(' ')}
- if(prep==='zwischen'){
-  const match=rest.match(/^(den|die|das|dem|der)\\s+(.+?)\\s+und\\s+(den|die|das|dem|der)\\s+(.+)$/);
-  if(match){answer=match[1]+' / '+match[3];accepted=[match[1]+' '+match[3],match[1]+', '+match[3]];rest='___ '+match[2]+' und ___ '+match[4]}
-  else rest='___ '+rest
- }else rest='___ '+rest;
- return{prompt:stem.replace('___',prep+' '+rest)+'.',answer,accepted,explanation:`„${prep}“ beantwortet hier „${kase==='acc'?'wohin':'wo'}?“ und steht deshalb mit ${kase==='acc'?'Akkusativ':'Dativ'}.`}
+ if(contractions[first]){
+  answer=contractions[first][1];
+  rest='___ '+rest.split(' ').slice(1).join(' ');
+ }else{
+  rest=rest.replace(new RegExp('^'+prep+'\\s+','i'),'');
+  const match=prep==='zwischen'&&rest.match(/^(den|die|das|dem|der)\s+(.+?)\s+und\s+(den|die|das|dem|der)\s+(.+)$/);
+  if(match){
+   answer=match[1]+' / '+match[3];
+   accepted=[match[1]+' '+match[3],match[1]+', '+match[3]];
+   rest='___ '+match[2]+' und ___ '+match[4];
+  }else{
+   const parts=rest.split(' ');
+   answer=parts.shift();
+   rest='___ '+parts.join(' ');
+  }
+ }
+ const pairHint=answer.includes(' / ')?' Trage beide Artikel in der Reihenfolge der Lücken ein (zum Beispiel: den / die).':'';
+ return{prompt:stem.replace('___',prep+' '+rest)+'.'+pairHint,answer,accepted,explanation:`„${prep}“ beantwortet hier „${kase==='acc'?'wohin':'wo'}?“ und steht deshalb mit ${kase==='acc'?'Akkusativ':'Dativ'}.`}
 };
 let twoTotal=0;const twoTargets=[112,111,111,111,111,111,111,111,111];
 twoConfigs.forEach((config,i)=>{

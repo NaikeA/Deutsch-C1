@@ -2,7 +2,8 @@
 'use strict';
 const section=document.querySelector('#deklination');
 if(!section)return;
-const STORAGE_KEY='deutsch-c1-declension-v1';
+// Keep ambiguous v1 answers intact; they cannot be assigned to individual nouns safely.
+const STORAGE_KEY='deutsch-c1-declension-v2';
 const COUNT_KEY='deutsch-c1-declension-count-v1';
 const categories={
   mixed:'Gemischt',
@@ -69,30 +70,30 @@ const nouns=Object.entries(nounDefinitions).flatMap(([gender,items])=>items.map(
 })));
 const cases=['nom','acc','dat','gen'];
 const exercises=[];
-const add=(category,id,prompt,answer,explanation)=>exercises.push({category,id,prompt,answer,explanation});
+const add=(category,id,prompt,answer,explanation,nounId)=>exercises.push({category,id:`${id}-${nounId}`,prompt,answer,explanation});
 for(const noun of nouns){
   for(const grammaticalCase of cases){
     const gender=noun.gender,caseLabel=caseNames[grammaticalCase],genderLabel=genders[gender];
     const defArticle=definite[grammaticalCase][gender];
     const defAdj='wichtig'+adjectiveEndings.definite[grammaticalCase][gender];
     const nounForm=noun.forms[grammaticalCase];
-    add('articles',`art-def-${grammaticalCase}-${gender}`,noun.frame[grammaticalCase](`___ ${defAdj} ${nounForm}`)+` (bestimmter Artikel)`,defArticle,`${caseLabel}, ${genderLabel}: bestimmter Artikel „${defArticle}“.`);
-    add('groups',`group-def-${grammaticalCase}-${gender}`,noun.frame[grammaticalCase]('___')+` (bestimmt · wichtig · ${noun.forms.nom})`,`${defArticle} ${defAdj} ${nounForm}`,`Nominalgruppe im ${caseLabel}: Artikel + Adjektivendung + passende Nomenform.`);
-    add('adjectives',`adj-def-${grammaticalCase}-${gender}`,noun.frame[grammaticalCase](`${defArticle} wichtig___ ${nounForm}`),adjectiveEndings.definite[grammaticalCase][gender],`Nach dem bestimmten Artikel lautet die Adjektivendung im ${caseLabel} ${genderLabel}: -${adjectiveEndings.definite[grammaticalCase][gender]}.`);
+    add('articles',`art-def-${grammaticalCase}-${gender}`,noun.frame[grammaticalCase](`___ ${defAdj} ${nounForm}`)+` (bestimmter Artikel)`,defArticle,`${caseLabel}, ${genderLabel}: bestimmter Artikel „${defArticle}“.`,noun.forms.nom);
+    add('groups',`group-def-${grammaticalCase}-${gender}`,noun.frame[grammaticalCase]('___')+` (bestimmt · wichtig · ${noun.forms.nom})`,`${defArticle} ${defAdj} ${nounForm}`,`Nominalgruppe im ${caseLabel}: Artikel + Adjektivendung + passende Nomenform.`,noun.forms.nom);
+    add('adjectives',`adj-def-${grammaticalCase}-${gender}`,noun.frame[grammaticalCase](`${defArticle} wichtig___ ${nounForm}`),adjectiveEndings.definite[grammaticalCase][gender],`Nach dem bestimmten Artikel lautet die Adjektivendung im ${caseLabel} ${genderLabel}: -${adjectiveEndings.definite[grammaticalCase][gender]}.`,noun.forms.nom);
     if(gender!=='p'){
       const indArticle=indefinite[grammaticalCase][gender];
       const indAdj='wichtig'+adjectiveEndings.indefinite[grammaticalCase][gender];
-      add('articles',`art-ind-${grammaticalCase}-${gender}`,noun.frame[grammaticalCase](`___ ${indAdj} ${nounForm}`)+` (unbestimmter Artikel)`,indArticle,`${caseLabel}, ${genderLabel}: unbestimmter Artikel „${indArticle}“.`);
-      add('groups',`group-ind-${grammaticalCase}-${gender}`,noun.frame[grammaticalCase]('___')+` (unbestimmt · wichtig · ${noun.forms.nom})`,`${indArticle} ${indAdj} ${nounForm}`,`Nominalgruppe im ${caseLabel}: unbestimmter Artikel + gemischte Adjektivendung + Nomen.`);
-      add('adjectives',`adj-ind-${grammaticalCase}-${gender}`,noun.frame[grammaticalCase](`${indArticle} wichtig___ ${nounForm}`),adjectiveEndings.indefinite[grammaticalCase][gender],`Nach dem unbestimmten Artikel lautet die Adjektivendung im ${caseLabel} ${genderLabel}: -${adjectiveEndings.indefinite[grammaticalCase][gender]}.`);
+      add('articles',`art-ind-${grammaticalCase}-${gender}`,noun.frame[grammaticalCase](`___ ${indAdj} ${nounForm}`)+` (unbestimmter Artikel)`,indArticle,`${caseLabel}, ${genderLabel}: unbestimmter Artikel „${indArticle}“.`,noun.forms.nom);
+      add('groups',`group-ind-${grammaticalCase}-${gender}`,noun.frame[grammaticalCase]('___')+` (unbestimmt · wichtig · ${noun.forms.nom})`,`${indArticle} ${indAdj} ${nounForm}`,`Nominalgruppe im ${caseLabel}: unbestimmter Artikel + gemischte Adjektivendung + Nomen.`,noun.forms.nom);
+      add('adjectives',`adj-ind-${grammaticalCase}-${gender}`,noun.frame[grammaticalCase](`${indArticle} wichtig___ ${nounForm}`),adjectiveEndings.indefinite[grammaticalCase][gender],`Nach dem unbestimmten Artikel lautet die Adjektivendung im ${caseLabel} ${genderLabel}: -${adjectiveEndings.indefinite[grammaticalCase][gender]}.`,noun.forms.nom);
     }
     const strongEnding=adjectiveEndings.none[grammaticalCase][gender];
-    add('adjectives',`adj-strong-${grammaticalCase}-${gender}`,noun.frame[grammaticalCase](`wichtig___ ${nounForm}`),strongEnding,`Ohne Artikel trägt das Adjektiv die starke Endung -${strongEnding} (${caseLabel}, ${genderLabel}).`);
+    add('adjectives',`adj-strong-${grammaticalCase}-${gender}`,noun.frame[grammaticalCase](`wichtig___ ${nounForm}`),strongEnding,`Ohne Artikel trägt das Adjektiv die starke Endung -${strongEnding} (${caseLabel}, ${genderLabel}).`,noun.forms.nom);
     for(const owner of owners){
       const ending=possessiveEndings[grammaticalCase][gender];
       const answer=owner.combine?owner.combine(ending):owner.stem+ending;
       const possAdj='wichtig'+adjectiveEndings.possessive[grammaticalCase][gender];
-      add('possessives',`poss-${owner.cue}-${grammaticalCase}-${gender}`,noun.frame[grammaticalCase](`___ ${possAdj} ${nounForm}`)+` (Besitzer: ${owner.cue})`,answer,`Possessivartikel im ${caseLabel} ${genderLabel}: „${answer}“.`);
+      add('possessives',`poss-${owner.cue}-${grammaticalCase}-${gender}`,noun.frame[grammaticalCase](`___ ${possAdj} ${nounForm}`)+` (Besitzer: ${owner.cue})`,answer,`Possessivartikel im ${caseLabel} ${genderLabel}: „${answer}“.`,noun.forms.nom);
     }
   }
 }

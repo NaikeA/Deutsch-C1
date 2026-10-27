@@ -13,7 +13,8 @@
     "ios:init": "npm run prepare:web && cap add ios",
     "ios:sync": "npm run prepare:web && cap sync ios",
     "ios:open": "cap open ios",
-    "ios:copy": "npm run prepare:web && cap copy ios"
+    "ios:copy": "npm run prepare:web && cap copy ios",
+    "test": "node scripts/test-grammar-regressions.mjs"
   },
   "dependencies": {
     "@capacitor-community/text-to-speech": "^8.0.2",

@@ -215,12 +215,27 @@ function renderNotesList(){
  const box=document.querySelector('#notesList');
  const dates=Object.keys(notes).filter(date=>getNoteDay(date).blocks.length).sort().reverse();
  box.innerHTML=dates.length?dates.map(date=>{
-  const blocks=getNoteDay(date).blocks;
+  const entry=getNoteDay(date);
+  const blocks=entry.blocks;
   const firstTitle=blocks.map(block=>block.title?.trim()).find(Boolean);
-  const label=firstTitle||`${blocks.length} Notizblock${blocks.length===1?'':'blöcke'}`;
-  return `<button type="button" data-note-date="${date}" class="note-history-item${date===notesDate.value?' active':''}"><b>${esc(label)}</b><span>${formatNoteDate(date)} · ${blocks.length} Block${blocks.length===1?'':'blöcke'}</span></button>`
+  const label=entry.listTitle?.trim()||firstTitle||`${blocks.length} Notizblock${blocks.length===1?'':'blöcke'}`;
+  return `<article class="note-history-row${date===notesDate.value?' active':''}">
+   <button type="button" data-note-date="${date}" class="note-history-item" title="${esc(label)}"><b>${esc(label)}</b><span>${formatNoteDate(date)} · ${blocks.length} Block${blocks.length===1?'':'blöcke'}</span></button>
+   <button type="button" data-rename-note="${date}" class="note-history-rename" aria-label="Gespeicherte Notiz umbenennen" title="Umbenennen">✎</button>
+  </article>`
  }).join(''):'<p class="notes-empty">Noch keine Notizen gespeichert.</p>';
- box.querySelectorAll('[data-note-date]').forEach(btn=>btn.addEventListener('click',()=>{saveNotesStorage();notesDate.value=btn.dataset.noteDate;loadNote()}))
+ box.querySelectorAll('[data-note-date]').forEach(btn=>btn.addEventListener('click',()=>{saveNotesStorage();notesDate.value=btn.dataset.noteDate;loadNote()}));
+ box.querySelectorAll('[data-rename-note]').forEach(btn=>btn.addEventListener('click',()=>{
+  const date=btn.dataset.renameNote;
+  const entry=getNoteDay(date);
+  const firstTitle=entry.blocks.map(block=>block.title?.trim()).find(Boolean);
+  const current=entry.listTitle?.trim()||firstTitle||'';
+  const renamed=window.prompt('Neuer Name für diese gespeicherte Notiz:',current);
+  if(renamed===null)return;
+  entry.listTitle=renamed.trim();
+  saveNotesStorage();
+  renderNotesList()
+ }))
 }
 function renderNoteBlocks(){
  const entry=getNoteDay(notesDate.value);

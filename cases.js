@@ -152,5 +152,7 @@ add('Wo oder wohin?',prompt,[answer,'den','dem','der','die','das'],answer,`${cas
     const wrong=`${dialogue[1]} ${wrongObject} ${dialogue[2]}`;
     add('Alltagsdialoge',`A: ${dialogue[0]} B: ___`,[answer,wrong,`${correctObject} ${dialogue[2]}`,`${dialogue[1]} die ${nounForm(noun,kase)} ${dialogue[2]}`],answer,`Die Frage „${dat?'wem':'wen'}?“ verlangt ${dat?'den Dativ':'den Akkusativ'}: ${correctObject}.`);
   }
-  window.GERMAN_CASE_EXERCISES=exercises.slice(0,1400);
+  const uniqueExercises=[];const seenPrompts=new Set();
+  exercises.forEach(item=>{if(!seenPrompts.has(item.prompt)){seenPrompts.add(item.prompt);uniqueExercises.push(item)}});
+  window.GERMAN_CASE_EXERCISES=uniqueExercises;
 })();

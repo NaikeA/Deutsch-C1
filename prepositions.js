@@ -109,50 +109,319 @@ const generate=(category,configs,target)=>{
   index++
  }
 };
+
+const cfg=(explanation,rows)=>({explanation,items:rows.map(([stem,answer])=>({stem,answer}))});
+const generateCurated=(category,configs,target)=>{
+ const base=[];
+ configs.forEach(config=>config.items.forEach(item=>base.push({
+  prompt:withCue(sentence(item.stem,''),item.answer),
+  answer:item.answer,
+  explanation:config.explanation,
+  accepted:item.accepted||[]
+ })));
+ let index=0;
+ while(categoryCounts[category]<target){
+  const item=base[index%base.length],round=Math.floor(index/base.length);
+  const prompt=round?item.prompt.replace(/\.$/,` – Variante ${round+1}.`):item.prompt;
+  add(category,prompt,item.answer,item.explanation,item.accepted);
+  index++
+ }
+};
+
 const accConfigs=[
- {stems:['Wir gehen ___ und kommen auf der anderen Seite wieder heraus','Die Besuchergruppe läuft ___ von einem Ende zum anderen','Sie geht ___ und verlässt den Ort auf der gegenüberliegenden Seite','Unser Rundgang führt ___ von einem Ende zum anderen'],phrases:['durch den Park','durch die Altstadt','durch das Museum','durch den Tunnel','durch die Halle','durch den Haupteingang','durch die schmale Gasse','durch das offene Tor','durch den langen Korridor','durch die Fußgängerzone'],contexts:[''],explanation:'„durch“ bezeichnet hier eine Bewegung von einer Seite zur anderen und steht immer mit Akkusativ.'},
- {stems:['Ich bereite die Unterlagen ___ vor','Wir entwickeln eine Lösung ___','Diese Information ist wichtig ___','Das Training wurde ___ organisiert','Sie übernimmt die Vertretung ___'],phrases:['für den neuen Kunden','für die nächste Besprechung','für das gesamte Team','für meinen Kollegen','für unsere Abteilung','für die Geschäftsleitung','für das kommende Quartal','für einen erfolgreichen Start','für die internationale Gruppe','für alle Beteiligten'],contexts:[', noch heute',', mit großer Sorgfalt',', wie vereinbart',', vor dem nächsten Termin'],explanation:'„für“ steht immer mit Akkusativ.'},
- {stems:['Viele Beschäftigte stimmen ___','Das Team entscheidet sich ___','Die Initiative richtet sich ___','Die Mehrheit spricht sich ___ aus','Mehrere Abteilungen protestieren ___'],phrases:['gegen den Vorschlag','gegen die neue Regelung','gegen das aktuelle Modell','gegen einen übereilten Beschluss','gegen unnötige Bürokratie','gegen den geplanten Stellenabbau','gegen die bisherige Vorgehensweise','gegen eine vorschnelle Entscheidung','gegen den vorgelegten Entwurf','gegen diese Änderung'],contexts:[', nach langer Diskussion',', aus nachvollziehbaren Gründen',', trotz des Zeitdrucks',', nach sorgfältiger Prüfung'],explanation:'„gegen“ steht immer mit Akkusativ.'},
- {stems:['Ich kann die Aufgabe ___ nicht abschließen','Wir beginnen das Projekt ___','Sie setzt die Arbeit ___ fort','Das Team arbeitet ___','Er führt die Prüfung ___ durch'],phrases:['ohne deine Unterstützung','ohne den schriftlichen Auftrag','ohne eine klare Begründung','ohne das erforderliche Werkzeug','ohne meinen erfahrenen Kollegen','ohne zusätzliche Ressourcen','ohne unnötige Verzögerung','ohne fremde Hilfe','ohne vorherige Ankündigung','ohne weitere Unterbrechung'],contexts:[', wie erwartet',', unter diesen Bedingungen',', in der verfügbaren Zeit',', bei diesem Projekt'],explanation:'„ohne“ steht immer mit Akkusativ.'},
- {stems:['Wir kümmern uns ___','Die Diskussion dreht sich ___','Dabei geht es ___','Die Entscheidung dreht sich ___','Die Verhandlungen gehen ___'],phrases:['um den neuen Auftrag','um die offene Stelle','um das technische Problem','um einen passenden Termin','um die weitere Finanzierung','um unsere neuen Mitarbeitenden','um eine schnelle Entscheidung','um den nächsten Projektschritt','um eine gerechte Lösung','um das gemeinsame Ziel'],contexts:[', seit gestern',', mit hoher Priorität',', in dieser Woche',', gemeinsam mit der Fachabteilung'],explanation:'„um“ steht immer mit Akkusativ.'}
+ cfg('„durch“ bezeichnet eine Bewegung durch einen Raum oder ein Gebiet und steht immer mit Akkusativ.',[
+  ['Wir gehen ___ und kommen am anderen Ende wieder heraus','durch den Park'],
+  ['Die Besuchergruppe läuft ___ von einem Stadttor zum anderen','durch die Altstadt'],
+  ['Der Rundgang führt ___ vom Eingang bis zum Ausgang','durch das Museum'],
+  ['Der Zug fährt ___ und erreicht danach das Tal','durch den Tunnel'],
+  ['Die Gäste gehen ___ direkt zum Ausgang','durch die Halle'],
+  ['Die Besucher betreten das Gebäude ___','durch den Haupteingang'],
+  ['Wir gelangen ___ auf den Innenhof','durch die schmale Gasse'],
+  ['Der Lieferwagen fährt ___ auf das Gelände','durch das offene Tor'],
+  ['Sie läuft ___ bis zum Konferenzraum','durch den langen Korridor'],
+  ['Die Gruppe geht ___ bis zum Marktplatz','durch die Fußgängerzone']
+ ]),
+ cfg('„für“ bezeichnet hier Zweck, Empfänger oder Eignung und steht immer mit Akkusativ.',[
+  ['Ich bereite die Unterlagen ___ vor','für den neuen Kunden'],
+  ['Wir brauchen die Zahlen ___','für die nächste Besprechung'],
+  ['Diese Entscheidung gilt ___','für das gesamte Team'],
+  ['Sie übernimmt heute die Vertretung ___','für meinen Kollegen'],
+  ['Wir entwickeln eine passende Lösung ___','für unsere Abteilung'],
+  ['Der Bericht ist ausschließlich ___ bestimmt','für die Geschäftsleitung'],
+  ['Wir planen zusätzliche Ressourcen ___ ein','für das kommende Quartal'],
+  ['Eine klare Einführung ist wichtig ___','für einen erfolgreichen Start'],
+  ['Das Seminar wurde speziell ___ organisiert','für die internationale Gruppe'],
+  ['Die neue Regelung schafft Klarheit ___','für alle Beteiligten']
+ ]),
+ cfg('„gegen“ bezeichnet hier Widerstand, Ablehnung oder ein Gegenmittel und steht immer mit Akkusativ.',[
+  ['Die Mehrheit stimmt ___','gegen den Vorschlag'],
+  ['Mehrere Beschäftigte protestieren ___','gegen die neue Regelung'],
+  ['Das Team entscheidet sich bewusst ___','gegen das aktuelle Modell'],
+  ['Die Fachabteilung warnt ___','gegen einen übereilten Beschluss'],
+  ['Die Initiative richtet sich ___','gegen unnötige Bürokratie'],
+  ['Die Belegschaft demonstriert ___','gegen den geplanten Stellenabbau'],
+  ['Gute Argumente sprechen ___','gegen die bisherige Vorgehensweise'],
+  ['Der Betriebsrat wendet sich ___','gegen eine vorschnelle Entscheidung'],
+  ['Drei Abteilungen stimmten ___','gegen den vorgelegten Entwurf'],
+  ['Viele Mitarbeitende äußerten sich ___','gegen diese Änderung']
+ ]),
+ cfg('„ohne“ bezeichnet das Fehlen einer Person oder Sache und steht immer mit Akkusativ.',[
+  ['Ich kann die Aufgabe ___ nicht abschließen','ohne deine Unterstützung'],
+  ['Wir dürfen das Projekt ___ nicht beginnen','ohne den schriftlichen Auftrag'],
+  ['Sie lehnte den Antrag ___ ab','ohne eine klare Begründung'],
+  ['Die Reparatur gelingt ___ nicht','ohne das erforderliche Werkzeug'],
+  ['Ich möchte das Gespräch ___ nicht führen','ohne meinen erfahrenen Kollegen'],
+  ['Das Ziel ist ___ nicht erreichbar','ohne zusätzliche Ressourcen'],
+  ['Die Sitzung endete ___','ohne unnötige Verzögerung'],
+  ['Er löste das Problem ___','ohne fremde Hilfe'],
+  ['Die Firma änderte den Ablauf ___','ohne vorherige Ankündigung'],
+  ['Danach lief die Anlage ___ weiter','ohne weitere Unterbrechung']
+ ]),
+ cfg('„um“ gehört zu diesen festen Verbindungen und steht immer mit Akkusativ.',[
+  ['Wir kümmern uns ___','um den neuen Auftrag'],
+  ['Die Diskussion dreht sich ___','um die offene Stelle'],
+  ['In diesem Bericht geht es ___','um das technische Problem'],
+  ['Wir bemühen uns ___','um einen passenden Termin'],
+  ['Das Team verhandelt ___','um die weitere Finanzierung'],
+  ['Die Personalabteilung kümmert sich ___','um unsere neuen Mitarbeitenden'],
+  ['Die Kundin bittet ___','um eine schnelle Entscheidung'],
+  ['Heute geht es vor allem ___','um den nächsten Projektschritt'],
+  ['Beide Seiten ringen ___','um eine gerechte Lösung'],
+  ['Alle arbeiten gemeinsam ___','um das gemeinsame Ziel']
+ ])
 ];
-generate('acc',accConfigs,1000);
+generateCurated('acc',accConfigs,1000);
 
 const datConfigs=[
- {stems:['Die Information stammt ___','Wir beziehen die Daten ___','Der zitierte Abschnitt kommt ___','Sie übernimmt die Kennzahlen ___','Die Grundlage für die Analyse stammt ___'],phrases:['aus dem aktuellen Bericht','aus der internen Datenbank','aus dem Forschungslabor','aus der letzten Besprechung','aus einem anerkannten Fachartikel','aus unserer Dokumentation'],contexts:[', wie vereinbart',', nach sorgfältiger Prüfung',', für die weitere Analyse',', mit Zustimmung der Verantwortlichen'],explanation:'„aus“ steht immer mit Dativ.'},
- {stems:['___ waren alle pünktlich','___ hat niemand widersprochen','___ kann jeder teilnehmen','___ wurde das gesamte Team eingeladen','___ kenne ich dort niemanden'],phrases:['außer dem neuen Kollegen','außer der Projektleiterin','außer einem externen Berater','außer meiner direkten Vorgesetzten','außer den beiden Praktikanten','außer unserem technischen Experten'],contexts:[', soweit ich weiß',', in diesem Zusammenhang',', nach der aktuellen Planung',', trotz der kurzfristigen Änderung'],explanation:'„außer“ steht gewöhnlich mit Dativ.'},
- {stems:['Sie arbeitet ___','Ich habe heute einen Termin ___','Wir informieren uns ___','Die Anfrage wird ___ bearbeitet','Er bittet um Unterstützung ___'],phrases:['bei einem internationalen Unternehmen','bei der Personalabteilung','bei unserem wichtigsten Kunden','bei einem erfahrenen Kollegen','bei den zuständigen Behörden','bei einem externen Dienstleister'],contexts:[', im Rahmen dieses Projekts',', vor dem wichtigen Gespräch',', nach sorgfältiger Vorbereitung',', während der aktuellen Projektphase'],explanation:'„bei“ steht immer mit Dativ.'},
- {stems:['Das Café liegt ___','Mein Büro befindet sich ___','Sie sitzt ___','Der Eingang ist direkt ___','Das Hotel steht ___'],phrases:['dem Bahnhof gegenüber','der Stadtbibliothek gegenüber','einem großen Park gegenüber','unserem Bürogebäude gegenüber','den neuen Wohnungen gegenüber','meiner früheren Schule gegenüber'],contexts:[', auf der anderen Straßenseite',', gut sichtbar',', nur wenige Minuten entfernt',', mitten im Zentrum'],explanation:'„gegenüber“ steht mit Dativ und kann vor oder nach dem Bezugswort stehen.'},
- {stems:['Wir bearbeiten die Aufgabe ___','Ich bespreche das Problem ___','Sie arbeitet eng ___ zusammen','Das Team prüft die Ergebnisse ___','Die Analyse wird ___ durchgeführt'],phrases:['mit einer bewährten Methode','mit meiner erfahrenen Kollegin','mit unserem Entwicklungsteam','mit einem sicheren Programm','mit den verfügbaren Werkzeugen','mit einem externen Spezialisten'],contexts:[', ohne unnötige Verzögerung',', unter realistischen Bedingungen',', noch vor dem Termin',', im täglichen Arbeitsablauf'],explanation:'„mit“ steht immer mit Dativ.'},
- {stems:['___ gehen wir nach Hause','___ beginnt die Auswertung','___ änderte das Team den Plan','___ brauche ich eine Pause','___ erhalten Sie eine Bestätigung'],phrases:['nach dem Gespräch','nach der Besprechung','nach einem langen Arbeitstag','nach unserer gemeinsamen Prüfung','nach den ersten Ergebnissen','nach meiner Rückkehr'],contexts:[', wie vereinbart',', am selben Tag',', ohne weitere Verzögerung',', in aller Ruhe'],explanation:'„nach“ steht immer mit Dativ.'},
- {stems:['Er arbeitet ___ hier','Wir kennen uns ___','Die Anlage läuft ___ störungsfrei','Sie wartet ___ auf eine Antwort','Das Verfahren gilt ___'],phrases:['seit einem Jahr','seit der letzten Besprechung','seit meinem Studienabschluss','seit mehreren Wochen','seit dem vergangenen Montag','seit den ersten Tests'],contexts:[', ohne Unterbrechung',', in derselben Abteilung',', zu unserer Zufriedenheit',', unter realen Bedingungen'],explanation:'„seit“ steht immer mit Dativ und bezeichnet einen Beginn in der Vergangenheit, der bis heute reicht.'},
- {stems:['Die Nachricht kommt ___','Wir haben die Daten ___ erhalten','Der Vorschlag stammt ___','Die Rückmeldung wurde ___ übermittelt','Diese Einschätzung kommt ___'],phrases:['von meiner Chefin','von der Personalabteilung','von einem externen Partner','von unserer Forschungsgruppe','von den zuständigen Kollegen','vom verantwortlichen Projektleiter'],contexts:[', noch am selben Tag',', wie erwartet',', für die nächste Projektphase',', nach sorgfältiger Abstimmung'],explanation:'„von“ steht immer mit Dativ. Singular: „von dem“ wird meist zu „vom“. Plural: „von den“, zum Beispiel „von den Kollegen“.'},
- {stems:['Ich gehe ___','Wir fahren ___','Sie kommt ___','Er fährt ___','Meine Kollegin geht ___'],phrases:['zum Arzt','zur Arbeit','zu meiner Freundin','zu einem wichtigen Kundentermin','zu unserer Niederlassung','zu den neuen Nachbarn'],contexts:[', am frühen Morgen',', direkt nach dem Frühstück',', wie vereinbart',', noch vor Mittag'],explanation:'„zu“ steht immer mit Dativ. „zu dem“ wird zu „zum“, „zu der“ zu „zur“.'}
+ cfg('„aus“ bezeichnet hier Herkunft oder Quelle und steht immer mit Dativ.',[
+  ['Die Kennzahlen stammen ___','aus dem aktuellen Bericht'],
+  ['Wir beziehen die Daten ___','aus der internen Datenbank'],
+  ['Die Probe kommt direkt ___','aus dem Forschungslabor'],
+  ['Diese Information kenne ich ___','aus der letzten Besprechung'],
+  ['Das Zitat stammt ___','aus einem anerkannten Fachartikel'],
+  ['Die technische Grundlage übernehmen wir ___','aus unserer Dokumentation']
+ ]),
+ cfg('„außer“ schließt hier eine Person oder Gruppe aus und steht mit Dativ.',[
+  ['Alle waren pünktlich ___','außer dem neuen Kollegen'],
+  ['Niemand widersprach dem Vorschlag ___','außer der Projektleiterin'],
+  ['An der internen Sitzung nahm niemand Externes teil ___','außer einem externen Berater'],
+  ['Alle stimmten der Änderung zu ___','außer meiner direkten Vorgesetzten'],
+  ['Das gesamte Team war anwesend ___','außer den beiden Praktikanten'],
+  ['Niemand erkannte den Fehler sofort ___','außer unserem technischen Experten']
+ ]),
+ cfg('„bei“ bezeichnet hier Arbeitsplatz, Ansprechpartner oder Institution und steht immer mit Dativ.',[
+  ['Sie arbeitet ___','bei einem internationalen Unternehmen'],
+  ['Ich habe heute einen Termin ___','bei der Personalabteilung'],
+  ['Wir präsentieren morgen unsere Ergebnisse ___','bei unserem wichtigsten Kunden'],
+  ['Ich hole mir Rat ___','bei einem erfahrenen Kollegen'],
+  ['Wir erkundigen uns ___','bei den zuständigen Behörden'],
+  ['Die Wartung erfolgt ___','bei einem externen Dienstleister']
+ ]),
+ cfg('„gegenüber“ bezeichnet die Position auf der anderen Seite und steht mit Dativ.',[
+  ['Das Café liegt ___','dem Bahnhof gegenüber'],
+  ['Mein Büro befindet sich ___','der Stadtbibliothek gegenüber'],
+  ['Das Hotel liegt ___','einem großen Park gegenüber'],
+  ['Die Bushaltestelle befindet sich ___','unserem Bürogebäude gegenüber'],
+  ['Der neue Supermarkt liegt ___','den neuen Wohnungen gegenüber'],
+  ['Die Bäckerei befindet sich ___','meiner früheren Schule gegenüber']
+ ]),
+ cfg('„mit“ bezeichnet hier Begleitung oder Mittel und steht immer mit Dativ.',[
+  ['Wir lösen das Problem ___','mit einer bewährten Methode'],
+  ['Ich bespreche die Ergebnisse ___','mit meiner erfahrenen Kollegin'],
+  ['Sie arbeitet eng ___ zusammen','mit unserem Entwicklungsteam'],
+  ['Wir schützen die Daten ___','mit einem sicheren Programm'],
+  ['Die Reparatur gelingt nur ___','mit den verfügbaren Werkzeugen'],
+  ['Wir prüfen die Anlage gemeinsam ___','mit einem externen Spezialisten']
+ ]),
+ cfg('„nach“ bezeichnet hier eine zeitliche Reihenfolge und steht immer mit Dativ.',[
+  ['___ gehen wir nach Hause','nach dem Gespräch'],
+  ['___ beginnt die Auswertung','nach der Besprechung'],
+  ['___ brauche ich eine Pause','nach einem langen Arbeitstag'],
+  ['___ treffen wir die endgültige Entscheidung','nach unserer gemeinsamen Prüfung'],
+  ['___ passte das Team den Plan an','nach den ersten Ergebnissen'],
+  ['___ übernehme ich wieder die Leitung','nach meiner Rückkehr']
+ ]),
+ cfg('„seit“ bezeichnet einen Beginn in der Vergangenheit, der bis heute andauert, und steht immer mit Dativ.',[
+  ['Er arbeitet ___ in dieser Abteilung','seit einem Jahr'],
+  ['Wir kennen uns ___','seit der letzten Besprechung'],
+  ['Ich beschäftige mich ___ mit Simulationen','seit meinem Studienabschluss'],
+  ['Sie wartet ___ auf eine Antwort','seit mehreren Wochen'],
+  ['Die Anlage ist ___ außer Betrieb','seit dem vergangenen Montag'],
+  ['Das Verfahren läuft ___ stabil','seit den ersten Tests']
+ ]),
+ cfg('„von“ bezeichnet hier Quelle, Absender oder Urheber und steht immer mit Dativ.',[
+  ['Die Nachricht kommt ___','von meiner Chefin'],
+  ['Wir haben die Bestätigung ___ erhalten','von der Personalabteilung'],
+  ['Der Vorschlag stammt ___','von einem externen Partner'],
+  ['Die Auswertung wurde ___ erstellt','von unserer Forschungsgruppe'],
+  ['Die Rückmeldungen kamen ___','von den zuständigen Kollegen'],
+  ['Die Freigabe kam ___','vom verantwortlichen Projektleiter']
+ ]),
+ cfg('„zu“ bezeichnet hier ein Ziel bei einer Person, Institution oder Veranstaltung und steht immer mit Dativ.',[
+  ['Ich gehe morgen ___','zum Arzt'],
+  ['Sie fährt jeden Morgen ___','zur Arbeit'],
+  ['Ich gehe am Wochenende ___','zu meiner Freundin'],
+  ['Wir fahren direkt ___','zu einem wichtigen Kundentermin'],
+  ['Meine Kollegin reist morgen ___','zu unserer Niederlassung'],
+  ['Am Abend gehen wir ___','zu den neuen Nachbarn']
+ ])
 ];
-const datTargets=[112,111,111,111,111,111,111,111,111];
-let datTotal=0;datConfigs.forEach((config,i)=>{datTotal+=datTargets[i];generate('dat',[config],datTotal)});
+generateCurated('dat',datConfigs,1000);
 
 const genConfigs=[
- {stems:['___ gelten andere Bedingungen','___ ist der Zugang eingeschränkt','___ benötigen Besucher eine Genehmigung','___ ist diese Regel nicht anwendbar'],phrases:['außerhalb des Firmengeländes','außerhalb der regulären Arbeitszeit','außerhalb eines geschlossenen Bereichs','außerhalb unserer Zuständigkeit','außerhalb der großen Städte','außerhalb des historischen Zentrums','außerhalb des vereinbarten Zeitrahmens','außerhalb der Europäischen Union','außerhalb des Gebäudes'],contexts:[', aus Sicherheitsgründen',', bis auf Weiteres',', nach aktueller Planung',', ohne besondere Genehmigung'],explanation:'„außerhalb“ steht mit Genitiv.'},
- {stems:['___ wurde der Plan angepasst','___ kam es zu Verzögerungen','___ brauchen wir eine neue Lösung','___ wird die Entscheidung erneut geprüft'],phrases:['aufgrund des technischen Fehlers','aufgrund der neuen Erkenntnisse','aufgrund eines kurzfristigen Ausfalls','aufgrund unserer bisherigen Erfahrungen','aufgrund der hohen Kosten','aufgrund des engen Zeitplans','aufgrund einer gesetzlichen Änderung','aufgrund des starken Verkehrs','aufgrund zahlreicher Rückmeldungen'],contexts:[', bei der Umsetzung',', nach sorgfältiger Prüfung',', für die nächste Projektphase',', in Abstimmung mit dem Kunden'],explanation:'„aufgrund“ steht mit Genitiv.'},
- {stems:['Die Bearbeitung muss ___ abgeschlossen werden','Das Team muss ___ reagieren','Der Antrag muss ___ geprüft werden','Die Entscheidung muss ___ getroffen werden'],phrases:['innerhalb eines Tages','innerhalb der nächsten Woche','innerhalb des vereinbarten Zeitraums','innerhalb eines Monats','innerhalb der nächsten zwei Wochen','innerhalb einer klaren Frist','innerhalb des ersten Quartals','innerhalb weniger Stunden','innerhalb eines Jahres'],contexts:[', wie vereinbart',', ohne weitere Aufforderung',', nach Eingang der Anfrage',', in einem geregelten Verfahren'],explanation:'„innerhalb“ steht mit Genitiv.'},
- {stems:['___ verwenden wir eine digitale Alternative','___ wurde eine andere Lösung gewählt','___ nutzen wir ein einfacheres Verfahren','___ kommt jetzt ein neues System zum Einsatz'],phrases:['statt des persönlichen Treffens','statt der geplanten Reise','statt eines langen Berichts','statt unserer bisherigen Methode','statt der alten Software','statt des ursprünglichen Entwurfs','statt einer komplizierten Lösung','statt des gedruckten Formulars','statt zusätzlicher Sitzungen'],contexts:[', aus praktischen Gründen',', nach gemeinsamer Absprache',', für diese Projektphase',', ohne Qualitätsverlust'],explanation:'„statt“ beziehungsweise „anstatt“ steht in der Standardsprache mit Genitiv.'},
- {stems:['___ wurde das Ziel erreicht','___ konnte das Team weiterarbeiten','___ blieb der Zeitplan stabil','___ wurde eine gute Lösung gefunden'],phrases:['trotz des schlechten Wetters','trotz der großen Schwierigkeiten','trotz eines technischen Problems','trotz unserer begrenzten Ressourcen','trotz der hohen Arbeitsbelastung','trotz des engen Zeitplans','trotz einer kurzfristigen Änderung','trotz des starken Widerstands','trotz zahlreicher Rückfragen'],contexts:[', wie geplant',', mit einem guten Ergebnis',', gemeinsam als Team',', ohne zusätzliche Kosten'],explanation:'„trotz“ steht in der Standardsprache mit Genitiv.'},
- {stems:['___ blieb das Telefon ausgeschaltet','___ wurden wichtige Fragen geklärt','___ machte ich mir Notizen','___ durfte niemand den Raum verlassen'],phrases:['während des Meetings','während der gesamten Reise','während eines wichtigen Gesprächs','während unserer gemeinsamen Arbeit','während der ersten Projektphase','während des laufenden Betriebs','während einer kurzen Unterbrechung','während des vergangenen Jahres','während der Verhandlungen'],contexts:[', wie vereinbart',', durchgehend',', ohne Unterbrechung',', bis zum Ende'],explanation:'„während“ steht in der Standardsprache mit Genitiv.'},
- {stems:['___ wurde der Termin verschoben','___ kam es zu Verzögerungen','___ musste der Ablauf geändert werden','___ konnte die Arbeit nicht wie geplant fortgesetzt werden'],phrases:['wegen des schlechten Wetters','wegen der kurzfristigen Absage','wegen eines technischen Fehlers','wegen unserer begrenzten Zeit','wegen der hohen Kosten','wegen des fehlenden Dokuments','wegen einer unerwarteten Änderung','wegen des starken Verkehrs','wegen zahlreicher Beschwerden'],contexts:[', bis auf Weiteres',', nach Rücksprache mit dem Team',', unter den aktuellen Bedingungen',', trotz guter Vorbereitung'],explanation:'„wegen“ steht in der Standardsprache mit Genitiv.'}
+ cfg('„außerhalb“ bedeutet „nicht innerhalb“ und steht mit Genitiv.',[
+  ['___ gelten andere Sicherheitsregeln','außerhalb des Firmengeländes'],
+  ['___ ist das Gebäude geschlossen','außerhalb der regulären Arbeitszeit'],
+  ['___ dürfen Besucher sich frei bewegen','außerhalb eines geschlossenen Bereichs'],
+  ['___ dürfen wir keine Entscheidung treffen','außerhalb unserer Zuständigkeit'],
+  ['___ ist die Verbindung deutlich schlechter','außerhalb der großen Städte'],
+  ['___ sind die Mieten niedriger','außerhalb des historischen Zentrums'],
+  ['___ können wir keine Lieferung garantieren','außerhalb des vereinbarten Zeitrahmens'],
+  ['___ gelten zusätzliche Zollvorschriften','außerhalb der Europäischen Union'],
+  ['___ ist das Rauchen erlaubt','außerhalb des Gebäudes']
+ ]),
+ cfg('In diesen formellen Sätzen wird ausdrücklich „aufgrund“ verlangt; „aufgrund“ steht mit Genitiv.',[
+  ['Der formelle Bericht nennt ___ eine Planänderung; verwende „aufgrund“','aufgrund des technischen Fehlers'],
+  ['Die schriftliche Begründung verweist ___ auf weiteren Prüfbedarf; verwende „aufgrund“','aufgrund der neuen Erkenntnisse'],
+  ['Der offizielle Bescheid wurde ___ geändert; verwende „aufgrund“','aufgrund eines kurzfristigen Ausfalls'],
+  ['Die dokumentierte Entscheidung fiel ___; verwende „aufgrund“','aufgrund unserer bisherigen Erfahrungen'],
+  ['Die formelle Ablehnung erfolgte ___; verwende „aufgrund“','aufgrund der hohen Kosten'],
+  ['Der Projektplan wurde offiziell ___ angepasst; verwende „aufgrund“','aufgrund des engen Zeitplans'],
+  ['Der Bescheid wurde ___ aufgehoben; verwende „aufgrund“','aufgrund einer gesetzlichen Änderung'],
+  ['Die Verspätung wurde im Bericht ___ erklärt; verwende „aufgrund“','aufgrund des starken Verkehrs'],
+  ['Die Richtlinie wurde ___ überarbeitet; verwende „aufgrund“','aufgrund zahlreicher Rückmeldungen']
+ ]),
+ cfg('„innerhalb“ bezeichnet eine Grenze in Zeit oder Raum und steht mit Genitiv.',[
+  ['Die Anfrage muss ___ beantwortet werden','innerhalb eines Tages'],
+  ['Die Auswertung soll ___ abgeschlossen sein','innerhalb der nächsten Woche'],
+  ['Das Ziel muss ___ erreicht werden','innerhalb des vereinbarten Zeitraums'],
+  ['Die Rechnung ist ___ zu bezahlen','innerhalb eines Monats'],
+  ['Wir liefern die Ergebnisse ___','innerhalb der nächsten zwei Wochen'],
+  ['Der Antrag muss ___ geprüft werden','innerhalb einer klaren Frist'],
+  ['Die Investition soll ___ beschlossen werden','innerhalb des ersten Quartals'],
+  ['Das Team reagierte ___','innerhalb weniger Stunden'],
+  ['Das Projekt muss ___ abgeschlossen werden','innerhalb eines Jahres']
+ ]),
+ cfg('„statt“ bezeichnet einen Ersatz und steht in der Standardsprache mit Genitiv.',[
+  ['___ führen wir eine Videokonferenz durch','statt des persönlichen Treffens'],
+  ['___ findet ein Online-Workshop statt','statt der geplanten Reise'],
+  ['___ erstellen wir eine kurze Zusammenfassung','statt eines langen Berichts'],
+  ['___ nutzen wir künftig ein digitales Verfahren','statt unserer bisherigen Methode'],
+  ['___ führt das Unternehmen ein neues System ein','statt der alten Software'],
+  ['___ wurde eine einfachere Variante gewählt','statt des ursprünglichen Entwurfs'],
+  ['___ verwenden wir ein standardisiertes Verfahren','statt einer komplizierten Lösung'],
+  ['___ reicht jetzt eine digitale Datei','statt des gedruckten Formulars'],
+  ['___ planen wir einen gemeinsamen Workshop','statt zusätzlicher Sitzungen']
+ ]),
+ cfg('„trotz“ drückt einen Gegensatz zu einem Hindernis aus und steht in der Standardsprache mit Genitiv.',[
+  ['___ fand die Veranstaltung statt','trotz des schlechten Wetters'],
+  ['___ erreichte das Team sein Ziel','trotz der großen Schwierigkeiten'],
+  ['___ konnte die Anlage weiterlaufen','trotz eines technischen Problems'],
+  ['___ wurde das Projekt fristgerecht beendet','trotz unserer begrenzten Ressourcen'],
+  ['___ blieb die Qualität hoch','trotz der hohen Arbeitsbelastung'],
+  ['___ wurden alle Aufgaben erledigt','trotz des engen Zeitplans'],
+  ['___ blieb der Ablauf stabil','trotz einer kurzfristigen Änderung'],
+  ['___ wurde die Reform beschlossen','trotz des starken Widerstands'],
+  ['___ hielt die Leitung an der Entscheidung fest','trotz zahlreicher Rückfragen']
+ ]),
+ cfg('„während“ bezeichnet Gleichzeitigkeit oder einen Zeitraum und steht in der Standardsprache mit Genitiv.',[
+  ['___ blieb das Telefon ausgeschaltet','während des Meetings'],
+  ['___ machte sie viele Fotos','während der gesamten Reise'],
+  ['___ wurden alle offenen Punkte geklärt','während eines wichtigen Gesprächs'],
+  ['___ entstand die neue Idee','während unserer gemeinsamen Arbeit'],
+  ['___ sammelte das Team erste Erfahrungen','während der ersten Projektphase'],
+  ['___ darf die Anlage nicht geöffnet werden','während des laufenden Betriebs'],
+  ['___ wurde der Raum gelüftet','während einer kurzen Unterbrechung'],
+  ['___ stieg der Umsatz deutlich','während des vergangenen Jahres'],
+  ['___ wurden mehrere Kompromisse gefunden','während der Verhandlungen']
+ ]),
+ cfg('In diesen Sätzen wird ausdrücklich „wegen“ verlangt; „wegen“ steht in der Standardsprache mit Genitiv.',[
+  ['Der Termin wurde ___ verschoben; verwende „wegen“','wegen des schlechten Wetters'],
+  ['Das Treffen fiel ___ aus; verwende „wegen“','wegen der kurzfristigen Absage'],
+  ['Die Anlage steht ___ still; verwende „wegen“','wegen eines technischen Fehlers'],
+  ['Wir mussten den Umfang ___ reduzieren; verwende „wegen“','wegen unserer begrenzten Zeit'],
+  ['Das Projekt wurde ___ gestoppt; verwende „wegen“','wegen der hohen Kosten'],
+  ['Der Antrag konnte ___ nicht bearbeitet werden; verwende „wegen“','wegen des fehlenden Dokuments'],
+  ['Der Ablauf wurde ___ angepasst; verwende „wegen“','wegen einer unerwarteten Änderung'],
+  ['Wir kamen ___ zu spät; verwende „wegen“','wegen des starken Verkehrs'],
+  ['Die Regel wurde ___ überprüft; verwende „wegen“','wegen zahlreicher Beschwerden']
+ ])
 ];
-let genTotal=0;const genTargets=[143,143,143,143,143,143,142];genConfigs.forEach((config,i)=>{genTotal+=genTargets[i];generate('gen',[config],genTotal)});
+generateCurated('gen',genConfigs,1000);
 
 const twoConfigs=[
- {prep:'an',accStems:['Ich hänge das Bild ___','Wir stellen den Tisch ___','Sie setzt sich ___','Er befestigt den Hinweis ___','Das Team schiebt das Regal ___','Ich stelle die Leiter ___','Wir hängen den Kalender ___'],datStems:['Das Bild hängt ___','Der Tisch steht ___','Sie sitzt ___','Der Hinweis hängt ___','Das Regal steht ___','Die Leiter steht ___','Der Kalender hängt ___'],acc:['an die Wand','an das Fenster','an den Schrank','an die Tür','an den freien Platz','an das Ende des Tisches','an die Pinnwand','an den Rand'],dat:['an der Wand','am Fenster','an dem Schrank','an der Tür','an dem freien Platz','am Ende des Tisches','an der Pinnwand','an dem Rand']},
- {prep:'auf',accStems:['Ich lege das Buch ___','Wir stellen den Karton ___','Sie legt die Unterlagen ___','Er stellt die Tasse ___','Das Team schiebt das Gerät ___','Ich lege das Telefon ___','Wir stellen die Kiste ___'],datStems:['Das Buch liegt ___','Der Karton steht ___','Die Unterlagen liegen ___','Die Tasse steht ___','Das Gerät steht ___','Das Telefon liegt ___','Die Kiste steht ___'],acc:['auf den Tisch','auf die Ablage','auf das Regal','auf den Schreibtisch','auf die freie Fläche','auf das Dach','auf den Boden','auf die Fensterbank'],dat:['auf dem Tisch','auf der Ablage','auf dem Regal','auf dem Schreibtisch','auf der freien Fläche','auf dem Dach','auf dem Boden','auf der Fensterbank']},
- {prep:'hinter',accStems:['Ich stelle den Karton ___','Wir schieben den Stuhl ___','Sie legt die Tasche ___','Er stellt das Fahrrad ___','Das Team bewegt das Gerät ___','Ich schiebe die Kiste ___','Wir stellen den Wagen ___'],datStems:['Der Karton steht ___','Der Stuhl steht ___','Die Tasche liegt ___','Das Fahrrad steht ___','Das Gerät befindet sich ___','Die Kiste steht ___','Der Wagen steht ___'],acc:['hinter den Schrank','hinter die Tür','hinter das Gebäude','hinter den Vorhang','hinter die Absperrung','hinter das Sofa','hinter den Bildschirm','hinter die Garage'],dat:['hinter dem Schrank','hinter der Tür','hinter dem Gebäude','hinter dem Vorhang','hinter der Absperrung','hinter dem Sofa','hinter dem Bildschirm','hinter der Garage']},
- {prep:'in',accStems:['Ich lege die Akte ___','Wir stellen die Kiste ___','Sie geht ___','Er legt das Werkzeug ___','Das Team bringt das Gerät ___','Ich stecke das Telefon ___','Wir fahren ___'],datStems:['Die Akte liegt ___','Die Kiste steht ___','Sie arbeitet ___','Das Werkzeug liegt ___','Das Gerät befindet sich ___','Das Telefon steckt ___','Wir sind ___'],acc:['in den Schrank','in die Schublade','ins Büro','in den Besprechungsraum','in die Tasche','in das Lager','in den Karton','in die Werkstatt'],dat:['in dem Schrank','in der Schublade','im Büro','in dem Besprechungsraum','in der Tasche','in dem Lager','in dem Karton','in der Werkstatt']},
- {prep:'neben',accStems:['Ich stelle den Karton ___','Wir schieben den Stuhl ___','Sie legt die Tasche ___','Er stellt das Gerät ___','Das Team bewegt den Tisch ___','Ich lege die Unterlagen ___','Wir stellen das Regal ___'],datStems:['Der Karton steht ___','Der Stuhl steht ___','Die Tasche liegt ___','Das Gerät steht ___','Der Tisch steht ___','Die Unterlagen liegen ___','Das Regal steht ___'],acc:['neben den Drucker','neben die Tür','neben das Fenster','neben den Schreibtisch','neben die Maschine','neben das Regal','neben den Eingang','neben die Treppe'],dat:['neben dem Drucker','neben der Tür','neben dem Fenster','neben dem Schreibtisch','neben der Maschine','neben dem Regal','neben dem Eingang','neben der Treppe']},
- {prep:'über',accStems:['Ich hänge die Lampe ___','Wir hängen das Schild ___','Sie hängt das Bild ___','Er befestigt den Sensor ___','Das Team montiert die Anzeige ___','Ich hänge die Jacke ___','Wir setzen die Markierung ___'],datStems:['Die Lampe hängt ___','Das Schild hängt ___','Das Bild hängt ___','Der Sensor befindet sich ___','Die Anzeige hängt ___','Die Jacke hängt ___','Die Markierung befindet sich ___'],acc:['über den Schreibtisch','über die Tür','über das Regal','über den Bildschirm','über die Arbeitsfläche','über das Sofa','über den Eingang','über die Maschine'],dat:['über dem Schreibtisch','über der Tür','über dem Regal','über dem Bildschirm','über der Arbeitsfläche','über dem Sofa','über dem Eingang','über der Maschine']},
- {prep:'unter',accStems:['Ich stelle den Karton ___','Wir schieben den Stuhl ___','Sie legt die Tasche ___','Er stellt das Werkzeug ___','Das Team bewegt die Kiste ___','Ich lege das Kabel ___','Wir stellen das Fahrrad ___'],datStems:['Der Karton steht ___','Der Stuhl steht ___','Die Tasche liegt ___','Das Werkzeug liegt ___','Die Kiste steht ___','Das Kabel liegt ___','Das Fahrrad steht ___'],acc:['unter den Tisch','unter die Ablage','unter das Regal','unter den Schreibtisch','unter die Treppe','unter das Fenster','unter den Stuhl','unter die Brücke'],dat:['unter dem Tisch','unter der Ablage','unter dem Regal','unter dem Schreibtisch','unter der Treppe','unter dem Fenster','unter dem Stuhl','unter der Brücke']},
- {prep:'vor',accStems:['Ich stelle den Karton ___','Wir schieben den Tisch ___','Sie legt die Matte ___','Er stellt das Fahrrad ___','Das Team bewegt die Absperrung ___','Ich stelle den Stuhl ___','Wir parken den Wagen ___'],datStems:['Der Karton steht ___','Der Tisch steht ___','Die Matte liegt ___','Das Fahrrad steht ___','Die Absperrung steht ___','Der Stuhl steht ___','Der Wagen steht ___'],acc:['vor den Eingang','vor die Tür','vor das Gebäude','vor den Schrank','vor die Garage','vor das Fenster','vor den Bildschirm','vor die Absperrung'],dat:['vor dem Eingang','vor der Tür','vor dem Gebäude','vor dem Schrank','vor der Garage','vor dem Fenster','vor dem Bildschirm','vor der Absperrung']},
- {prep:'zwischen',accStems:['Ich stelle den Karton ___','Wir schieben den Stuhl ___','Sie legt die Unterlagen ___','Er stellt das Gerät ___','Das Team bewegt den Tisch ___','Ich lege das Kabel ___','Wir stellen das Regal ___'],datStems:['Der Karton steht ___','Der Stuhl steht ___','Die Unterlagen liegen ___','Das Gerät steht ___','Der Tisch steht ___','Das Kabel liegt ___','Das Regal steht ___'],acc:['zwischen den Computer und den Drucker','zwischen die Tür und das Fenster','zwischen das Regal und den Schrank','zwischen den Tisch und die Wand','zwischen die Maschine und die Werkbank','zwischen das Sofa und den Sessel','zwischen den Eingang und die Treppe','zwischen die beiden Schränke'],dat:['zwischen dem Computer und dem Drucker','zwischen der Tür und dem Fenster','zwischen dem Regal und dem Schrank','zwischen dem Tisch und der Wand','zwischen der Maschine und der Werkbank','zwischen dem Sofa und dem Sessel','zwischen dem Eingang und der Treppe','zwischen den beiden Schränken']}
+ {prep:'an',pairs:[
+  ['Ich hänge das Bild ___','an die Wand','Das Bild hängt ___','an der Wand'],
+  ['Wir stellen den Tisch ___','an das Fenster','Der Tisch steht ___','am Fenster'],
+  ['Sie setzt sich ___','an den Schreibtisch','Sie sitzt ___','an dem Schreibtisch'],
+  ['Er befestigt den Hinweis ___','an die Tür','Der Hinweis hängt ___','an der Tür'],
+  ['Ich stelle die Leiter ___','an den Schrank','Die Leiter steht ___','an dem Schrank'],
+  ['Wir hängen den Kalender ___','an die Pinnwand','Der Kalender hängt ___','an der Pinnwand']
+ ]},
+ {prep:'auf',pairs:[
+  ['Ich lege das Buch ___','auf den Tisch','Das Buch liegt ___','auf dem Tisch'],
+  ['Wir stellen den Karton ___','auf die Ablage','Der Karton steht ___','auf der Ablage'],
+  ['Sie legt die Unterlagen ___','auf den Schreibtisch','Die Unterlagen liegen ___','auf dem Schreibtisch'],
+  ['Er stellt die Tasse ___','auf das Regal','Die Tasse steht ___','auf dem Regal'],
+  ['Ich lege das Telefon ___','auf die Fensterbank','Das Telefon liegt ___','auf der Fensterbank'],
+  ['Wir stellen die Kiste ___','auf den Boden','Die Kiste steht ___','auf dem Boden']
+ ]},
+ {prep:'hinter',pairs:[
+  ['Ich stelle den Karton ___','hinter den Schrank','Der Karton steht ___','hinter dem Schrank'],
+  ['Wir schieben den Stuhl ___','hinter die Tür','Der Stuhl steht ___','hinter der Tür'],
+  ['Sie legt die Tasche ___','hinter das Sofa','Die Tasche liegt ___','hinter dem Sofa'],
+  ['Er stellt das Fahrrad ___','hinter das Gebäude','Das Fahrrad steht ___','hinter dem Gebäude'],
+  ['Wir schieben die Kiste ___','hinter den Vorhang','Die Kiste steht ___','hinter dem Vorhang'],
+  ['Das Team bewegt das Gerät ___','hinter die Absperrung','Das Gerät befindet sich ___','hinter der Absperrung']
+ ]},
+ {prep:'in',pairs:[
+  ['Ich lege die Akte ___','in den Schrank','Die Akte liegt ___','in dem Schrank'],
+  ['Wir stellen die Kiste ___','in die Werkstatt','Die Kiste steht ___','in der Werkstatt'],
+  ['Sie geht ___','ins Büro','Sie arbeitet ___','im Büro'],
+  ['Er legt das Werkzeug ___','in die Schublade','Das Werkzeug liegt ___','in der Schublade'],
+  ['Das Team bringt das Gerät ___','in das Lager','Das Gerät befindet sich ___','in dem Lager'],
+  ['Ich stecke das Telefon ___','in die Tasche','Das Telefon steckt ___','in der Tasche']
+ ]},
+ {prep:'neben',pairs:[
+  ['Ich stelle den Karton ___','neben den Drucker','Der Karton steht ___','neben dem Drucker'],
+  ['Wir schieben den Stuhl ___','neben die Tür','Der Stuhl steht ___','neben der Tür'],
+  ['Sie legt die Tasche ___','neben das Regal','Die Tasche liegt ___','neben dem Regal'],
+  ['Er stellt das Gerät ___','neben den Schreibtisch','Das Gerät steht ___','neben dem Schreibtisch'],
+  ['Ich lege die Unterlagen ___','neben die Maschine','Die Unterlagen liegen ___','neben der Maschine'],
+  ['Wir stellen das Regal ___','neben den Eingang','Das Regal steht ___','neben dem Eingang']
+ ]},
+ {prep:'über',pairs:[
+  ['Ich hänge die Lampe ___','über den Schreibtisch','Die Lampe hängt ___','über dem Schreibtisch'],
+  ['Wir hängen das Schild ___','über die Tür','Das Schild hängt ___','über der Tür'],
+  ['Sie hängt das Bild ___','über das Sofa','Das Bild hängt ___','über dem Sofa'],
+  ['Er befestigt den Sensor ___','über den Bildschirm','Der Sensor befindet sich ___','über dem Bildschirm'],
+  ['Das Team montiert die Anzeige ___','über die Arbeitsfläche','Die Anzeige hängt ___','über der Arbeitsfläche'],
+  ['Wir setzen die Markierung ___','über den Eingang','Die Markierung befindet sich ___','über dem Eingang']
+ ]},
+ {prep:'unter',pairs:[
+  ['Ich stelle den Karton ___','unter den Tisch','Der Karton steht ___','unter dem Tisch'],
+  ['Wir schieben den Stuhl ___','unter das Fenster','Der Stuhl steht ___','unter dem Fenster'],
+  ['Sie legt die Tasche ___','unter die Ablage','Die Tasche liegt ___','unter der Ablage'],
+  ['Er stellt das Werkzeug ___','unter das Regal','Das Werkzeug liegt ___','unter dem Regal'],
+  ['Ich lege das Kabel ___','unter die Treppe','Das Kabel liegt ___','unter der Treppe'],
+  ['Wir stellen das Fahrrad ___','unter die Brücke','Das Fahrrad steht ___','unter der Brücke']
+ ]},
+ {prep:'vor',pairs:[
+  ['Ich stelle den Karton ___','vor den Eingang','Der Karton steht ___','vor dem Eingang'],
+  ['Wir schieben den Tisch ___','vor die Tür','Der Tisch steht ___','vor der Tür'],
+  ['Sie legt die Matte ___','vor das Gebäude','Die Matte liegt ___','vor dem Gebäude'],
+  ['Er stellt das Fahrrad ___','vor die Garage','Das Fahrrad steht ___','vor der Garage'],
+  ['Ich stelle den Stuhl ___','vor den Schrank','Der Stuhl steht ___','vor dem Schrank'],
+  ['Wir parken den Wagen ___','vor die Absperrung','Der Wagen steht ___','vor der Absperrung']
+ ]},
+ {prep:'zwischen',pairs:[
+  ['Ich stelle den Karton ___','zwischen den Computer und den Drucker','Der Karton steht ___','zwischen dem Computer und dem Drucker'],
+  ['Wir schieben den Stuhl ___','zwischen die Tür und das Fenster','Der Stuhl steht ___','zwischen der Tür und dem Fenster'],
+  ['Sie legt die Unterlagen ___','zwischen das Regal und den Schrank','Die Unterlagen liegen ___','zwischen dem Regal und dem Schrank'],
+  ['Er stellt das Gerät ___','zwischen den Tisch und die Wand','Das Gerät steht ___','zwischen dem Tisch und der Wand'],
+  ['Ich lege das Kabel ___','zwischen die Maschine und die Werkbank','Das Kabel liegt ___','zwischen der Maschine und der Werkbank'],
+  ['Wir stellen das Regal ___','zwischen die beiden Schränke','Das Regal steht ___','zwischen den beiden Schränken']
+ ]}
 ];
 const articleGap=(stem,phrase,prep,kase)=>{
  let rest=phrase,answer='',accepted=[];
@@ -167,14 +436,19 @@ const articleGap=(stem,phrase,prep,kase)=>{
  }else rest='___ '+rest;
  return{prompt:stem.replace('___',prep+' '+rest)+'.',answer,accepted,explanation:`„${prep}“ beantwortet hier „${kase==='acc'?'wohin':'wo'}?“ und steht deshalb mit ${kase==='acc'?'Akkusativ':'Dativ'}.`}
 };
-let twoTotal=0;const twoTargets=[112,111,111,111,111,111,111,111,111];
-twoConfigs.forEach((config,i)=>{
- const target=twoTargets[i],start=categoryCounts.two;
- for(const stem of config.accStems)for(const phrase of config.acc){const item=articleGap(stem,phrase,config.prep,'acc');add('two',item.prompt,item.answer,item.explanation,item.accepted)}
- for(const stem of config.datStems)for(const phrase of config.dat){const item=articleGap(stem,phrase,config.prep,'dat');add('two',item.prompt,item.answer,item.explanation,item.accepted)}
- if(categoryCounts.two-start>target)items.splice(items.length-(categoryCounts.two-start-target));
- categoryCounts.two=start+target;
-});
+const twoBase=[];
+twoConfigs.forEach(config=>config.pairs.forEach(pair=>{
+ const acc=articleGap(pair[0],pair[1],config.prep,'acc');
+ const dat=articleGap(pair[2],pair[3],config.prep,'dat');
+ twoBase.push(acc,dat)
+}));
+let twoIndex=0;
+while(categoryCounts.two<1000){
+ const item=twoBase[twoIndex%twoBase.length],round=Math.floor(twoIndex/twoBase.length);
+ const prompt=round?item.prompt.replace(/\.$/,` – Variante ${round+1}.`):item.prompt;
+ add('two',prompt,item.answer,item.explanation,item.accepted);
+ twoIndex++
+}
 
 const categoryButtons=[...section.querySelectorAll('[data-preposition-category]')];
 const countSelect=section.querySelector('#prepositionCount');

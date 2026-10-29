@@ -221,3 +221,7 @@ footer a{color:var(--green)}.article-plural{display:block;min-height:16px;color:
 
 /* Add the next note directly after the final note block */
 .note-add-after{display:block;width:100%;margin:16px 0 0;padding:12px 16px}
+
+/* Add the next Schreiben comparison directly after the final pair */
+.comparison-add-after{display:block;width:100%;margin:16px 0 0;border-color:var(--green);color:var(--green);background:#fff;padding:12px 16px}
+.comparison-add-after:hover,.comparison-add-after:focus-visible{background:#edf7f2;outline:0}

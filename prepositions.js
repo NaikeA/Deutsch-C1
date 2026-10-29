@@ -111,21 +111,10 @@ const generate=(category,configs,target)=>{
 };
 
 const cfg=(explanation,rows)=>({explanation,items:rows.map(([stem,answer])=>({stem,answer}))});
-const generateCurated=(category,configs,target)=>{
- const base=[];
- configs.forEach(config=>config.items.forEach(item=>base.push({
-  prompt:withCue(sentence(item.stem,''),item.answer),
-  answer:item.answer,
-  explanation:config.explanation,
-  accepted:item.accepted||[]
- })));
- let index=0;
- while(categoryCounts[category]<target){
-  const item=base[index%base.length],round=Math.floor(index/base.length);
-  const prompt=round?item.prompt.replace(/\.$/,` – Variante ${round+1}.`):item.prompt;
-  add(category,prompt,item.answer,item.explanation,item.accepted);
-  index++
- }
+const generateCurated=(category,configs)=>{
+ configs.forEach(config=>config.items.forEach(item=>{
+  add(category,withCue(sentence(item.stem,''),item.answer),item.answer,config.explanation,item.accepted||[])
+ }))
 };
 
 const accConfigs=[
@@ -190,7 +179,7 @@ const accConfigs=[
   ['Alle kämpfen gemeinsam ___','um das gemeinsame Ziel']
  ])
 ];
-generateCurated('acc',accConfigs,1000);
+generateCurated('acc',accConfigs);
 
 const datConfigs=[
  cfg('„aus“ bezeichnet hier Herkunft oder Quelle und steht immer mit Dativ.',[
@@ -266,7 +255,7 @@ const datConfigs=[
   ['Am Abend gehen wir ___','zu den neuen Nachbarn']
  ])
 ];
-generateCurated('dat',datConfigs,1000);
+generateCurated('dat',datConfigs);
 
 const genConfigs=[
  cfg('„außerhalb“ bedeutet „nicht innerhalb“ und steht mit Genitiv.',[
@@ -347,7 +336,7 @@ const genConfigs=[
   ['Die Regel wurde ___ überprüft; verwende „wegen“','wegen zahlreicher Beschwerden']
  ])
 ];
-generateCurated('gen',genConfigs,1000);
+generateCurated('gen',genConfigs);
 
 const twoConfigs=[
  {prep:'an',pairs:[
@@ -442,13 +431,7 @@ twoConfigs.forEach(config=>config.pairs.forEach(pair=>{
  const dat=articleGap(pair[2],pair[3],config.prep,'dat');
  twoBase.push(acc,dat)
 }));
-let twoIndex=0;
-while(categoryCounts.two<1000){
- const item=twoBase[twoIndex%twoBase.length],round=Math.floor(twoIndex/twoBase.length);
- const prompt=round?item.prompt.replace(/\.$/,` – Variante ${round+1}.`):item.prompt;
- add('two',prompt,item.answer,item.explanation,item.accepted);
- twoIndex++
-}
+twoBase.forEach(item=>add('two',item.prompt,item.answer,item.explanation,item.accepted));
 
 const categoryButtons=[...section.querySelectorAll('[data-preposition-category]')];
 const countSelect=section.querySelector('#prepositionCount');

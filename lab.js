@@ -53,5 +53,16 @@ const CONNECTOR_PATTERNS=[
   (n,p,t)=>[`${n} fragt, wann beginnt ${t} die Besprechung.`,`${n} fragt, wann ${t} die Besprechung beginnt.`,'Indirekte W-Frage: Verb am Ende.']
 ];
 ERROR_LAB.connectors.push(...CONNECTOR_PATTERNS.flatMap(f=>CONNECTOR_PEOPLE.flatMap(([n,p])=>CONNECTOR_TIMES.map(t=>f(n,p,t)))));
-for(const key of ['spelling','endings','natural','connectors'])ERROR_LAB[key]=ERROR_LAB[key].slice(0,350);
+const dedupeLab=(list,keyFn)=>{const seen=new Set();return list.filter(item=>{const key=keyFn(item);if(seen.has(key))return false;seen.add(key);return true})};
+ERROR_LAB.spelling=dedupeLab(ERROR_LAB.spelling,item=>item.join('|')).slice(0,350);
+ERROR_LAB.endings=ERROR_LAB.endings.slice(0,35);
+ERROR_LAB.natural=dedupeLab(
+ ERROR_LAB.natural.map(item=>item.map(value=>value.replace(/^(Lukas|Mia|Jonas|Lea|David|Nora|Tobias):\s*/,'').trim())),
+ item=>item.join('|')
+);
+const connectorKey=item=>item.join('|')
+ .replace(/\b(Lukas|Mia|Jonas|Lea|David|Nora|Tobias)\b/g,'NAME')
+ .replace(/\b(er|sie|Er|Sie)\b/g,'PRONOMEN')
+ .replace(/\b(heute|morgen|am Montag|Heute|Morgen|Am Montag)\b/g,'ZEIT');
+ERROR_LAB.connectors=dedupeLab(ERROR_LAB.connectors,connectorKey);
 window.ERROR_LAB=ERROR_LAB;

@@ -188,14 +188,108 @@ document.querySelector('#clearCorrected').addEventListener('click',()=>{correcte
 document.querySelector('#copyForCorrection').addEventListener('click',async()=>{const text=paragraph.value.trim();const note=document.querySelector('#copyCorrectionStatus');if(!text){note.textContent='Schreibe zuerst einen Absatz.';return}const prompt='Bitte korrigiere meinen deutschen Text. Zeige mir: 1. eine korrigierte natürliche Version, 2. meine Fehler nach Kategorien (Rechtschreibung, Artikel/Endungen, Plural, Satzbau, Wortwahl), 3. drei kurze Übungen zu meinen häufigsten Fehlern. Text:\n\n'+text;await navigator.clipboard.writeText(prompt);note.textContent='Korrekturauftrag kopiert ✓'});
 showPrompt();loadEntry();
 const notes=JSON.parse(localStorage.getItem(NOTES_KEY)||'{}');
-const notesDate=document.querySelector('#notesDate');const notesTitle=document.querySelector('#notesTitle');const dailyNotes=document.querySelector('#dailyNotes');const notesStatus=document.querySelector('#notesStatus');let notesTimer;
+let notesMigrated=false;
+Object.keys(notes).forEach(date=>{
+ const entry=notes[date];
+ if(entry&&!Array.isArray(entry.blocks)&&(entry.title||entry.text)){
+  notes[date]={blocks:[{id:'legacy-'+date,title:entry.title||'',text:entry.text||'',savedAt:entry.savedAt||''}],savedAt:entry.savedAt||''};
+  notesMigrated=true
+ }
+});
+if(notesMigrated)localStorage.setItem(NOTES_KEY,JSON.stringify(notes));
+const notesDate=document.querySelector('#notesDate');
+const notesBlocks=document.querySelector('#notesBlocks');
+const notesStatus=document.querySelector('#notesStatus');
+let notesTimer;
 notesDate.value=day;
+const makeNoteBlock=()=>({id:'note-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7),title:'',text:'',savedAt:''});
+const getNoteDay=(date,create=false)=>{
+ let entry=notes[date];
+ if(!entry&&create)entry=notes[date]={blocks:[],savedAt:''};
+ if(entry&&!Array.isArray(entry.blocks))entry.blocks=[];
+ return entry||{blocks:[],savedAt:''}
+};
+const saveNotesStorage=()=>localStorage.setItem(NOTES_KEY,JSON.stringify(notes));
 function formatNoteDate(date){return new Intl.DateTimeFormat('de-DE',{day:'2-digit',month:'short',year:'numeric'}).format(new Date(date+'T12:00:00'))}
-function renderNotesList(){const box=document.querySelector('#notesList');const dates=Object.keys(notes).filter(date=>notes[date]?.title||notes[date]?.text).sort().reverse();box.innerHTML=dates.length?dates.map(date=>`<button type="button" data-note-date="${date}" class="note-history-item${date===notesDate.value?' active':''}"><b>${esc(notes[date].title||'Notiz')}</b><span>${formatNoteDate(date)}</span></button>`).join(''):'<p class="notes-empty">Noch keine Notizen gespeichert.</p>';box.querySelectorAll('[data-note-date]').forEach(btn=>btn.addEventListener('click',()=>{notesDate.value=btn.dataset.noteDate;loadNote()}))}
-function loadNote(){clearTimeout(notesTimer);const entry=notes[notesDate.value]||{};notesTitle.value=entry.title||'';dailyNotes.value=entry.text||'';notesStatus.textContent=entry.savedAt?'Gespeichert':'Noch nicht gespeichert';renderNotesList()}
-function saveNote(auto=false){clearTimeout(notesTimer);const title=notesTitle.value.trim();const text=dailyNotes.value.trim();if(!title&&!text){notesStatus.textContent='Noch nichts zu speichern';return}notes[notesDate.value]={title,text,savedAt:new Date().toISOString()};localStorage.setItem(NOTES_KEY,JSON.stringify(notes));notesStatus.textContent=auto?'Automatisch gespeichert ✓':'Gespeichert ✓';renderNotesList()}
-function queueNoteSave(){notesStatus.textContent='Wird gespeichert …';clearTimeout(notesTimer);notesTimer=setTimeout(()=>saveNote(true),700)}
-notesTitle.addEventListener('input',queueNoteSave);dailyNotes.addEventListener('input',queueNoteSave);notesDate.addEventListener('change',loadNote);document.querySelector('#saveNote').addEventListener('click',()=>saveNote(false));document.querySelector('#deleteNote').addEventListener('click',()=>{if(!notes[notesDate.value])return;if(!window.confirm('Möchtest du diese Notiz wirklich löschen?'))return;delete notes[notesDate.value];localStorage.setItem(NOTES_KEY,JSON.stringify(notes));loadNote()});loadNote();
+function renderNotesList(){
+ const box=document.querySelector('#notesList');
+ const dates=Object.keys(notes).filter(date=>getNoteDay(date).blocks.length).sort().reverse();
+ box.innerHTML=dates.length?dates.map(date=>{
+  const blocks=getNoteDay(date).blocks;
+  const firstTitle=blocks.map(block=>block.title?.trim()).find(Boolean);
+  const label=firstTitle||`${blocks.length} Notizblock${blocks.length===1?'':'blöcke'}`;
+  return `<button type="button" data-note-date="${date}" class="note-history-item${date===notesDate.value?' active':''}"><b>${esc(label)}</b><span>${formatNoteDate(date)} · ${blocks.length} Block${blocks.length===1?'':'blöcke'}</span></button>`
+ }).join(''):'<p class="notes-empty">Noch keine Notizen gespeichert.</p>';
+ box.querySelectorAll('[data-note-date]').forEach(btn=>btn.addEventListener('click',()=>{saveNotesStorage();notesDate.value=btn.dataset.noteDate;loadNote()}))
+}
+function renderNoteBlocks(){
+ const entry=getNoteDay(notesDate.value);
+ if(!entry.blocks.length){
+  notesBlocks.innerHTML='<div class="notes-blocks-empty"><b>Noch kein Notizblock für diesen Tag</b><span>Klicke auf „+ Neuer Notizblock“, um zu beginnen.</span></div>';
+  return
+ }
+ notesBlocks.innerHTML=entry.blocks.map((block,index)=>`
+  <article class="note-block" data-note-id="${block.id}">
+   <div class="note-block-head"><strong>Notizblock ${index+1}</strong><button class="text-btn remove-note-block" type="button" aria-label="Notizblock ${index+1} entfernen">Block entfernen</button></div>
+   <label>Titel <small>(optional)</small><input data-note-field="title" type="text" maxlength="100" value="${esc(block.title||'')}" placeholder="Zum Beispiel: Neue Wörter aus dem Gespräch"></label>
+   <label>Notizen<textarea data-note-field="text" lang="de" spellcheck="true" placeholder="Was möchtest du festhalten?">${esc(block.text||'')}</textarea></label>
+   <span class="note-block-status">${block.savedAt?'Gespeichert':'Noch nicht gespeichert'}</span>
+  </article>`).join('');
+ notesBlocks.querySelectorAll('.note-block').forEach(card=>{
+  const block=entry.blocks.find(item=>item.id===card.dataset.noteId);
+  card.querySelectorAll('[data-note-field]').forEach(field=>field.addEventListener('input',()=>{
+   block[field.dataset.noteField]=field.value;
+   card.querySelector('.note-block-status').textContent='Wird gespeichert …';
+   queueNoteSave()
+  }));
+  card.querySelector('.remove-note-block').addEventListener('click',()=>{
+   if((block.title?.trim()||block.text?.trim())&&!window.confirm('Möchtest du diesen Notizblock wirklich entfernen?'))return;
+   entry.blocks=entry.blocks.filter(item=>item.id!==block.id);
+   entry.savedAt=new Date().toISOString();
+   saveNotesStorage();notesStatus.textContent='Notizblock entfernt';renderNoteBlocks();renderNotesList()
+  })
+ })
+}
+function loadNote(){
+ clearTimeout(notesTimer);
+ const entry=getNoteDay(notesDate.value);
+ notesStatus.textContent=entry.savedAt?'Gespeichert':'Noch nicht gespeichert';
+ renderNoteBlocks();renderNotesList()
+}
+function saveNote(auto=false){
+ clearTimeout(notesTimer);
+ const entry=getNoteDay(notesDate.value);
+ if(!entry.blocks.length){notesStatus.textContent='Noch nichts zu speichern';return}
+ const savedAt=new Date().toISOString();
+ entry.savedAt=savedAt;
+ entry.blocks.forEach(block=>block.savedAt=savedAt);
+ saveNotesStorage();
+ notesStatus.textContent=auto?'Automatisch gespeichert ✓':'Alle Notizblöcke gespeichert ✓';
+ notesBlocks.querySelectorAll('.note-block-status').forEach(status=>status.textContent='Gespeichert');
+ renderNotesList()
+}
+function queueNoteSave(){
+ notesStatus.textContent='Wird gespeichert …';
+ clearTimeout(notesTimer);
+ notesTimer=setTimeout(()=>saveNote(true),700)
+}
+document.querySelector('#addNoteBlock').addEventListener('click',()=>{
+ const entry=getNoteDay(notesDate.value,true);
+ entry.blocks.push(makeNoteBlock());
+ saveNotesStorage();
+ notesStatus.textContent='Neuer Notizblock hinzugefügt';
+ renderNoteBlocks();renderNotesList();
+ notesBlocks.lastElementChild?.querySelector('input')?.focus()
+});
+notesDate.addEventListener('change',()=>{saveNotesStorage();loadNote()});
+document.querySelector('#saveNote').addEventListener('click',()=>saveNote(false));
+document.querySelector('#deleteNote').addEventListener('click',()=>{
+ const entry=getNoteDay(notesDate.value);
+ if(!entry.blocks.length)return;
+ if(!window.confirm('Möchtest du alle Notizblöcke dieses Tages wirklich löschen?'))return;
+ delete notes[notesDate.value];saveNotesStorage();loadNote()
+});
+loadNote();
 const listeningExercises=window.GERMAN_LISTENING||[];
 const isNativeAndroid=!!(window.Capacitor?.isNativePlatform?.()&&window.Capacitor?.getPlatform?.()==='android');
 const nativeTts=isNativeAndroid&&typeof window.Capacitor?.nativePromise==='function'?{speak:options=>window.Capacitor.nativePromise('TextToSpeech','speak',options),stop:()=>window.Capacitor.nativePromise('TextToSpeech','stop',{}),getSupportedVoices:()=>window.Capacitor.nativePromise('TextToSpeech','getSupportedVoices',{}),openInstall:()=>window.Capacitor.nativePromise('TextToSpeech','openInstall',{})}:null;const listeningDate=document.querySelector('#listeningDate');const listeningState=JSON.parse(localStorage.getItem(LISTENING_KEY)||'{}');const listeningRate=document.querySelector('#listeningRate');const listeningVoice=document.querySelector('#listeningVoice');const listeningSeek=document.querySelector('#listeningSeek');let listeningUtterance=null;let germanVoices=[];let listeningOffset=0;let listeningRun=0;let listeningPaused=false;let listeningDragging=false;let listeningPreviewOffset=0;let listeningTimer=null;let listeningTimerStart=0;let listeningTimerOffset=0;listeningDate.value=day;

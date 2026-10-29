@@ -157,7 +157,7 @@ const accConfigs=[
   ['Die Mehrheit stimmt ___','gegen den Vorschlag'],
   ['Mehrere Beschäftigte protestieren ___','gegen die neue Regelung'],
   ['Das Team entscheidet sich bewusst ___','gegen das aktuelle Modell'],
-  ['Die Fachabteilung warnt ___','gegen einen übereilten Beschluss'],
+  ['Die Fachabteilung spricht sich ___ aus','gegen einen übereilten Beschluss'],
   ['Die Initiative richtet sich ___','gegen unnötige Bürokratie'],
   ['Die Belegschaft demonstriert ___','gegen den geplanten Stellenabbau'],
   ['Gute Argumente sprechen ___','gegen die bisherige Vorgehensweise'],
@@ -187,7 +187,7 @@ const accConfigs=[
   ['Die Kundin bittet ___','um eine schnelle Entscheidung'],
   ['Heute geht es vor allem ___','um den nächsten Projektschritt'],
   ['Beide Seiten ringen ___','um eine gerechte Lösung'],
-  ['Alle arbeiten gemeinsam ___','um das gemeinsame Ziel']
+  ['Alle kämpfen gemeinsam ___','um das gemeinsame Ziel']
  ])
 ];
 generateCurated('acc',accConfigs,1000);
@@ -281,8 +281,8 @@ const genConfigs=[
   ['___ ist das Rauchen erlaubt','außerhalb des Gebäudes']
  ]),
  cfg('In diesen formellen Sätzen wird ausdrücklich „aufgrund“ verlangt; „aufgrund“ steht mit Genitiv.',[
-  ['Der formelle Bericht nennt ___ eine Planänderung; verwende „aufgrund“','aufgrund des technischen Fehlers'],
-  ['Die schriftliche Begründung verweist ___ auf weiteren Prüfbedarf; verwende „aufgrund“','aufgrund der neuen Erkenntnisse'],
+  ['Der Plan wurde ___ geändert; verwende „aufgrund“','aufgrund des technischen Fehlers'],
+  ['Die Prüfung wird ___ fortgesetzt; verwende „aufgrund“','aufgrund der neuen Erkenntnisse'],
   ['Der offizielle Bescheid wurde ___ geändert; verwende „aufgrund“','aufgrund eines kurzfristigen Ausfalls'],
   ['Die dokumentierte Entscheidung fiel ___; verwende „aufgrund“','aufgrund unserer bisherigen Erfahrungen'],
   ['Die formelle Ablehnung erfolgte ___; verwende „aufgrund“','aufgrund der hohen Kosten'],
@@ -412,7 +412,7 @@ const twoConfigs=[
   ['Sie legt die Matte ___','vor das Gebäude','Die Matte liegt ___','vor dem Gebäude'],
   ['Er stellt das Fahrrad ___','vor die Garage','Das Fahrrad steht ___','vor der Garage'],
   ['Ich stelle den Stuhl ___','vor den Schrank','Der Stuhl steht ___','vor dem Schrank'],
-  ['Wir parken den Wagen ___','vor die Absperrung','Der Wagen steht ___','vor der Absperrung']
+  ['Wir schieben den Wagen ___','vor die Absperrung','Der Wagen steht ___','vor der Absperrung']
  ]},
  {prep:'zwischen',pairs:[
   ['Ich stelle den Karton ___','zwischen den Computer und den Drucker','Der Karton steht ___','zwischen dem Computer und dem Drucker'],

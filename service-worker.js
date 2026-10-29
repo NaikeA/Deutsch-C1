@@ -1,5 +1,5 @@
-const CACHE_NAME='deutsch-c1-v95';
-const CORE=['./','./index.html','./styles.css?v=48','./prepositions.css?v=1','./verb-count.css?v=16','./listening.css?v=19','./playback.css?v=24','./noun-meanings.css?v=20','./vocabulary.css?v=1','./cases.css?v=2','./declension.css?v=1','./nouns.js?v=17','./noun-meanings.js?v=21','./listening.js?v=22','./verb-meanings.js?v=20','./dictionary-data.js?v=1','./verbs.js?v=21','./corrections.js?v=16','./writing-prompts.js?v=1','./lab.js?v=16','./expansions.js?v=3','./cases.js?v=7','./speech-controls.js?v=1','./backup.js?v=2','./declension.js?v=3','./prepositions.js?v=12','./grammar-expanded.js?v=5','./app.js?v=87','./verb-review.js?v=3','./daily-defaults.js?v=2','./manifest.webmanifest','./app-icon.svg'];
+const CACHE_NAME='deutsch-c1-v96';
+const CORE=['./','./index.html','./styles.css?v=48','./prepositions.css?v=1','./verb-count.css?v=16','./listening.css?v=19','./playback.css?v=24','./noun-meanings.css?v=20','./vocabulary.css?v=1','./cases.css?v=2','./declension.css?v=1','./nouns.js?v=17','./noun-meanings.js?v=21','./listening.js?v=22','./verb-meanings.js?v=20','./dictionary-data.js?v=1','./verbs.js?v=21','./corrections.js?v=17','./writing-prompts.js?v=2','./lab.js?v=17','./expansions.js?v=3','./cases.js?v=8','./speech-controls.js?v=1','./backup.js?v=2','./declension.js?v=4','./prepositions.js?v=12','./grammar-expanded.js?v=5','./app.js?v=87','./verb-review.js?v=3','./daily-defaults.js?v=2','./manifest.webmanifest','./app-icon.svg'];
 self.addEventListener('install',event=>{
   event.waitUntil(
     caches.open(CACHE_NAME)

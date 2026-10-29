@@ -49,4 +49,4 @@ const CORRECTION_RULES=[
   {r:'Höfliche Bitte mit Konjunktiv II',w:p=>`${p.n} sagt: „Können Sie mir bitte helfen würden?“`,c:p=>`${p.n} sagt: „Könnten Sie mir bitte helfen?“`},
   {r:'„gern“ steht normalerweise beim Verb',w:p=>`${p.n} mag Kaffee trinken gern.`,c:p=>`${p.n} trinkt gern Kaffee.`}
 ];
-window.GERMAN_CORRECTIONS=CORRECTION_RULES.flatMap((rule,ruleIndex)=>CORRECTION_PEOPLE.map((person,personIndex)=>({id:`${ruleIndex}-${personIndex}`,wrong:rule.w(person),correct:rule.c(person),rule:rule.r})));
+window.GERMAN_CORRECTIONS=CORRECTION_RULES.map((rule,ruleIndex)=>{const person=CORRECTION_PEOPLE[ruleIndex%CORRECTION_PEOPLE.length];return{id:`rule-${ruleIndex}`,wrong:rule.w(person),correct:rule.c(person),rule:rule.r}});

@@ -69,7 +69,7 @@ const nouns=Object.entries(nounDefinitions).flatMap(([gender,items])=>items.map(
 })));
 const cases=['nom','acc','dat','gen'];
 const exercises=[];
-const add=(category,id,prompt,answer,explanation)=>exercises.push({category,id,prompt,answer,explanation});
+const add=(category,id,prompt,answer,explanation)=>exercises.push({category,id:`${id}-${exercises.length+1}`,prompt,answer,explanation});
 for(const noun of nouns){
   for(const grammaticalCase of cases){
     const gender=noun.gender,caseLabel=caseNames[grammaticalCase],genderLabel=genders[gender];

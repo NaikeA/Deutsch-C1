@@ -347,13 +347,14 @@
       </div>
       <div class="notes-layout">
         <div class="notes-editor">
-          <label for="notesTitle">Titel <small>(optional)</small></label>
-          <input id="notesTitle" type="text" maxlength="100" placeholder="Zum Beispiel: Neue Wörter aus dem Gespräch">
-          <label for="dailyNotes">Notizen</label>
-          <textarea id="dailyNotes" lang="de" spellcheck="true" placeholder="Was möchtest du heute festhalten?"></textarea>
-          <div class="notes-actions"><span id="notesStatus" aria-live="polite">Noch nicht gespeichert</span><div><button id="deleteNote" class="text-btn" type="button">Notiz löschen</button><button id="saveNote" class="save-btn" type="button">Notiz speichern</button></div></div>
+          <div class="notes-editor-toolbar">
+            <div><h3>Notizblöcke</h3><p>Erstelle für jeden Gedanken, jedes Thema oder jede Frage einen eigenen Block.</p></div>
+            <button id="addNoteBlock" class="save-btn" type="button">+ Neuer Notizblock</button>
+          </div>
+          <div id="notesBlocks" class="notes-blocks"></div>
+          <div class="notes-actions"><span id="notesStatus" aria-live="polite">Noch nicht gespeichert</span><div><button id="deleteNote" class="text-btn" type="button">Alle Blöcke dieses Tages löschen</button><button id="saveNote" class="save-btn" type="button">Alle speichern</button></div></div>
         </div>
-        <aside class="notes-history"><h3>Gespeicherte Notizen</h3><p>Wähle einen Tag aus, um seine Notiz zu öffnen.</p><div id="notesList"></div></aside>
+        <aside class="notes-history"><h3>Gespeicherte Notizen</h3><p>Wähle einen Tag aus, um seine Notizblöcke zu öffnen.</p><div id="notesList"></div></aside>
       </div>
     </section>
 

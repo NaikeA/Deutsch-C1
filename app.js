@@ -229,16 +229,42 @@ function renderNoteBlocks(){
   return
  }
  notesBlocks.innerHTML=entry.blocks.map((block,index)=>`
-  <article class="note-block" data-note-id="${block.id}">
-   <div class="note-block-head"><strong>Notizblock ${index+1}</strong><button class="text-btn remove-note-block" type="button" aria-label="Notizblock ${index+1} entfernen">Block entfernen</button></div>
-   <label>Titel <small>(optional)</small><input data-note-field="title" type="text" maxlength="100" value="${esc(block.title||'')}" placeholder="Zum Beispiel: Neue Wörter aus dem Gespräch"></label>
-   <label>Notizen<textarea data-note-field="text" lang="de" spellcheck="true" placeholder="Was möchtest du festhalten?">${esc(block.text||'')}</textarea></label>
+  <article class="note-block comparison-pair" data-note-id="${block.id}">
+   <div class="comparison-pair-head note-block-head"><strong>Notizblock <span>${index+1}</span></strong><button class="text-btn remove-note-block" type="button" aria-label="Notizblock ${index+1} entfernen">Entfernen</button></div>
+   <label>Titel <small>(optional)</small></label>
+   <input class="note-title-input" data-note-field="title" type="text" maxlength="100" value="${esc(block.title||'')}" placeholder="Zum Beispiel: Neue Wörter aus dem Gespräch">
+   <label>Meine Notiz</label>
+   <div class="note-toolbar pair-toolbar format-toolbar" role="toolbar" aria-label="Notiz formatieren">
+    <button type="button" data-note-format="bold" title="Fett"><b>B</b></button>
+    <button type="button" data-note-format="italic" title="Kursiv"><i>I</i></button>
+    <button type="button" data-note-format="underline" title="Unterstrichen"><u>U</u></button>
+    <button type="button" data-note-format="strikeThrough" title="Durchgestrichen"><s>S</s></button>
+    <button type="button" data-note-format="insertUnorderedList" title="Aufzählung">• Liste</button>
+   </div>
+   <div class="note-editor-content pair-editor" contenteditable="true" role="textbox" aria-multiline="true" lang="de" spellcheck="true" data-placeholder="Was möchtest du festhalten?"></div>
    <span class="note-block-status">${block.savedAt?'Gespeichert':'Noch nicht gespeichert'}</span>
   </article>`).join('');
  notesBlocks.querySelectorAll('.note-block').forEach(card=>{
   const block=entry.blocks.find(item=>item.id===card.dataset.noteId);
-  card.querySelectorAll('[data-note-field]').forEach(field=>field.addEventListener('input',()=>{
-   block[field.dataset.noteField]=field.value;
+  const titleInput=card.querySelector('[data-note-field="title"]');
+  const editor=card.querySelector('.note-editor-content');
+  editor.innerHTML=block.html||esc(block.text||'').replace(/\n/g,'<br>');
+  titleInput.addEventListener('input',()=>{
+   block.title=titleInput.value;
+   card.querySelector('.note-block-status').textContent='Wird gespeichert …';
+   queueNoteSave()
+  });
+  editor.addEventListener('input',()=>{
+   block.html=editor.innerHTML;
+   block.text=editor.innerText;
+   card.querySelector('.note-block-status').textContent='Wird gespeichert …';
+   queueNoteSave()
+  });
+  card.querySelectorAll('[data-note-format]').forEach(button=>button.addEventListener('click',()=>{
+   editor.focus();
+   document.execCommand(button.dataset.noteFormat,false,null);
+   block.html=editor.innerHTML;
+   block.text=editor.innerText;
    card.querySelector('.note-block-status').textContent='Wird gespeichert …';
    queueNoteSave()
   }));

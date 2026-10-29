@@ -38,15 +38,15 @@
     {g:'p',adj:'technisch',nom:'Anforderungen',acc:'Anforderungen',dat:'Anforderungen',gen:'Anforderungen'}
   ];
   const endingPatterns=[
-    {type:'definite',kase:'nom',frame:g=>g+' ist für den Projekterfolg entscheidend.'},
+    {type:'definite',kase:'nom',frame:(g,l)=>g+' '+(l.g==='p'?'sind':'ist')+' für den Projekterfolg entscheidend.'},
     {type:'definite',kase:'acc',frame:g=>'Wir berücksichtigen '+g+' bei der Planung.'},
     {type:'definite',kase:'dat',frame:g=>'Wir arbeiten seit Monaten mit '+g+'.'},
     {type:'definite',kase:'gen',frame:g=>'Die Bewertung '+g+' liegt bereits vor.'},
-    {type:'ein',kase:'nom',frame:g=>g+' übernimmt heute die Verantwortung.'},
+    {type:'ein',kase:'nom',frame:(g,l)=>g+' '+(l.g==='p'?'übernehmen':'übernimmt')+' heute die Verantwortung.'},
     {type:'ein',kase:'acc',frame:g=>'Das Unternehmen sucht '+g+'.'},
     {type:'ein',kase:'dat',frame:g=>'Die Leitung spricht ausführlich mit '+g+'.'},
     {type:'ein',kase:'gen',frame:g=>'Die Empfehlung '+g+' wurde umgesetzt.'},
-    {type:'possessive',kase:'nom',frame:g=>g+' unterstützt das gesamte Team.'},
+    {type:'possessive',kase:'nom',frame:(g,l)=>g+' '+(l.g==='p'?'unterstützen':'unterstützt')+' das gesamte Team.'},
     {type:'possessive',kase:'acc',frame:g=>'Wir stellen '+g+' morgen vor.'}
   ];
   const qualityEndings=[];
@@ -54,7 +54,7 @@
     const type=pattern.type,article=articles[type][pattern.kase][lex.g];
     const ending=endings[type==='possessive'?'ein':type][pattern.kase][lex.g];
     const group=article+' '+lex.adj+'___ '+lex[pattern.kase];
-    qualityEndings.push([pattern.frame(group),ending,ending]);
+    qualityEndings.push([pattern.frame(group,lex),ending,ending]);
   }));
 
   const qualityNatural=[

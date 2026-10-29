@@ -35,5 +35,8 @@
     topic=>`Welche Gefühle verbindest du mit „${topic}“? Beschreibe ihre Ursachen möglichst genau.`,
     topic=>`Führe ein kurzes Pro-und-Contra-Argument zum Thema „${topic}“ und formuliere anschließend dein Fazit.`
   ];
-  window.GERMAN_WRITING_PROMPTS=topics.flatMap(topic=>frames.map(frame=>frame(topic)));
+  window.GERMAN_WRITING_PROMPTS=topics.map((topic,index)=>{
+    const frame=frames[index%frames.length];
+    return frame(topic)
+  });
 })();

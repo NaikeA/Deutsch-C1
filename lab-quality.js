@@ -50,11 +50,17 @@
     {type:'possessive',kase:'acc',frame:g=>'Wir stellen '+g+' morgen vor.'}
   ];
   const qualityEndings=[];
-  lexemes.forEach(lex=>endingPatterns.forEach(pattern=>{
+  const endingChoices=['e','en','er','es','em'];
+  lexemes.forEach((lex,lexIndex)=>endingPatterns.forEach((pattern,patternIndex)=>{
     const type=pattern.type,article=articles[type][pattern.kase][lex.g];
     const ending=endings[type==='possessive'?'ein':type][pattern.kase][lex.g];
     const group=article+' '+lex.adj+'___ '+lex[pattern.kase];
-    qualityEndings.push([pattern.frame(group,lex),ending,ending]);
+    const distractors=endingChoices.filter(value=>value!==ending);
+    const offset=(lexIndex+patternIndex)%distractors.length;
+    const rotated=distractors.slice(offset).concat(distractors.slice(0,offset)).slice(0,3);
+    const options=rotated.slice();
+    options.splice((lexIndex*3+patternIndex)%4,0,ending);
+    qualityEndings.push([pattern.frame(group,lex),ending,options.join('|')]);
   }));
 
   const qualityNatural=[

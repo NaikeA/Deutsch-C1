@@ -211,6 +211,29 @@ const getNoteDay=(date,create=false)=>{
 };
 const saveNotesStorage=()=>localStorage.setItem(NOTES_KEY,JSON.stringify(notes));
 function formatNoteDate(date){return new Intl.DateTimeFormat('de-DE',{day:'2-digit',month:'short',year:'numeric'}).format(new Date(date+'T12:00:00'))}
+function changeSavedNoteDate(oldDate){
+ const proposed=window.prompt('Neues Datum im Format JJJJ-MM-TT:',oldDate);
+ if(proposed===null)return;
+ const newDate=proposed.trim();
+ const valid=/^\d{4}-\d{2}-\d{2}$/.test(newDate)&&!Number.isNaN(new Date(newDate+'T12:00:00Z').getTime())&&new Date(newDate+'T12:00:00Z').toISOString().slice(0,10)===newDate;
+ if(!valid){window.alert('Bitte gib ein gültiges Datum im Format JJJJ-MM-TT ein.');return}
+ if(newDate===oldDate)return;
+ const source=getNoteDay(oldDate);
+ const target=getNoteDay(newDate);
+ if(target.blocks.length){
+  if(!window.confirm('Für dieses Datum sind bereits Notizen gespeichert. Möchtest du beide Einträge zusammenführen?'))return;
+  target.blocks=[...target.blocks,...source.blocks];
+  target.savedAt=new Date().toISOString();
+  if(!target.listTitle?.trim()&&source.listTitle?.trim())target.listTitle=source.listTitle;
+ }else{
+  notes[newDate]=source;
+ }
+ delete notes[oldDate];
+ if(notesDate.value===oldDate)notesDate.value=newDate;
+ saveNotesStorage();
+ notesStatus.textContent='Datum geändert ✓';
+ loadNote()
+}
 function renderNotesList(){
  const box=document.querySelector('#notesList');
  const dates=Object.keys(notes).filter(date=>getNoteDay(date).blocks.length).sort().reverse();
@@ -221,10 +244,12 @@ function renderNotesList(){
   const label=entry.listTitle?.trim()||firstTitle||`${blocks.length} Notizblock${blocks.length===1?'':'blöcke'}`;
   return `<article class="note-history-row${date===notesDate.value?' active':''}">
    <button type="button" data-note-date="${date}" class="note-history-item" title="${esc(label)}"><b>${esc(label)}</b><span>${formatNoteDate(date)} · ${blocks.length} Block${blocks.length===1?'':'blöcke'}</span></button>
+   <button type="button" data-change-note-date="${date}" class="note-history-date" aria-label="Datum der gespeicherten Notiz ändern" title="Datum ändern">▣</button>
    <button type="button" data-rename-note="${date}" class="note-history-rename" aria-label="Gespeicherte Notiz umbenennen" title="Umbenennen">✎</button>
   </article>`
  }).join(''):'<p class="notes-empty">Noch keine Notizen gespeichert.</p>';
  box.querySelectorAll('[data-note-date]').forEach(btn=>btn.addEventListener('click',()=>{saveNotesStorage();notesDate.value=btn.dataset.noteDate;loadNote()}));
+ box.querySelectorAll('[data-change-note-date]').forEach(btn=>btn.addEventListener('click',()=>changeSavedNoteDate(btn.dataset.changeNoteDate)));
  box.querySelectorAll('[data-rename-note]').forEach(btn=>btn.addEventListener('click',()=>{
   const date=btn.dataset.renameNote;
   const entry=getNoteDay(date);

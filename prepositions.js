@@ -270,15 +270,15 @@ const genConfigs=[
   ['___ ist das Rauchen erlaubt','außerhalb des Gebäudes']
  ]),
  cfg('In diesen formellen Sätzen wird ausdrücklich „aufgrund“ verlangt; „aufgrund“ steht mit Genitiv.',[
-  ['Der Plan wurde ___ geändert; verwende „aufgrund“','aufgrund des technischen Fehlers'],
-  ['Die Prüfung wird ___ fortgesetzt; verwende „aufgrund“','aufgrund der neuen Erkenntnisse'],
-  ['Der offizielle Bescheid wurde ___ geändert; verwende „aufgrund“','aufgrund eines kurzfristigen Ausfalls'],
-  ['Die dokumentierte Entscheidung fiel ___; verwende „aufgrund“','aufgrund unserer bisherigen Erfahrungen'],
-  ['Die formelle Ablehnung erfolgte ___; verwende „aufgrund“','aufgrund der hohen Kosten'],
-  ['Der Projektplan wurde offiziell ___ angepasst; verwende „aufgrund“','aufgrund des engen Zeitplans'],
-  ['Der Bescheid wurde ___ aufgehoben; verwende „aufgrund“','aufgrund einer gesetzlichen Änderung'],
-  ['Die Verspätung wurde im Bericht ___ erklärt; verwende „aufgrund“','aufgrund des starken Verkehrs'],
-  ['Die Richtlinie wurde ___ überarbeitet; verwende „aufgrund“','aufgrund zahlreicher Rückmeldungen']
+  ['Der Plan wurde ___ geändert','aufgrund des technischen Fehlers'],
+  ['Die Prüfung wird ___ fortgesetzt','aufgrund der neuen Erkenntnisse'],
+  ['Der offizielle Bescheid wurde ___ geändert','aufgrund eines kurzfristigen Ausfalls'],
+  ['Die dokumentierte Entscheidung fiel ___','aufgrund unserer bisherigen Erfahrungen'],
+  ['Die formelle Ablehnung erfolgte ___','aufgrund der hohen Kosten'],
+  ['Der Projektplan wurde offiziell ___ angepasst','aufgrund des engen Zeitplans'],
+  ['Der Bescheid wurde ___ aufgehoben','aufgrund einer gesetzlichen Änderung'],
+  ['Die Verspätung wurde im Bericht ___ erklärt','aufgrund des starken Verkehrs'],
+  ['Die Richtlinie wurde ___ überarbeitet','aufgrund zahlreicher Rückmeldungen']
  ]),
  cfg('„innerhalb“ bezeichnet eine Grenze in Zeit oder Raum und steht mit Genitiv.',[
   ['Die Anfrage muss ___ beantwortet werden','innerhalb eines Tages'],
@@ -325,15 +325,15 @@ const genConfigs=[
   ['___ wurden mehrere Kompromisse gefunden','während der Verhandlungen']
  ]),
  cfg('In diesen Sätzen wird ausdrücklich „wegen“ verlangt; „wegen“ steht in der Standardsprache mit Genitiv.',[
-  ['Der Termin wurde ___ verschoben; verwende „wegen“','wegen des schlechten Wetters'],
-  ['Das Treffen fiel ___ aus; verwende „wegen“','wegen der kurzfristigen Absage'],
-  ['Die Anlage steht ___ still; verwende „wegen“','wegen eines technischen Fehlers'],
-  ['Wir mussten den Umfang ___ reduzieren; verwende „wegen“','wegen unserer begrenzten Zeit'],
-  ['Das Projekt wurde ___ gestoppt; verwende „wegen“','wegen der hohen Kosten'],
-  ['Der Antrag konnte ___ nicht bearbeitet werden; verwende „wegen“','wegen des fehlenden Dokuments'],
-  ['Der Ablauf wurde ___ angepasst; verwende „wegen“','wegen einer unerwarteten Änderung'],
-  ['Wir kamen ___ zu spät; verwende „wegen“','wegen des starken Verkehrs'],
-  ['Die Regel wurde ___ überprüft; verwende „wegen“','wegen zahlreicher Beschwerden']
+  ['Der Termin wurde ___ verschoben','wegen des schlechten Wetters'],
+  ['Das Treffen fiel ___ aus','wegen der kurzfristigen Absage'],
+  ['Die Anlage steht ___ still','wegen eines technischen Fehlers'],
+  ['Wir mussten den Umfang ___ reduzieren','wegen unserer begrenzten Zeit'],
+  ['Das Projekt wurde ___ gestoppt','wegen der hohen Kosten'],
+  ['Der Antrag konnte ___ nicht bearbeitet werden','wegen des fehlenden Dokuments'],
+  ['Der Ablauf wurde ___ angepasst','wegen einer unerwarteten Änderung'],
+  ['Wir kamen ___ zu spät','wegen des starken Verkehrs'],
+  ['Die Regel wurde ___ überprüft','wegen zahlreicher Beschwerden']
  ])
 ];
 generateCurated('gen',genConfigs);

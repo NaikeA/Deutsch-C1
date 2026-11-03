@@ -489,6 +489,7 @@ localStorage.setItem(VERB_BOOKMARKS_KEY,JSON.stringify([...verbBookmarks]));
 const validBookmarkedVerbs=()=>verbs.filter(verb=>verbBookmarks.has(verb.v));
 let weeklyVerbReview=false;
 let bookmarkedVerbReview=false;
+let bookmarkedVerbPage=0;
 const shiftPracticeDate=(date,days)=>{const value=new Date(date+'T12:00:00Z');value.setUTCDate(value.getUTCDate()+days);return value.toISOString().slice(0,10)};
 const verbExerciseDate=()=>weeklyVerbReview?shiftPracticeDate(verbDate.value,-7):verbDate.value;
 const verbStorageKey=()=>bookmarkedVerbReview?`${verbDate.value}-bookmarks-${verbPerson}`:weeklyVerbReview?`${verbDate.value}-weekly-${verbExerciseDate()}-${verbPerson}`:`${verbDate.value}-${verbPerson}`;
@@ -497,8 +498,12 @@ function saveVerbBookmarks(){localStorage.setItem(VERB_BOOKMARKS_KEY,JSON.string
 function dailyVerbs(){
   if(bookmarkedVerbReview){
     const bookmarked=validBookmarkedVerbs();
-    const requested=bookmarkVerbCount.value==='all'?bookmarked.length:Math.max(2,Math.min(10,+bookmarkVerbCount.value||2));
-    return bookmarked.slice(0,requested)
+    if(bookmarkVerbCount.value==='all'){bookmarkedVerbPage=0;return bookmarked}
+    const requested=Math.max(2,Math.min(10,+bookmarkVerbCount.value||2));
+    const pageCount=Math.max(1,Math.ceil(bookmarked.length/requested));
+    bookmarkedVerbPage=Math.min(bookmarkedVerbPage,pageCount-1);
+    const start=bookmarkedVerbPage*requested;
+    return bookmarked.slice(start,start+requested)
   }
   const n=Math.floor(new Date(verbExerciseDate()+'T12:00:00Z').getTime()/86400000);
   const start=(((n%verbs.length)+verbs.length)%verbs.length);
@@ -596,7 +601,8 @@ function renderVerbs(){
     const tenseExamples=verbTenseExamples(v);
     const card=document.createElement('article');
     card.className='verb-card';
-    card.innerHTML=`<div class="practice-word-head"><h3>${i+1}. ${v.v}</h3><div class="practice-word-actions"><button class="bookmark-verb" type="button"></button><button class="pronounce-word" type="button" aria-label="${esc(v.v)} anhören" title="Aussprache anhören">🔊</button></div></div><span class="meaning">${verbMeanings[v.v]||'English meaning unavailable'}</span>${['Präsens','Präteritum','Perfekt'].map((t,j)=>`<div class="verb-form-block"><label class="verb-field"><span>${t}</span><input data-form="${j}" autocomplete="off" value="${values[j]||''}" placeholder="${j===2?'Hilfsverb + Partizip':'Verbform'}"><small class="verb-answer"></small></label><details class="form-example"><summary>Beispielsatz</summary><div class="form-example-content"><p>${esc(tenseExamples[j])}</p><button class="pronounce-example" data-example="${j}" type="button" aria-label="${t}-Beispiel anhören" title="Beispielsatz anhören">🔊</button></div></details></div>`).join('')}${v.exampleNote?`<p class="verb-example-note">${esc(v.exampleNote)}</p>`:''}<button class="check-verb">Antwort prüfen</button>`;
+    const displayIndex=bookmarkedVerbReview&&bookmarkVerbCount.value!=='all'?bookmarkedVerbPage*(+bookmarkVerbCount.value||2)+i+1:i+1;
+    card.innerHTML=`<div class="practice-word-head"><h3>${displayIndex}. ${v.v}</h3><div class="practice-word-actions"><button class="bookmark-verb" type="button"></button><button class="pronounce-word" type="button" aria-label="${esc(v.v)} anhören" title="Aussprache anhören">🔊</button></div></div><span class="meaning">${verbMeanings[v.v]||'English meaning unavailable'}</span>${['Präsens','Präteritum','Perfekt'].map((t,j)=>`<div class="verb-form-block"><label class="verb-field"><span>${t}</span><input data-form="${j}" autocomplete="off" value="${values[j]||''}" placeholder="${j===2?'Hilfsverb + Partizip':'Verbform'}"><small class="verb-answer"></small></label><details class="form-example"><summary>Beispielsatz</summary><div class="form-example-content"><p>${esc(tenseExamples[j])}</p><button class="pronounce-example" data-example="${j}" type="button" aria-label="${t}-Beispiel anhören" title="Beispielsatz anhören">🔊</button></div></details></div>`).join('')}${v.exampleNote?`<p class="verb-example-note">${esc(v.exampleNote)}</p>`:''}<button class="check-verb">Antwort prüfen</button>`;
     const bookmarkButton=card.querySelector('.bookmark-verb');
     updateVerbBookmarkButton(bookmarkButton,v.v);
     bookmarkButton.addEventListener('click',()=>{
@@ -649,12 +655,24 @@ function updateVerbPracticeModeUi(){
   weeklyButton.classList.toggle('active',weeklyVerbReview);
   bookmarkButton.classList.toggle('active',bookmarkedVerbReview);
   bookmarkVerbCountPicker.hidden=!bookmarkedVerbReview;
+  const pager=document.querySelector('#bookmarkVerbPager');
   weeklyButton.textContent=weeklyVerbReview?'Heutige Verben anzeigen':'↶ Letzte Woche wiederholen';
   const validBookmarkCount=validBookmarkedVerbs().length;
   bookmarkButton.textContent=bookmarkedVerbReview?'Heutige Verben anzeigen':`★ Gemerkte Verben üben (${validBookmarkCount})`;
   if(bookmarkedVerbReview){
-    const shown=bookmarkVerbCount.value==='all'?validBookmarkCount:Math.min(validBookmarkCount,+bookmarkVerbCount.value||2);
-    status.textContent=bookmarkVerbCount.value==='all'?`Alle ${validBookmarkCount} gemerkten Verben`:`${shown} von ${validBookmarkCount} gemerkten Verben`;
+    const showAll=bookmarkVerbCount.value==='all';
+    const pageSize=showAll?Math.max(1,validBookmarkCount):Math.max(2,Math.min(10,+bookmarkVerbCount.value||2));
+    const pageCount=Math.max(1,Math.ceil(validBookmarkCount/pageSize));
+    bookmarkedVerbPage=Math.min(bookmarkedVerbPage,pageCount-1);
+    const first=validBookmarkCount?bookmarkedVerbPage*pageSize+1:0;
+    const last=Math.min(validBookmarkCount,(bookmarkedVerbPage+1)*pageSize);
+    pager.hidden=showAll||validBookmarkCount<=pageSize;
+    document.querySelector('#bookmarkVerbPageStatus').textContent=`${first}–${last} von ${validBookmarkCount}`;
+    document.querySelector('#previousBookmarkedVerbs').disabled=bookmarkedVerbPage===0;
+    document.querySelector('#nextBookmarkedVerbs').disabled=bookmarkedVerbPage>=pageCount-1;
+    status.textContent=showAll?`Alle ${validBookmarkCount} gemerkten Verben`:`${first}–${last} von ${validBookmarkCount} gemerkten Verben`;
+  }else{
+    pager.hidden=true;
   }
   else if(weeklyVerbReview)status.textContent=`Wiederholung vom ${formatEntryDate(verbExerciseDate())}`;
   else status.textContent='Aktuelle Tagesverben'
@@ -670,6 +688,7 @@ document.querySelector('#reviewBookmarkedVerbs').addEventListener('click',()=>{
   const activate=!bookmarkedVerbReview;
   bookmarkedVerbReview=activate;
   weeklyVerbReview=false;
+  bookmarkedVerbPage=0;
   updateVerbPracticeModeUi();
   renderVerbs()
 });
@@ -680,7 +699,13 @@ verbDate.addEventListener('change',()=>{
   renderVerbs()
 });
 verbCount.addEventListener('change',()=>{localStorage.setItem(VERB_COUNT_KEY,verbCount.value);renderVerbs()});
-bookmarkVerbCount.addEventListener('change',()=>{localStorage.setItem(VERB_BOOKMARK_COUNT_KEY,bookmarkVerbCount.value);if(bookmarkedVerbReview)renderVerbs()});
+bookmarkVerbCount.addEventListener('change',()=>{localStorage.setItem(VERB_BOOKMARK_COUNT_KEY,bookmarkVerbCount.value);bookmarkedVerbPage=0;if(bookmarkedVerbReview)renderVerbs()});
+document.querySelector('#previousBookmarkedVerbs').addEventListener('click',()=>{if(bookmarkedVerbPage>0){bookmarkedVerbPage--;renderVerbs()}});
+document.querySelector('#nextBookmarkedVerbs').addEventListener('click',()=>{
+ const total=validBookmarkedVerbs().length;
+ const pageSize=Math.max(2,Math.min(10,+bookmarkVerbCount.value||2));
+ if((bookmarkedVerbPage+1)*pageSize<total){bookmarkedVerbPage++;renderVerbs()}
+});
 document.querySelector('#clearVerbs').addEventListener('click',()=>{delete verbState[verbStorageKey()];localStorage.setItem(VERB_KEY,JSON.stringify(verbState));renderVerbs()});
 updateVerbPracticeModeUi();
 renderVerbs();

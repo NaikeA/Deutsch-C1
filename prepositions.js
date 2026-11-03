@@ -259,15 +259,15 @@ generateCurated('dat',datConfigs);
 
 const genConfigs=[
  cfg('„außerhalb“ bedeutet „nicht innerhalb“ und steht mit Genitiv.',[
-  ['___ gelten andere Sicherheitsregeln','außerhalb des Firmengeländes'],
-  ['___ ist das Gebäude geschlossen','außerhalb der regulären Arbeitszeit'],
-  ['___ dürfen Besucher sich frei bewegen','außerhalb eines geschlossenen Bereichs'],
-  ['___ dürfen wir keine Entscheidung treffen','außerhalb unserer Zuständigkeit'],
-  ['___ ist die Verbindung deutlich schlechter','außerhalb der großen Städte'],
-  ['___ sind die Mieten niedriger','außerhalb des historischen Zentrums'],
-  ['___ können wir keine Lieferung garantieren','außerhalb des vereinbarten Zeitrahmens'],
-  ['___ gelten zusätzliche Zollvorschriften','außerhalb der Europäischen Union'],
-  ['___ ist das Rauchen erlaubt','außerhalb des Gebäudes']
+  ['Wer das Werktor verlässt, muss beachten: ___ gelten andere Sicherheitsregeln','außerhalb des Firmengeländes'],
+  ['Die reguläre Arbeitszeit ist vorbei; ___ ist das Gebäude geschlossen','außerhalb der regulären Arbeitszeit'],
+  ['Der abgesperrte Bereich endet an der Markierung; ___ dürfen Besucher sich frei bewegen','außerhalb eines geschlossenen Bereichs'],
+  ['Diese Frage gehört nicht zu unserem Aufgabenbereich; ___ dürfen wir keine Entscheidung treffen','außerhalb unserer Zuständigkeit'],
+  ['Sobald man die großen Städte verlässt, ist ___ die Verbindung deutlich schlechter','außerhalb der großen Städte'],
+  ['Wer das historische Zentrum verlässt, findet ___ meist niedrigere Mieten','außerhalb des historischen Zentrums'],
+  ['Der vereinbarte Zeitrahmen ist überschritten; ___ können wir keine Lieferung garantieren','außerhalb des vereinbarten Zeitrahmens'],
+  ['Nach dem Verlassen der EU gelten ___ zusätzliche Zollvorschriften','außerhalb der Europäischen Union'],
+  ['Im Gebäude gilt Rauchverbot; ___ ist das Rauchen erlaubt','außerhalb des Gebäudes']
  ]),
  cfg('In diesen formellen Sätzen wird ausdrücklich „aufgrund“ verlangt; „aufgrund“ steht mit Genitiv.',[
   ['Der Plan wurde ___ geändert','aufgrund des technischen Fehlers'],

@@ -673,9 +673,9 @@ function updateVerbPracticeModeUi(){
     status.textContent=showAll?`Alle ${validBookmarkCount} gemerkten Verben`:`${first}–${last} von ${validBookmarkCount} gemerkten Verben`;
   }else{
     pager.hidden=true;
+    if(weeklyVerbReview)status.textContent=`Wiederholung vom ${formatEntryDate(verbExerciseDate())}`;
+    else status.textContent='Aktuelle Tagesverben'
   }
-  else if(weeklyVerbReview)status.textContent=`Wiederholung vom ${formatEntryDate(verbExerciseDate())}`;
-  else status.textContent='Aktuelle Tagesverben'
 }
 document.querySelector('#reviewLastWeekVerbs').addEventListener('click',()=>{
   const activate=!weeklyVerbReview;

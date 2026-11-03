@@ -151,7 +151,12 @@ footer a{color:var(--green)}.article-plural{display:block;min-height:16px;color:
 .bookmark-count-picker{display:flex;align-items:center;gap:8px;color:#31584a;font-size:.9rem;font-weight:800}
 .bookmark-count-picker[hidden]{display:none}
 .bookmark-count-picker select{min-width:76px;border:1px solid #a9c3b5;border-radius:9px;padding:8px 28px 8px 10px;background:#fff;color:#083d2f;font:inherit;cursor:pointer}
-@media(max-width:600px){.weekly-review-bar{align-items:stretch;flex-direction:column}.weekly-review-bar button{width:100%}}
+.bookmark-verb-pager{display:flex;align-items:center;gap:8px}
+.bookmark-verb-pager[hidden]{display:none}
+.bookmark-verb-pager button{display:grid;width:38px;height:38px;place-items:center;padding:0;border-radius:50%;font-size:1.15rem}
+.bookmark-verb-pager button:disabled{border-color:#cbd8d1;background:#edf2ef;color:#95a39c;cursor:not-allowed}
+.bookmark-verb-pager span{min-width:72px;text-align:center;white-space:nowrap}
+@media(max-width:600px){.weekly-review-bar{align-items:stretch;flex-direction:column}.weekly-review-bar>button{width:100%}.bookmark-verb-pager{justify-content:center}.bookmark-verb-pager button{width:42px}}
 
 .daily-defaults{margin:0 0 28px;padding:26px 28px;background:linear-gradient(135deg,#f7fff2 0%,#eef8f3 100%);border:1px solid #cfe0d6}
 .daily-defaults-head{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:20px}

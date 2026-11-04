@@ -1,5 +1,6 @@
 const KEY='deutsch-c1-tracker-v1';
 const WRITING_KEY='deutsch-c1-writing-v1';
+const MEMORY_CORRECTED_HEIGHT_KEY='deutsch-c1-memory-corrected-height-v1';
 const VERB_KEY='deutsch-c1-verbs-v1';
 const VERB_BOOKMARKS_KEY='deutsch-c1-verb-bookmarks-v1';
 const VERB_BOOKMARK_COUNT_KEY='deutsch-c1-verb-bookmark-count-v1';
@@ -59,6 +60,38 @@ const memoryRewrite=document.querySelector('#memoryRewrite');
 const memoryStatus=document.querySelector('#memoryStatus');
 const memoryReference=document.querySelector('#memoryReference');
 const memorySourceSelect=document.querySelector('#memorySourceSelect');
+const memoryCorrectedArticle=document.querySelector('#memoryCorrectedArticle');
+const memorySizeStatus=document.querySelector('#memoryCorrectedSizeStatus');
+const clampMemoryHeight=value=>Math.max(180,Math.min(900,Math.round(value)));
+function setMemoryCorrectedHeight(value,persist=true){
+ const height=clampMemoryHeight(value);
+ memoryCorrectedArticle.style.height=height+'px';
+ if(persist)localStorage.setItem(MEMORY_CORRECTED_HEIGHT_KEY,String(height));
+ memorySizeStatus.textContent=height+' px'
+}
+const savedMemoryHeight=Number(localStorage.getItem(MEMORY_CORRECTED_HEIGHT_KEY));
+if(savedMemoryHeight)setMemoryCorrectedHeight(savedMemoryHeight,false);
+document.querySelectorAll('[data-memory-corrected-size]').forEach(button=>button.addEventListener('click',()=>{
+ const action=button.dataset.memoryCorrectedSize;
+ if(action==='reset'){
+  memoryCorrectedArticle.style.height='';
+  localStorage.removeItem(MEMORY_CORRECTED_HEIGHT_KEY);
+  memorySizeStatus.textContent='Automatisch';
+  return
+ }
+ const current=memoryCorrectedArticle.getBoundingClientRect().height||savedMemoryHeight||280;
+ setMemoryCorrectedHeight(current+Number(action))
+}));
+if('ResizeObserver'in window){
+ let previousHeight=0;
+ new ResizeObserver(entries=>{
+  const height=Math.round(entries[0]?.contentRect.height||0);
+  if(memoryCorrectedArticle.hidden||height<180||Math.abs(height-previousHeight)<2)return;
+  previousHeight=height;
+  localStorage.setItem(MEMORY_CORRECTED_HEIGHT_KEY,String(clampMemoryHeight(height)));
+  memorySizeStatus.textContent=clampMemoryHeight(height)+' px'
+ }).observe(memoryCorrectedArticle)
+}
 const previousDate=date=>{const value=new Date(date+'T12:00:00Z');value.setUTCDate(value.getUTCDate()-1);return value.toISOString().slice(0,10)};
 const formatEntryDate=date=>new Intl.DateTimeFormat('de-DE',{day:'2-digit',month:'2-digit',year:'numeric',timeZone:'UTC'}).format(new Date(date+'T12:00:00Z'));
 const promptIndexForDate=date=>{let hash=2166136261;for(const char of date){hash^=char.charCodeAt(0);hash=Math.imul(hash,16777619)}return(hash>>>0)%prompts.length};

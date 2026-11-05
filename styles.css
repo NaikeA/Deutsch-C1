@@ -51,13 +51,14 @@ footer a{color:var(--green)}.article-plural{display:block;min-height:16px;color:
 .memory-reference article>span{display:block;color:#087354;margin-bottom:.65rem}
 .memory-reference article>div{line-height:1.65;overflow-wrap:anywhere}
 #memoryOriginalArticle,#memoryCorrectedArticle{position:relative;min-height:180px;max-height:900px;resize:vertical;overflow:auto}
-#memoryOriginalArticle>span,#memoryCorrectedArticle>span{padding-right:250px}
-.memory-size-controls{position:absolute;top:10px;right:10px;display:flex;align-items:center;gap:5px;line-height:1!important}
+#memoryOriginalArticle>span,#memoryCorrectedArticle>span{padding-right:0}
+.memory-size-controls{position:static;display:flex;align-items:center;gap:6px;margin:0 0 12px;padding:8px 10px;border:1px solid #d7e4dc;border-radius:10px;background:#f8fbf9;line-height:1!important}
+.memory-size-controls strong{margin-right:auto;color:#31584b;font-size:.76rem}
 .memory-size-controls button{min-width:30px;height:30px;margin:0;padding:4px 8px;border:1px solid #b8cec1;border-radius:8px;background:#f4f9f6;color:#087354;font-weight:800;cursor:pointer}
 .memory-size-controls button:hover,.memory-size-controls button:focus-visible{background:#087354;color:#fff;outline:0}
 .memory-size-controls span{min-width:60px;color:#687b73;font-size:.72rem;text-align:center}
 .memory-resize-hint{display:block;margin-top:10px;color:#687b73;font-size:.72rem}
-@media(max-width:600px){#memoryOriginalArticle>span,#memoryCorrectedArticle>span{padding-right:0}.memory-size-controls{position:static;margin:-2px 0 10px}.memory-size-controls button{width:auto!important}.memory-size-controls span{flex:1}}
+@media(max-width:600px){#memoryOriginalArticle>span,#memoryCorrectedArticle>span{padding-right:0}.memory-size-controls{margin:-2px 0 10px;flex-wrap:wrap}.memory-size-controls button{width:auto!important}.memory-size-controls span{flex:1}}
 .memory-reference hr{border:0;border-top:1px solid #dce8e1;margin:1rem 0}
 .memory-empty,.memory-unavailable{color:#6b756f;font-style:italic}
 .memory-unavailable{padding:1rem;border-radius:12px;background:#fff}

@@ -335,7 +335,7 @@ function renderNoteBlocks(){
  }
  notesBlocks.innerHTML=entry.blocks.map((block,index)=>`
   <article class="note-block comparison-pair" data-note-id="${block.id}">
-   <div class="comparison-pair-head note-block-head"><strong>Notizblock <span>${index+1}</span></strong><button class="text-btn remove-note-block" type="button" aria-label="Notizblock ${index+1} entfernen">Entfernen</button></div>
+   <div class="comparison-pair-head note-block-head"><strong>Notizblock <span>${index+1}</span></strong><div class="note-block-order" role="group" aria-label="Notizblock ${index+1} verschieben"><button class="text-btn move-note-block" data-note-move="-1" type="button" aria-label="Notizblock ${index+1} nach oben verschieben" title="Nach oben" ${index===0?'disabled':''}>↑</button><button class="text-btn move-note-block" data-note-move="1" type="button" aria-label="Notizblock ${index+1} nach unten verschieben" title="Nach unten" ${index===entry.blocks.length-1?'disabled':''}>↓</button><button class="text-btn remove-note-block" type="button" aria-label="Notizblock ${index+1} entfernen">Entfernen</button></div></div>
    <label>Titel <small>(optional)</small></label>
    <input class="note-title-input" data-note-field="title" type="text" maxlength="100" value="${esc(block.title||'')}" placeholder="Zum Beispiel: Neue Wörter aus dem Gespräch">
    <label>Meine Notiz</label>
@@ -372,6 +372,16 @@ function renderNoteBlocks(){
    block.text=editor.innerText;
    card.querySelector('.note-block-status').textContent='Wird gespeichert …';
    queueNoteSave()
+  }));
+  card.querySelectorAll('.move-note-block').forEach(button=>button.addEventListener('click',()=>{
+   const currentIndex=entry.blocks.findIndex(item=>item.id===block.id);
+   const nextIndex=currentIndex+Number(button.dataset.noteMove);
+   if(currentIndex<0||nextIndex<0||nextIndex>=entry.blocks.length)return;
+   [entry.blocks[currentIndex],entry.blocks[nextIndex]]=[entry.blocks[nextIndex],entry.blocks[currentIndex]];
+   entry.savedAt=new Date().toISOString();
+   saveNotesStorage();
+   notesStatus.textContent='Reihenfolge gespeichert ✓';
+   renderNoteBlocks();renderNotesList()
   }));
   card.querySelector('.remove-note-block').addEventListener('click',()=>{
    if((block.title?.trim()||block.text?.trim())&&!window.confirm('Möchtest du diesen Notizblock wirklich entfernen?'))return;

@@ -1,6 +1,7 @@
 const KEY='deutsch-c1-tracker-v1';
 const WRITING_KEY='deutsch-c1-writing-v1';
 const MEMORY_CORRECTED_HEIGHT_KEY='deutsch-c1-memory-corrected-height-v1';
+const MEMORY_ORIGINAL_HEIGHT_KEY='deutsch-c1-memory-original-height-v1';
 const VERB_KEY='deutsch-c1-verbs-v1';
 const VERB_BOOKMARKS_KEY='deutsch-c1-verb-bookmarks-v1';
 const VERB_BOOKMARK_COUNT_KEY='deutsch-c1-verb-bookmark-count-v1';
@@ -91,6 +92,37 @@ if('ResizeObserver'in window){
   localStorage.setItem(MEMORY_CORRECTED_HEIGHT_KEY,String(clampMemoryHeight(height)));
   memorySizeStatus.textContent=clampMemoryHeight(height)+' px'
  }).observe(memoryCorrectedArticle)
+}
+const memoryOriginalArticle=document.querySelector('#memoryOriginalArticle');
+const memoryOriginalSizeStatus=document.querySelector('#memoryOriginalSizeStatus');
+function setMemoryOriginalHeight(value,persist=true){
+ const height=clampMemoryHeight(value);
+ memoryOriginalArticle.style.height=height+'px';
+ if(persist)localStorage.setItem(MEMORY_ORIGINAL_HEIGHT_KEY,String(height));
+ memoryOriginalSizeStatus.textContent=height+' px'
+}
+const savedMemoryOriginalHeight=Number(localStorage.getItem(MEMORY_ORIGINAL_HEIGHT_KEY));
+if(savedMemoryOriginalHeight)setMemoryOriginalHeight(savedMemoryOriginalHeight,false);
+document.querySelectorAll('[data-memory-original-size]').forEach(button=>button.addEventListener('click',()=>{
+ const action=button.dataset.memoryOriginalSize;
+ if(action==='reset'){
+  memoryOriginalArticle.style.height='';
+  localStorage.removeItem(MEMORY_ORIGINAL_HEIGHT_KEY);
+  memoryOriginalSizeStatus.textContent='Automatisch';
+  return
+ }
+ const current=memoryOriginalArticle.getBoundingClientRect().height||savedMemoryOriginalHeight||280;
+ setMemoryOriginalHeight(current+Number(action))
+}));
+if('ResizeObserver'in window){
+ let previousOriginalHeight=0;
+ new ResizeObserver(entries=>{
+  const height=Math.round(entries[0]?.contentRect.height||0);
+  if(memoryOriginalArticle.hidden||height<180||Math.abs(height-previousOriginalHeight)<2)return;
+  previousOriginalHeight=height;
+  localStorage.setItem(MEMORY_ORIGINAL_HEIGHT_KEY,String(clampMemoryHeight(height)));
+  memoryOriginalSizeStatus.textContent=clampMemoryHeight(height)+' px'
+ }).observe(memoryOriginalArticle)
 }
 const previousDate=date=>{const value=new Date(date+'T12:00:00Z');value.setUTCDate(value.getUTCDate()-1);return value.toISOString().slice(0,10)};
 const formatEntryDate=date=>new Intl.DateTimeFormat('de-DE',{day:'2-digit',month:'2-digit',year:'numeric',timeZone:'UTC'}).format(new Date(date+'T12:00:00Z'));

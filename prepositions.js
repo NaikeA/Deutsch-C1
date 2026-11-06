@@ -113,7 +113,7 @@ const generate=(category,configs,target)=>{
 const cfg=(explanation,rows)=>({explanation,items:rows.map(([stem,answer])=>({stem,answer}))});
 const generateCurated=(category,configs)=>{
  configs.forEach(config=>config.items.forEach(item=>{
-  add(category,withCue(sentence(item.stem,''),item.answer),item.answer,config.explanation,item.accepted||[])
+  add(category,withCue(sentence(item.stem,''),item.answer),item.answer,config.explanation,[...(item.accepted||[]),...acceptedAlternatives(item.answer)])
  }))
 };
 
@@ -269,7 +269,7 @@ const genConfigs=[
   ['Nach dem Verlassen der EU gelten ___ zusätzliche Zollvorschriften','außerhalb der Europäischen Union'],
   ['Im Gebäude gilt Rauchverbot; ___ ist das Rauchen erlaubt','außerhalb des Gebäudes']
  ]),
- cfg('In diesen formellen Sätzen wird ausdrücklich „aufgrund“ verlangt; „aufgrund“ steht mit Genitiv.',[
+ cfg('„aufgrund“ bezeichnet einen Grund und steht mit Genitiv. In diesen Sätzen ist auch „wegen“ mit derselben Genitivform korrekt.',[
   ['Der Plan wurde ___ geändert','aufgrund des technischen Fehlers'],
   ['Die Prüfung wird ___ fortgesetzt','aufgrund der neuen Erkenntnisse'],
   ['Der offizielle Bescheid wurde ___ geändert','aufgrund eines kurzfristigen Ausfalls'],
@@ -324,7 +324,7 @@ const genConfigs=[
   ['___ stieg der Umsatz deutlich','während des vergangenen Jahres'],
   ['___ wurden mehrere Kompromisse gefunden','während der Verhandlungen']
  ]),
- cfg('In diesen Sätzen wird ausdrücklich „wegen“ verlangt; „wegen“ steht in der Standardsprache mit Genitiv.',[
+ cfg('„wegen“ bezeichnet einen Grund und steht in der Standardsprache mit Genitiv. In diesen Sätzen ist auch „aufgrund“ mit derselben Genitivform korrekt.',[
   ['Der Termin wurde ___ verschoben','wegen des schlechten Wetters'],
   ['Das Treffen fiel ___ aus','wegen der kurzfristigen Absage'],
   ['Die Anlage steht ___ still','wegen eines technischen Fehlers'],
@@ -482,7 +482,9 @@ function mark(card,item,value){
  const correct=isCorrect(item,value);
  card.classList.toggle('correct',correct);card.classList.toggle('wrong',!correct);
  const feedback=card.querySelector('.preposition-feedback');
- feedback.hidden=false;feedback.textContent=correct?'Richtig ✓':`Richtig: ${item.answer}`;
+ feedback.hidden=false;
+ const solutions=[...new Set(item.accepted.map(answer=>String(answer).trim()))];
+ feedback.textContent=correct?'Richtig ✓':solutions.length>1?`Mögliche Lösungen: ${solutions.join(' / ')}`:`Richtig: ${item.answer}`;
  card.querySelector('.preposition-rule').hidden=false;
  return correct
 }

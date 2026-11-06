@@ -142,17 +142,17 @@ const accConfigs=[
   ['Das Seminar wurde speziell ___ organisiert','für die internationale Gruppe'],
   ['Die neue Regelung schafft Klarheit ___','für alle Beteiligten']
  ]),
- cfg('„gegen“ bezeichnet hier Widerstand, Ablehnung oder ein Gegenmittel und steht immer mit Akkusativ.',[
-  ['Die Mehrheit stimmt ___','gegen den Vorschlag'],
+ cfg('„gegen“ bezeichnet hier Widerstand oder Ablehnung und steht immer mit Akkusativ.',[
+  ['Die Mehrheit lehnt den Vorschlag ab und stimmt ___','gegen den Vorschlag'],
   ['Mehrere Beschäftigte protestieren ___','gegen die neue Regelung'],
-  ['Das Team entscheidet sich bewusst ___','gegen das aktuelle Modell'],
-  ['Die Fachabteilung spricht sich ___ aus','gegen einen übereilten Beschluss'],
+  ['Das Team hält das aktuelle Modell für ungeeignet und entscheidet sich bewusst ___','gegen das aktuelle Modell'],
+  ['Die Fachabteilung lehnt einen übereilten Beschluss ab und spricht sich ___ aus','gegen einen übereilten Beschluss'],
   ['Die Initiative richtet sich ___','gegen unnötige Bürokratie'],
   ['Die Belegschaft demonstriert ___','gegen den geplanten Stellenabbau'],
-  ['Gute Argumente sprechen ___','gegen die bisherige Vorgehensweise'],
+  ['Die erheblichen Risiken sprechen ___','gegen die bisherige Vorgehensweise'],
   ['Der Betriebsrat wendet sich ___','gegen eine vorschnelle Entscheidung'],
-  ['Drei Abteilungen stimmten ___','gegen den vorgelegten Entwurf'],
-  ['Viele Mitarbeitende äußerten sich ___','gegen diese Änderung']
+  ['Drei Abteilungen hielten den vorgelegten Entwurf für ungeeignet und stimmten ___','gegen den vorgelegten Entwurf'],
+  ['Viele Mitarbeitende kritisierten die Änderung und äußerten sich ___','gegen diese Änderung']
  ]),
  cfg('„ohne“ bezeichnet das Fehlen einer Person oder Sache und steht immer mit Akkusativ.',[
   ['Ich kann die Aufgabe ___ nicht abschließen','ohne deine Unterstützung'],

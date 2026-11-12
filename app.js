@@ -347,7 +347,7 @@ function renderNoteBlocks(){
     <button type="button" data-note-format="insertUnorderedList" title="Aufzählung">• Liste</button>
    </div>
    <div class="note-editor-content pair-editor" contenteditable="true" role="textbox" aria-multiline="true" lang="de" spellcheck="true" data-placeholder="Was möchtest du festhalten?"></div>
-   <span class="note-block-status">${block.savedAt?'Gespeichert':'Noch nicht gespeichert'}</span>
+   <div class="note-block-save-row"><span class="note-block-status">${block.savedAt?'Gespeichert':'Noch nicht gespeichert'}</span><button class="save-btn save-note-block" type="button">Notizblock speichern</button></div>
   </article>`).join('');
  notesBlocks.querySelectorAll('.note-block').forEach(card=>{
   const block=entry.blocks.find(item=>item.id===card.dataset.noteId);
@@ -373,6 +373,19 @@ function renderNoteBlocks(){
    card.querySelector('.note-block-status').textContent='Wird gespeichert …';
    queueNoteSave()
   }));
+  card.querySelector('.save-note-block').addEventListener('click',()=>{
+   clearTimeout(notesTimer);
+   block.title=titleInput.value;
+   block.html=editor.innerHTML;
+   block.text=editor.innerText;
+   const savedAt=new Date().toISOString();
+   block.savedAt=savedAt;
+   entry.savedAt=savedAt;
+   saveNotesStorage();
+   card.querySelector('.note-block-status').textContent='Gespeichert ✓';
+   notesStatus.textContent='Notizblock gespeichert ✓';
+   renderNotesList()
+  });
   card.querySelectorAll('.move-note-block').forEach(button=>button.addEventListener('click',()=>{
    const currentIndex=entry.blocks.findIndex(item=>item.id===block.id);
    const nextIndex=currentIndex+Number(button.dataset.noteMove);

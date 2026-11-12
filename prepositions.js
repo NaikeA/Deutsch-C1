@@ -86,8 +86,11 @@ const grammaticalNumber=phrase=>{
  return pluralNounHeads.has(head)?'Plural':'Singular';
 };
 const withCue=(prompt,phrase)=>prompt.replace(/\.$/,` (Vorgegebene Wörter: ${cueFromPhrase(phrase)} · ${articleType(phrase)} · ${grammaticalNumber(phrase)}).`);
+const expandedDativeContractions={beim:'bei dem',vom:'von dem',zum:'zu dem',zur:'zu der'};
 const acceptedAlternatives=phrase=>{
  const alternatives=[];
+ const contraction=phrase.match(/^(beim|vom|zum|zur)(?=\s)/i);
+ if(contraction)alternatives.push(phrase.replace(contraction[0],expandedDativeContractions[contraction[0].toLowerCase()]));
  if(/^aufgrund\s+/i.test(phrase))alternatives.push(phrase.replace(/^aufgrund/i,'wegen'));
  if(/^wegen\s+/i.test(phrase))alternatives.push(phrase.replace(/^wegen/i,'aufgrund'));
  if(/^statt\s+/i.test(phrase))alternatives.push(phrase.replace(/^statt/i,'anstatt'));

@@ -861,7 +861,9 @@ function renderChoice(type,items){
   const saved=labDayState(type);
   return '<div class="drill-grid">'+items.map((x,i)=>{
     const opts=type==='endings'?x[2].split('|'):[x[0],x[1]].sort(()=>i%2?1:-1);
-    const prompt=type==='endings'?x[0]:'Welche Form ist richtig?';
+    const spellingPrompt=type==='spelling'&&x[0]==='versehen'&&x[1]==='verstehen'
+      ? 'Welche Form passt? Ich kann deine Erklärung gut ___.':null;
+    const prompt=type==='endings'?x[0]:spellingPrompt||'Welche Form ist richtig?';
     const answer=x[1],entry=saved[i]||{};
     return `<article class="mini-drill" data-index="${i}" data-answer="${esc(answer)}" data-category="${type}"><span>AUFGABE ${i+1}</span><p>${esc(prompt)}</p><div>${opts.map(o=>`<button type="button" data-choice="${esc(o)}" class="${entry.selected===o?'selected ':''}${entry.checked&&o===answer?'right':''}">${esc(o)}</button>`).join('')}</div><small>${entry.checked?(entry.selected===answer?'Richtig ✓':'Merke dir die grün markierte Form.'):''}</small></article>`
   }).join('')+'</div>'

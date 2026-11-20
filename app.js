@@ -871,7 +871,7 @@ function renderChoice(type,items){
 }
 function renderConnectors(){
   const items=labItems(ERROR_LAB.connectors,3),saved=labDayState('connectors');
-  return '<div class="drill-grid">'+items.map((x,i)=>{const entry=saved[i]||{};return `<article class="mini-drill connector-drill" data-index="${i}"><span>SATZ ${i+1}</span><p>${esc(x[0])}</p><textarea lang="de" spellcheck="true" placeholder="Schreibe den Satz richtig …">${esc(entry.text||'')}</textarea><button type="button" class="show-connector">${entry.revealed?'Lösung ausblenden':'Lösung zeigen'}</button><div class="connector-answer${entry.revealed?' visible':''}"><b>${esc(x[1])}</b><small>${esc(x[2])}</small></div></article>`}).join('')+'</div>'
+  return '<div class="drill-grid">'+items.map((x,i)=>{const entry=saved[i]||{};return `<article class="mini-drill connector-drill" data-index="${i}"><span>SATZ ${i+1}</span><p>${esc(x[0])}</p><textarea lang="de" spellcheck="true" placeholder="Schreibe den Satz richtig …">${esc(entry.text||'')}</textarea><button type="button" class="check-connector">Antwort prüfen</button><p class="correction-feedback ${entry.checkResult||''}" role="status">${entry.checkResult==='right'?'Richtig ✓':entry.checkResult==='wrong'?'Falsch ✗ – Bitte vergleiche deine Antwort mit der Musterlösung.':entry.checkResult==='empty'?'Bitte schreibe zuerst deinen Satz.':''}</p><small>Automatische Prüfung anhand der Musterlösung. Andere richtige Formulierungen können abweichen.</small><button type="button" class="show-connector">${entry.revealed?'Lösung ausblenden':'Lösung zeigen'}</button><div class="connector-answer${entry.revealed?' visible':''}"><b>${esc(x[1])}</b><small>${esc(x[2])}</small></div></article>`}).join('')+'</div>'
 }
 function renderLab(){
   const box=document.querySelector('#labContent'),items=activeLab==='connectors'?null:labItems(ERROR_LAB[activeLab],activeLab==='natural'?3:5);
@@ -883,7 +883,15 @@ function renderLab(){
   }));
   box.querySelectorAll('.connector-drill textarea').forEach(textarea=>textarea.addEventListener('input',()=>{
     const index=textarea.closest('.connector-drill').dataset.index,stateForDay=labDayState('connectors',true);
-    stateForDay[index]={...(stateForDay[index]||{}),text:textarea.value};saveLabState()
+    stateForDay[index]={...(stateForDay[index]||{}),text:textarea.value,checkResult:null};const feedback=textarea.closest('.connector-drill').querySelector('.correction-feedback');feedback.textContent='';feedback.className='correction-feedback';saveLabState()
+  }));
+  box.querySelectorAll('.check-connector').forEach(btn=>btn.addEventListener('click',()=>{
+    const card=btn.closest('.connector-drill'),index=card.dataset.index;
+    const item=labItems(ERROR_LAB.connectors,3)[index],stateForDay=labDayState('connectors',true);
+    const entry=stateForDay[index]||{},text=card.querySelector('textarea').value;
+    const checkResult=!text.trim()?'empty':normalizeCorrectionAnswer(text)===normalizeCorrectionAnswer(item[1])?'right':'wrong';
+    stateForDay[index]={...entry,text,checkResult,revealed:checkResult==='wrong'||entry.revealed};
+    saveLabState();renderLab()
   }));
   box.querySelectorAll('.show-connector').forEach(btn=>btn.addEventListener('click',()=>{
     const card=btn.closest('.connector-drill'),index=card.dataset.index,item=labItems(ERROR_LAB.connectors,3)[index],stateForDay=labDayState('connectors',true),entry=stateForDay[index]||{},text=card.querySelector('textarea').value.trim(),revealed=!entry.revealed;

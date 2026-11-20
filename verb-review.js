@@ -78,7 +78,7 @@
       const article=document.createElement('article');
       article.className='verb-review-card';
       article.innerHTML=`<div class="review-card-head"><strong>${escapeText(name)}</strong><span>${escapeText((window.GERMAN_VERB_MEANINGS||{})[name]||'')}</span></div>
-        <label>${PEOPLE[person]} · ${FORMS[form]}<input class="review-form" autocomplete="off" spellcheck="false" placeholder="Verbform eingeben"></label>
+        <label>${PEOPLE[person]} · ${FORMS[form]}<input class="review-form" autocomplete="off" lang="de" spellcheck="true" placeholder="Verbform eingeben"></label>
         <label>Eigener Satz aus deinem Alltag<textarea class="review-sentence" lang="de" spellcheck="true" placeholder="Schreibe einen Satz, den du tatsächlich sagen könntest."></textarea></label>
         <button type="button" class="review-check">Form prüfen</button>
         <p class="review-feedback" aria-live="polite"></p>

@@ -134,7 +134,7 @@ function render(){
     const entry=saved[item.id]||{};
     const card=document.createElement('article');
     card.className='declension-card';
-    card.innerHTML=`<p class="declension-meta">${categories[item.category]} · AUFGABE ${index+1}</p><h3>${item.prompt}</h3><label><span>Lösung einsetzen</span><input type="text" autocomplete="off" spellcheck="false" value="${String(entry.answer||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;')}" placeholder="Fehlende Form"></label><p class="declension-feedback" aria-live="polite"></p><div class="declension-rule" hidden><b>Grammatik:</b> ${item.explanation}</div>`;
+    card.innerHTML=`<p class="declension-meta">${categories[item.category]} · AUFGABE ${index+1}</p><h3>${item.prompt}</h3><label><span>Lösung einsetzen</span><input type="text" autocomplete="off" lang="de" spellcheck="true" value="${String(entry.answer||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;')}" placeholder="Fehlende Form"></label><p class="declension-feedback" aria-live="polite"></p><div class="declension-rule" hidden><b>Grammatik:</b> ${item.explanation}</div>`;
     const input=card.querySelector('input');
     input.addEventListener('input',()=>{
       saved[item.id]={answer:input.value,checked:false};

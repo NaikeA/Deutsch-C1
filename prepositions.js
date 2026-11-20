@@ -472,7 +472,7 @@ function render(){
    const entry=saved[item.id]||{};
    const card=document.createElement('article');
    card.className='preposition-card';
-   card.innerHTML=`<p class="preposition-meta">${categories[item.category]} · AUFGABE ${index+1}</p><h3>${item.prompt}</h3><label><span class="sr-only">Fehlende Präposition oder Wortgruppe</span><input type="text" autocomplete="off" spellcheck="false" placeholder="Präposition und Artikel" value="${String(entry.answer||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;')}"></label><p class="preposition-feedback" hidden></p><div class="preposition-rule" hidden><b>Grammatik:</b><span>${item.explanation}</span></div>`;
+   card.innerHTML=`<p class="preposition-meta">${categories[item.category]} · AUFGABE ${index+1}</p><h3>${item.prompt}</h3><label><span class="sr-only">Fehlende Präposition oder Wortgruppe</span><input type="text" autocomplete="off" lang="de" spellcheck="true" placeholder="Präposition und Artikel" value="${String(entry.answer||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;')}"></label><p class="preposition-feedback" hidden></p><div class="preposition-rule" hidden><b>Grammatik:</b><span>${item.explanation}</span></div>`;
    const input=card.querySelector('input');
    input.addEventListener('input',()=>{saved[item.id]={answer:input.value,checked:false};save();card.classList.remove('correct','wrong');card.querySelector('.preposition-feedback').hidden=true;card.querySelector('.preposition-rule').hidden=true;updateProgress()});
    if(entry.checked){mark(card,item,entry.answer)}

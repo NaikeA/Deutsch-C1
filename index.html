@@ -12,7 +12,7 @@
   <title>Deutsch auf C1</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="app-icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=58">
+  <link rel="stylesheet" href="styles.css?v=59">
   <link rel="stylesheet" href="verb-count.css?v=16">
   <link rel="stylesheet" href="listening.css?v=19">
   <link rel="stylesheet" href="playback.css?v=24">
@@ -145,6 +145,13 @@
         <div><p class="kicker">110 UNTERSCHIEDLICHE SCHREIBTHEMEN</p><h2>Gedanken in Worte fassen</h2><p>Schreibe ehrlich und einfach. Präzision kommt beim zweiten Lesen.</p></div>
         <div class="entry-date"><label for="entryDate">Eintrag vom</label><input id="entryDate" type="date"></div>
       </div>
+
+      <section id="writingCalendar" class="writing-calendar" aria-label="Schreibkalender">
+        <div class="writing-calendar-head"><button type="button" data-writing-month="-1" aria-label="Vorheriger Monat">‹</button><strong id="writingCalendarMonth" aria-live="polite"></strong><button type="button" data-writing-month="1" aria-label="Nächster Monat">›</button></div>
+        <div class="writing-calendar-legend"><span><i class="writing-dot new-text"></i> Neuer Text</span><span><i class="writing-dot repeated-text"></i> Wiederholung</span></div>
+        <div class="writing-calendar-week" aria-hidden="true"><span>Mo</span><span>Di</span><span>Mi</span><span>Do</span><span>Fr</span><span>Sa</span><span>So</span></div>
+        <div id="writingCalendarDays" class="writing-calendar-days"></div>
+      </section>
       <div class="writing-mode-picker" role="group" aria-label="Schreibmodus auswählen">
         <span>Was möchtest du heute machen?</span>
         <button type="button" class="writing-mode-button active" data-writing-mode="writing">✍ Neuen Text schreiben</button>
@@ -729,7 +736,7 @@
   <script src="declension.js?v=5"></script>
   <script src="prepositions.js?v=18"></script>
   <script src="grammar-expanded.js?v=5"></script>
-  <script src="app.js?v=99"></script>
+  <script src="app.js?v=100"></script>
   <script src="verb-review.js?v=4"></script>
   <script src="daily-defaults.js?v=2"></script>
 </body>

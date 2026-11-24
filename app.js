@@ -137,10 +137,51 @@ function setWritingMode(mode,persist=false){
   document.querySelector('#writingReviewPanel').hidden=selected!=='writing';
   document.querySelector('.writing-layout').classList.toggle('revision-active',selected==='revision');
   document.querySelectorAll('[data-writing-mode]').forEach(button=>{const active=button.dataset.writingMode===selected;button.classList.toggle('active',active);button.setAttribute('aria-pressed',active)});
-  if(persist){writing[entryDate.value]={...(writing[entryDate.value]||{}),mode:selected};localStorage.setItem(WRITING_KEY,JSON.stringify(writing))}
+  if(persist){writing[entryDate.value]={...(writing[entryDate.value]||{}),mode:selected};localStorage.setItem(WRITING_KEY,JSON.stringify(writing));renderWritingCalendar()}
 }
 document.querySelectorAll('[data-writing-mode]').forEach(button=>button.addEventListener('click',()=>setWritingMode(button.dataset.writingMode,true)));
-function loadEntry(){const entry=writing[entryDate.value]||{text:'',review:{},correctedHtml:'',comparisonPairs:[]};promptIndex=Number.isInteger(entry.promptIndex)?entry.promptIndex%prompts.length:promptIndexForDate(entryDate.value);showPrompt();paragraph.value=entry.text||'';correctedText.innerHTML=entry.correctedHtml||'';renderComparisonPairs(entry.comparisonPairs||[]);document.querySelectorAll('[data-review]').forEach(x=>x.checked=!!entry.review?.[x.dataset.review]);status.textContent=entry.text?'Gespeicherter Eintrag':'Noch nicht gespeichert';correctedStatus.textContent=entry.correctedHtml?'Gespeicherte Korrektur':'Noch nicht gespeichert';comparisonStatus.textContent=entry.comparisonPairs?.length?'Gespeicherte Absatzpaare':'Noch nicht gespeichert';updateCounts(false);loadMemoryReview();setWritingMode(entry.mode||'writing')}
+
+function writingActivity(entry={}){
+ const hasText=value=>String(value||'').replace(/<[^>]*>/g,'').replace(/&nbsp;/g,' ').trim().length>0;
+ return {
+  fresh:hasText(entry.text)||hasText(entry.correctedHtml)||(entry.comparisonPairs||[]).some(pair=>hasText(pair.originalHtml)||hasText(pair.correctedHtml)),
+  repeated:hasText(entry.memoryRewrite)
+ }
+}
+function renderWritingCalendar(){
+ const calendar=document.querySelector('#writingCalendar');
+ const month=calendar.dataset.month||entryDate.value.slice(0,7);
+ calendar.dataset.month=month;
+ const [year,monthNumber]=month.split('-').map(Number);
+ const first=new Date(year,monthNumber-1,1),days=new Date(year,monthNumber,0).getDate();
+ calendar.querySelector('#writingCalendarMonth').textContent=first.toLocaleDateString('de-DE',{month:'long',year:'numeric'});
+ const grid=calendar.querySelector('#writingCalendarDays');
+ grid.innerHTML='<span aria-hidden="true"></span>'.repeat((first.getDay()+6)%7);
+ for(let number=1;number<=days;number++){
+  const date=month+'-'+String(number).padStart(2,'0');
+  const activity=writingActivity(writing[date]);
+  const button=document.createElement('button');
+  button.type='button';
+  button.className='writing-calendar-day'+(date===entryDate.value?' selected':'');
+  button.setAttribute('aria-pressed',String(date===entryDate.value));
+  button.setAttribute('aria-label',date+(activity.fresh?' · Neuer Text':'')+(activity.repeated?' · Wiederholung':''));
+  button.innerHTML='<span>'+number+'</span><span class="writing-calendar-dots">'+(activity.fresh?'<i class="writing-dot new-text"></i>':'')+(activity.repeated?'<i class="writing-dot repeated-text"></i>':'')+'</span>';
+  button.addEventListener('click',()=>{
+   entryDate.value=date;
+   loadEntry();
+  });
+  grid.append(button)
+ }
+}
+document.querySelectorAll('[data-writing-month]').forEach(button=>button.addEventListener('click',()=>{
+ const calendar=document.querySelector('#writingCalendar');
+ const [year,month]=calendar.dataset.month.split('-').map(Number);
+ const next=new Date(year,month-1+Number(button.dataset.writingMonth),1);
+ calendar.dataset.month=next.getFullYear()+'-'+String(next.getMonth()+1).padStart(2,'0');
+ renderWritingCalendar()
+}));
+
+function loadEntry(){document.querySelector('#writingCalendar').dataset.month=entryDate.value.slice(0,7);renderWritingCalendar();const entry=writing[entryDate.value]||{text:'',review:{},correctedHtml:'',comparisonPairs:[]};promptIndex=Number.isInteger(entry.promptIndex)?entry.promptIndex%prompts.length:promptIndexForDate(entryDate.value);showPrompt();paragraph.value=entry.text||'';correctedText.innerHTML=entry.correctedHtml||'';renderComparisonPairs(entry.comparisonPairs||[]);document.querySelectorAll('[data-review]').forEach(x=>x.checked=!!entry.review?.[x.dataset.review]);status.textContent=entry.text?'Gespeicherter Eintrag':'Noch nicht gespeichert';correctedStatus.textContent=entry.correctedHtml?'Gespeicherte Korrektur':'Noch nicht gespeichert';comparisonStatus.textContent=entry.comparisonPairs?.length?'Gespeicherte Absatzpaare':'Noch nicht gespeichert';updateCounts(false);loadMemoryReview();setWritingMode(entry.mode||'writing')}
 function updateCounts(markUnsaved=true){const clean=paragraph.value.trim();document.querySelector('#wordCount').textContent=clean?clean.split(/\s+/).length:0;document.querySelector('#charCount').textContent=paragraph.value.length;if(markUnsaved)status.textContent='Änderungen nicht gespeichert'}
 function memoryReferenceHtml(entry,type){
   if(type==='original'){
@@ -195,14 +236,14 @@ function loadMemoryReview(){
 memorySourceSelect.addEventListener('change',()=>{
   const sourceDate=memorySourceSelect.value;
   writing[entryDate.value]={...(writing[entryDate.value]||{}),memorySourceDate:sourceDate};
-  localStorage.setItem(WRITING_KEY,JSON.stringify(writing));
+  localStorage.setItem(WRITING_KEY,JSON.stringify(writing));renderWritingCalendar();
   renderMemorySource(sourceDate);
   if(memoryRewrite.value.trim())memoryStatus.textContent='Quelltext geändert – Wiederholung erneut prüfen'
 });
 memoryRewrite.addEventListener('input',()=>updateMemoryCount());
 document.querySelector('#saveMemoryRewrite').addEventListener('click',()=>{
   writing[entryDate.value]={...(writing[entryDate.value]||{}),memoryRewrite:memoryRewrite.value.trim(),memorySourceDate:memorySourceSelect.value,memorySavedAt:new Date().toISOString()};
-  localStorage.setItem(WRITING_KEY,JSON.stringify(writing));
+  localStorage.setItem(WRITING_KEY,JSON.stringify(writing));renderWritingCalendar();
   if(memoryRewrite.value.trim())recordDailyProgress('Schreiben',`writing-memory:${entryDate.value}`,2,10);
   memoryStatus.textContent='Gespeichert ✓'
 });
@@ -225,8 +266,8 @@ document.querySelectorAll('[data-memory-reference]').forEach(button=>button.addE
 
 paragraph.addEventListener('input',()=>updateCounts());
 entryDate.addEventListener('change',loadEntry);
-document.querySelector('#newPrompt').addEventListener('click',()=>{promptIndex=(promptIndex+1)%prompts.length;writing[entryDate.value]={...(writing[entryDate.value]||{}),promptIndex};localStorage.setItem(WRITING_KEY,JSON.stringify(writing));showPrompt()});
-document.querySelector('#saveEntry').addEventListener('click',()=>{const review={};document.querySelectorAll('[data-review]').forEach(x=>review[x.dataset.review]=x.checked);writing[entryDate.value]={...(writing[entryDate.value]||{}),text:paragraph.value.trim(),review,comparisonPairs:collectComparisonPairs(),savedAt:new Date().toISOString()};localStorage.setItem(WRITING_KEY,JSON.stringify(writing));if(paragraph.value.trim()||collectComparisonPairs().some(pair=>pair.originalHtml||pair.correctedHtml))recordDailyProgress('Schreiben',`writing:${entryDate.value}`,2,10);status.textContent='Gespeichert ✓';comparisonStatus.textContent='Gespeichert ✓'});
+document.querySelector('#newPrompt').addEventListener('click',()=>{promptIndex=(promptIndex+1)%prompts.length;writing[entryDate.value]={...(writing[entryDate.value]||{}),promptIndex};localStorage.setItem(WRITING_KEY,JSON.stringify(writing));renderWritingCalendar();showPrompt()});
+document.querySelector('#saveEntry').addEventListener('click',()=>{const review={};document.querySelectorAll('[data-review]').forEach(x=>review[x.dataset.review]=x.checked);writing[entryDate.value]={...(writing[entryDate.value]||{}),text:paragraph.value.trim(),review,comparisonPairs:collectComparisonPairs(),savedAt:new Date().toISOString()};localStorage.setItem(WRITING_KEY,JSON.stringify(writing));renderWritingCalendar();if(paragraph.value.trim()||collectComparisonPairs().some(pair=>pair.originalHtml||pair.correctedHtml))recordDailyProgress('Schreiben',`writing:${entryDate.value}`,2,10);status.textContent='Gespeichert ✓';comparisonStatus.textContent='Gespeichert ✓'});
 
 function addComparisonPair(originalHtml='',correctedHtml=''){
   const pair=document.createElement('article');pair.className='comparison-pair';
@@ -236,7 +277,7 @@ function addComparisonPair(originalHtml='',correctedHtml=''){
 function numberComparisonPairs(){comparisonPairs.querySelectorAll('.comparison-pair').forEach((pair,index)=>pair.querySelector('.comparison-pair-head span').textContent=index+1)}
 function collectComparisonPairs(){return [...comparisonPairs.querySelectorAll('.comparison-pair')].map(pair=>({originalHtml:pair.querySelector('.original-editor').innerHTML,correctedHtml:pair.querySelector('.correction-editor').innerHTML})).filter(pair=>pair.originalHtml.replace(/<[^>]*>/g,'').trim()||pair.correctedHtml.replace(/<[^>]*>/g,'').trim())}
 function renderComparisonPairs(pairs){comparisonPairs.innerHTML='';(pairs.length?pairs:[{originalHtml:'',correctedHtml:''}]).forEach(pair=>addComparisonPair(pair.originalHtml||'',pair.correctedHtml||''))}
-function saveComparisonPairs(){writing[entryDate.value]={...(writing[entryDate.value]||{}),text:paragraph.value.trim(),comparisonPairs:collectComparisonPairs(),comparisonSavedAt:new Date().toISOString()};localStorage.setItem(WRITING_KEY,JSON.stringify(writing));if(collectComparisonPairs().some(pair=>pair.originalHtml||pair.correctedHtml))recordDailyProgress('Schreiben',`writing-pairs:${entryDate.value}`,2,10);comparisonStatus.textContent='Gespeichert ✓';comparisonPairs.querySelectorAll('.comparison-pair-status').forEach(status=>status.textContent='Gespeichert ✓')}
+function saveComparisonPairs(){writing[entryDate.value]={...(writing[entryDate.value]||{}),text:paragraph.value.trim(),comparisonPairs:collectComparisonPairs(),comparisonSavedAt:new Date().toISOString()};localStorage.setItem(WRITING_KEY,JSON.stringify(writing));renderWritingCalendar();if(collectComparisonPairs().some(pair=>pair.originalHtml||pair.correctedHtml))recordDailyProgress('Schreiben',`writing-pairs:${entryDate.value}`,2,10);comparisonStatus.textContent='Gespeichert ✓';comparisonPairs.querySelectorAll('.comparison-pair-status').forEach(status=>status.textContent='Gespeichert ✓')}
 document.querySelector('#addComparisonPair').addEventListener('click',()=>{addComparisonPair();comparisonPairs.lastElementChild.scrollIntoView({behavior:'smooth',block:'center'});comparisonStatus.textContent='Änderungen nicht gespeichert'});
 document.querySelector('#saveComparisons').addEventListener('click',saveComparisonPairs);
 comparisonPairs.addEventListener('input',event=>{comparisonStatus.textContent='Änderungen nicht gespeichert';event.target.closest('.comparison-pair')?.querySelector('.comparison-pair-status')?.replaceChildren('Änderungen nicht gespeichert')});
@@ -250,8 +291,8 @@ comparisonPairs.addEventListener('click',event=>{
 });
 document.querySelectorAll('[data-format]').forEach(button=>button.addEventListener('click',()=>{correctedText.focus();document.execCommand(button.dataset.format,false,button.dataset.value||null);correctedStatus.textContent='Änderungen nicht gespeichert'}));
 correctedText.addEventListener('input',()=>{correctedStatus.textContent='Änderungen nicht gespeichert'});
-document.querySelector('#saveCorrected').addEventListener('click',()=>{writing[entryDate.value]={...(writing[entryDate.value]||{}),text:paragraph.value.trim(),correctedHtml:correctedText.innerHTML,correctedSavedAt:new Date().toISOString()};localStorage.setItem(WRITING_KEY,JSON.stringify(writing));if(correctedText.textContent.trim())recordDailyProgress('Schreiben',`writing-corrected:${entryDate.value}`,1,5);correctedStatus.textContent='Gespeichert ✓'});
-document.querySelector('#clearCorrected').addEventListener('click',()=>{correctedText.innerHTML='';if(writing[entryDate.value]){writing[entryDate.value].correctedHtml='';localStorage.setItem(WRITING_KEY,JSON.stringify(writing))}correctedStatus.textContent='Noch nicht gespeichert'});
+document.querySelector('#saveCorrected').addEventListener('click',()=>{writing[entryDate.value]={...(writing[entryDate.value]||{}),text:paragraph.value.trim(),correctedHtml:correctedText.innerHTML,correctedSavedAt:new Date().toISOString()};localStorage.setItem(WRITING_KEY,JSON.stringify(writing));renderWritingCalendar();if(correctedText.textContent.trim())recordDailyProgress('Schreiben',`writing-corrected:${entryDate.value}`,1,5);correctedStatus.textContent='Gespeichert ✓'});
+document.querySelector('#clearCorrected').addEventListener('click',()=>{correctedText.innerHTML='';if(writing[entryDate.value]){writing[entryDate.value].correctedHtml='';localStorage.setItem(WRITING_KEY,JSON.stringify(writing));renderWritingCalendar()}correctedStatus.textContent='Noch nicht gespeichert'});
 document.querySelector('#copyForCorrection').addEventListener('click',async()=>{const text=paragraph.value.trim();const note=document.querySelector('#copyCorrectionStatus');if(!text){note.textContent='Schreibe zuerst einen Absatz.';return}const prompt='Bitte korrigiere meinen deutschen Text. Zeige mir: 1. eine korrigierte natürliche Version, 2. meine Fehler nach Kategorien (Rechtschreibung, Artikel/Endungen, Plural, Satzbau, Wortwahl), 3. drei kurze Übungen zu meinen häufigsten Fehlern. Text:\n\n'+text;await navigator.clipboard.writeText(prompt);note.textContent='Korrekturauftrag kopiert ✓'});
 showPrompt();loadEntry();
 const notes=JSON.parse(localStorage.getItem(NOTES_KEY)||'{}');

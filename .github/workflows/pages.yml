@@ -5,6 +5,7 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+  actions: read
   pages: write
   id-token: write
 concurrency:
@@ -26,4 +27,31 @@ jobs:
           path: .
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const artifacts = await github.paginate(github.rest.actions.listWorkflowRunArtifacts, {
+              owner, repo, run_id: context.runId, per_page: 100
+            });
+            const artifact = artifacts
+              .filter(item => item.name === 'github-pages' && !item.expired)
+              .sort((a, b) => b.id - a.id)[0];
+            if (!artifact) throw new Error('The uploaded github-pages artifact is missing.');
+            const response = await github.request('POST /repos/{owner}/{repo}/pages/deployments', {
+              owner, repo, artifact_id: artifact.id,
+              pages_build_version: context.sha,
+              oidc_token: await core.getIDToken()
+            });
+            core.setOutput('page_url', response.data.page_url);
+            for (let attempt = 0; attempt < 120; attempt++) {
+              const result = await github.request('GET /repos/{owner}/{repo}/pages/deployments/{deploymentId}', {
+                owner, repo, deploymentId: response.data.id
+              });
+              if (result.data.status === 'succeed') return;
+              if (['deployment_failed', 'deployment_content_failed', 'deployment_cancelled', 'failed'].includes(result.data.status)) {
+                throw new Error('Pages deployment failed: ' + result.data.status);
+              }
+              await new Promise(resolve => setTimeout(resolve, 5000));
+            }
+            throw new Error('Timed out waiting for Pages deployment.');

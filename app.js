@@ -267,7 +267,7 @@ document.querySelectorAll('[data-memory-reference]').forEach(button=>button.addE
 paragraph.addEventListener('input',()=>updateCounts());
 entryDate.addEventListener('change',loadEntry);
 document.querySelector('#newPrompt').addEventListener('click',()=>{promptIndex=(promptIndex+1)%prompts.length;writing[entryDate.value]={...(writing[entryDate.value]||{}),promptIndex};localStorage.setItem(WRITING_KEY,JSON.stringify(writing));renderWritingCalendar();showPrompt()});
-document.querySelector('#saveEntry').addEventListener('click',()=>{const review={};document.querySelectorAll('[data-review]').forEach(x=>review[x.dataset.review]=x.checked);writing[entryDate.value]={...(writing[entryDate.value]||{}),text:paragraph.value.trim(),review,comparisonPairs:collectComparisonPairs(),savedAt:new Date().toISOString()};localStorage.setItem(WRITING_KEY,JSON.stringify(writing));renderWritingCalendar();if(paragraph.value.trim()||collectComparisonPairs().some(pair=>pair.originalHtml||pair.correctedHtml))recordDailyProgress('Schreiben',`writing:${entryDate.value}`,2,10);status.textContent='Gespeichert ✓';comparisonStatus.textContent='Gespeichert ✓'});
+document.querySelector('#saveEntry').addEventListener('click',()=>{const review={};document.querySelectorAll('[data-review]').forEach(x=>review[x.dataset.review]=x.checked);writing[entryDate.value]={...(writing[entryDate.value]||{}),text:paragraph.value.trim(),topic:prompts[promptIndex],promptIndex,review,comparisonPairs:collectComparisonPairs(),savedAt:new Date().toISOString()};localStorage.setItem(WRITING_KEY,JSON.stringify(writing));renderWritingCalendar();if(paragraph.value.trim()||collectComparisonPairs().some(pair=>pair.originalHtml||pair.correctedHtml))recordDailyProgress('Schreiben',`writing:${entryDate.value}`,2,10);status.textContent='Gespeichert ✓';comparisonStatus.textContent='Gespeichert ✓'});
 
 function addComparisonPair(originalHtml='',correctedHtml=''){
   const pair=document.createElement('article');pair.className='comparison-pair';
@@ -277,7 +277,7 @@ function addComparisonPair(originalHtml='',correctedHtml=''){
 function numberComparisonPairs(){comparisonPairs.querySelectorAll('.comparison-pair').forEach((pair,index)=>pair.querySelector('.comparison-pair-head span').textContent=index+1)}
 function collectComparisonPairs(){return [...comparisonPairs.querySelectorAll('.comparison-pair')].map(pair=>({originalHtml:pair.querySelector('.original-editor').innerHTML,correctedHtml:pair.querySelector('.correction-editor').innerHTML})).filter(pair=>pair.originalHtml.replace(/<[^>]*>/g,'').trim()||pair.correctedHtml.replace(/<[^>]*>/g,'').trim())}
 function renderComparisonPairs(pairs){comparisonPairs.innerHTML='';(pairs.length?pairs:[{originalHtml:'',correctedHtml:''}]).forEach(pair=>addComparisonPair(pair.originalHtml||'',pair.correctedHtml||''))}
-function saveComparisonPairs(){writing[entryDate.value]={...(writing[entryDate.value]||{}),text:paragraph.value.trim(),comparisonPairs:collectComparisonPairs(),comparisonSavedAt:new Date().toISOString()};localStorage.setItem(WRITING_KEY,JSON.stringify(writing));renderWritingCalendar();if(collectComparisonPairs().some(pair=>pair.originalHtml||pair.correctedHtml))recordDailyProgress('Schreiben',`writing-pairs:${entryDate.value}`,2,10);comparisonStatus.textContent='Gespeichert ✓';comparisonPairs.querySelectorAll('.comparison-pair-status').forEach(status=>status.textContent='Gespeichert ✓')}
+function saveComparisonPairs(){writing[entryDate.value]={...(writing[entryDate.value]||{}),text:paragraph.value.trim(),topic:prompts[promptIndex],promptIndex,comparisonPairs:collectComparisonPairs(),comparisonSavedAt:new Date().toISOString()};localStorage.setItem(WRITING_KEY,JSON.stringify(writing));renderWritingCalendar();if(collectComparisonPairs().some(pair=>pair.originalHtml||pair.correctedHtml))recordDailyProgress('Schreiben',`writing-pairs:${entryDate.value}`,2,10);comparisonStatus.textContent='Gespeichert ✓';comparisonPairs.querySelectorAll('.comparison-pair-status').forEach(status=>status.textContent='Gespeichert ✓')}
 document.querySelector('#addComparisonPair').addEventListener('click',()=>{addComparisonPair();comparisonPairs.lastElementChild.scrollIntoView({behavior:'smooth',block:'center'});comparisonStatus.textContent='Änderungen nicht gespeichert'});
 document.querySelector('#saveComparisons').addEventListener('click',saveComparisonPairs);
 comparisonPairs.addEventListener('input',event=>{comparisonStatus.textContent='Änderungen nicht gespeichert';event.target.closest('.comparison-pair')?.querySelector('.comparison-pair-status')?.replaceChildren('Änderungen nicht gespeichert')});
@@ -291,7 +291,7 @@ comparisonPairs.addEventListener('click',event=>{
 });
 document.querySelectorAll('[data-format]').forEach(button=>button.addEventListener('click',()=>{correctedText.focus();document.execCommand(button.dataset.format,false,button.dataset.value||null);correctedStatus.textContent='Änderungen nicht gespeichert'}));
 correctedText.addEventListener('input',()=>{correctedStatus.textContent='Änderungen nicht gespeichert'});
-document.querySelector('#saveCorrected').addEventListener('click',()=>{writing[entryDate.value]={...(writing[entryDate.value]||{}),text:paragraph.value.trim(),correctedHtml:correctedText.innerHTML,correctedSavedAt:new Date().toISOString()};localStorage.setItem(WRITING_KEY,JSON.stringify(writing));renderWritingCalendar();if(correctedText.textContent.trim())recordDailyProgress('Schreiben',`writing-corrected:${entryDate.value}`,1,5);correctedStatus.textContent='Gespeichert ✓'});
+document.querySelector('#saveCorrected').addEventListener('click',()=>{writing[entryDate.value]={...(writing[entryDate.value]||{}),text:paragraph.value.trim(),topic:prompts[promptIndex],promptIndex,correctedHtml:correctedText.innerHTML,correctedSavedAt:new Date().toISOString()};localStorage.setItem(WRITING_KEY,JSON.stringify(writing));renderWritingCalendar();if(correctedText.textContent.trim())recordDailyProgress('Schreiben',`writing-corrected:${entryDate.value}`,1,5);correctedStatus.textContent='Gespeichert ✓'});
 document.querySelector('#clearCorrected').addEventListener('click',()=>{correctedText.innerHTML='';if(writing[entryDate.value]){writing[entryDate.value].correctedHtml='';localStorage.setItem(WRITING_KEY,JSON.stringify(writing));renderWritingCalendar()}correctedStatus.textContent='Noch nicht gespeichert'});
 document.querySelector('#copyForCorrection').addEventListener('click',async()=>{const text=paragraph.value.trim();const note=document.querySelector('#copyCorrectionStatus');if(!text){note.textContent='Schreibe zuerst einen Absatz.';return}const prompt='Bitte korrigiere meinen deutschen Text. Zeige mir: 1. eine korrigierte natürliche Version, 2. meine Fehler nach Kategorien (Rechtschreibung, Artikel/Endungen, Plural, Satzbau, Wortwahl), 3. drei kurze Übungen zu meinen häufigsten Fehlern. Text:\n\n'+text;await navigator.clipboard.writeText(prompt);note.textContent='Korrekturauftrag kopiert ✓'});
 showPrompt();loadEntry();
@@ -1083,3 +1083,74 @@ function syncTodayProgressFromSavedWork(){
   localStorage.setItem(KEY,JSON.stringify(state));render()
 }
 syncTodayProgressFromSavedWork();
+
+function writingPrintHtml(value){
+ const source=document.createElement('template');
+ source.innerHTML=String(value||'');
+ const allowed=new Set(['P','DIV','BR','B','STRONG','I','EM','U','S','STRIKE','UL','OL','LI','H1','H2','H3','H4','BLOCKQUOTE','TABLE','THEAD','TBODY','TR','TD','TH']);
+ function clean(node){
+  if(node.nodeType===3)return esc(node.textContent);
+  if(node.nodeType!==1)return '';
+  if(['SCRIPT','STYLE','IFRAME','OBJECT'].includes(node.tagName))return '';
+  const children=[...node.childNodes].map(clean).join('');
+  return allowed.has(node.tagName)?'<'+node.tagName.toLowerCase()+'>'+children+(node.tagName==='BR'?'':'</'+node.tagName.toLowerCase()+'>'):children
+ }
+ return [...source.content.childNodes].map(clean).join('')
+}
+function writingTopic(date,entry){
+ if(entry.topic)return entry.topic;
+ const index=Number.isInteger(entry.promptIndex)?entry.promptIndex:promptIndexForDate(date);
+ return prompts[((index%prompts.length)+prompts.length)%prompts.length]
+}
+function writingPrintEntry(date,entry,includeCorrections){
+ const hasText=value=>String(value||'').replace(/<[^>]*>/g,'').replace(/&nbsp;/g,' ').trim();
+ const plain=value=>esc(value).replace(/\n/g,'<br>');
+ const parts=[];
+ if(hasText(entry.text))parts.push('<h3>Mein Text</h3><p>'+plain(entry.text)+'</p>');
+ const pairs=(entry.comparisonPairs||[]).filter(pair=>hasText(pair.originalHtml)||(includeCorrections&&hasText(pair.correctedHtml)));
+ pairs.forEach((pair,index)=>{
+  parts.push('<section class="paragraph"><h3>Absatz '+(index+1)+'</h3>');
+  if(hasText(pair.originalHtml))parts.push('<h4>Original</h4>'+writingPrintHtml(pair.originalHtml));
+  if(includeCorrections&&hasText(pair.correctedHtml))parts.push('<h4>Korrigierte Fassung</h4>'+writingPrintHtml(pair.correctedHtml));
+  parts.push('</section>')
+ });
+ if(includeCorrections&&hasText(entry.correctedHtml))parts.push('<h3>Korrigierte Version</h3>'+writingPrintHtml(entry.correctedHtml));
+ if(hasText(entry.memoryRewrite)){
+  const sourceDate=entry.memorySourceDate||previousDate(date),source=writing[sourceDate]||{};
+  parts.push('<h3>Wiederholung</h3><p class="source">Thema: '+esc(writingTopic(sourceDate,source))+'<br>Quelltext vom '+esc(formatEntryDate(sourceDate))+'</p><p>'+plain(entry.memoryRewrite)+'</p>');
+  if(includeCorrections&&hasText(source.correctedHtml))parts.push('<h4>Korrigierte Version des Quelltexts</h4>'+writingPrintHtml(source.correctedHtml));
+  if(includeCorrections)(source.comparisonPairs||[]).forEach(pair=>{if(hasText(pair.correctedHtml))parts.push('<h4>Korrigierter Absatz des Quelltexts</h4>'+writingPrintHtml(pair.correctedHtml))})
+ }
+ if(!parts.length)return '';
+ return '<article class="entry"><h2>'+esc(formatEntryDate(date))+'</h2><p class="topic"><b>Thema</b><br>'+esc(writingTopic(date,entry))+'</p>'+parts.join('')+'</article>'
+}
+function updateWritingPrintScope(){
+ const scope=document.querySelector('#writingPrintScope').value;
+ document.querySelector('#writingPrintDateLabel').hidden=scope!=='date';
+ document.querySelector('#writingPrintMonthLabel').hidden=scope!=='month'
+}
+document.querySelector('#writingPrintScope').addEventListener('change',updateWritingPrintScope);
+document.querySelector('#writingPrintDate').value=entryDate.value;
+document.querySelector('#writingPrintMonth').value=entryDate.value.slice(0,7);
+document.querySelector('#printWriting').addEventListener('click',()=>{
+ const scope=document.querySelector('#writingPrintScope').value;
+ const date=document.querySelector('#writingPrintDate').value,month=document.querySelector('#writingPrintMonth').value;
+ const status=document.querySelector('#writingPrintStatus');
+ if((scope==='date'&&!date)||(scope==='month'&&!month)){status.textContent='Bitte wähle ein Datum oder einen Monat.';return}
+ const includeCorrections=document.querySelector('#writingPrintCorrections').checked;
+ const dates=Object.keys(writing).filter(key=>/^\d{4}-\d{2}-\d{2}$/.test(key)&&(scope==='all'||(scope==='date'?key===date:key.slice(0,7)===month))).sort();
+ const entries=dates.map(key=>writingPrintEntry(key,writing[key],includeCorrections)).filter(Boolean);
+ if(!entries.length){status.textContent='Keine gespeicherten Texte für diese Auswahl vorhanden.';return}
+ const title='Deutsch-C1 – '+(scope==='date'?date:scope==='month'?month:'Alle Texte');
+ const frame=document.createElement('iframe');
+ frame.title='Druckansicht meiner Texte';
+ frame.style.cssText='position:fixed;width:1px;height:1px;left:-10000px;border:0';
+ frame.onload=()=>{
+  frame.contentWindow.addEventListener('afterprint',()=>frame.remove(),{once:true});
+  frame.contentWindow.focus();
+  frame.contentWindow.print();
+  status.textContent=entries.length+' Einträge für den PDF-Druck vorbereitet.'
+ };
+ frame.srcdoc='<!doctype html><html lang="de"><head><meta charset="utf-8"><title>'+esc(title)+'</title><style>@page{size:A4;margin:18mm}body{font:11pt/1.55 Arial,sans-serif;color:#111}h1{font-size:20pt}h2{font-size:16pt}h3{font-size:12pt;margin-top:18pt}h4{font-size:11pt;margin-bottom:5pt}h1,h2,h3,h4{break-after:avoid}p{overflow-wrap:anywhere}.entry+.entry{break-before:page}.topic,.source{color:#333}.paragraph{margin-top:15pt}table{border-collapse:collapse;width:100%}td,th{border:1px solid #999;padding:5pt}blockquote{border-left:2pt solid #999;padding-left:10pt}</style></head><body><h1>Meine deutschen Texte</h1>'+entries.join('')+'</body></html>';
+ document.body.append(frame)
+});

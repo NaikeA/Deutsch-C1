@@ -262,19 +262,19 @@ footer a{color:var(--green)}.article-plural{display:block;min-height:16px;color:
 .mini-drill [data-choice].wrong{background:#fff0f0;border-color:#c62828;color:#b71c1c;outline-color:#c62828}
 .correction-feedback.wrong{color:#b71c1c;font-weight:700}.correction-feedback.right{color:var(--green);font-weight:700}
 
-.writing-calendar{max-width:390px;margin:0 0 20px;padding:16px;border:1px solid var(--line);border-radius:14px;background:white}
-.writing-calendar-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.writing-calendar-head button{border:1px solid var(--line);border-radius:8px;background:white;padding:4px 13px;font-size:1.2rem;cursor:pointer}
-.writing-calendar-legend{display:flex;gap:16px;flex-wrap:wrap;margin:12px 0;font-size:.8rem}
+.writing-calendar{width:280px;max-width:100%;margin:0 0 14px;padding:10px;border:1px solid var(--line);border-radius:14px;background:white}
+.writing-calendar-head{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:.85rem}
+.writing-calendar-head button{border:1px solid var(--line);border-radius:8px;background:white;padding:2px 9px;font-size:1rem;cursor:pointer}
+.writing-calendar-legend{display:flex;gap:12px;flex-wrap:wrap;margin:8px 0;font-size:.7rem}
 .writing-calendar-legend span{display:flex;align-items:center;gap:6px}
 .writing-dot{display:inline-block;width:7px;height:7px;border-radius:50%}
 .writing-dot.new-text{background:#13834f}.writing-dot.repeated-text{background:#d32f2f}
-.writing-calendar-week,.writing-calendar-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;text-align:center}
-.writing-calendar-week{font-size:.75rem;color:var(--muted);margin-bottom:6px}
-.writing-calendar-day{border:1px solid transparent;border-radius:8px;background:#f5f8f4;padding:6px 2px;color:var(--ink);font:inherit;cursor:pointer}
+.writing-calendar-week,.writing-calendar-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:2px;text-align:center}
+.writing-calendar-week{font-size:.65rem;color:var(--muted);margin-bottom:4px}
+.writing-calendar-day{border:1px solid transparent;border-radius:8px;background:#f5f8f4;padding:3px 1px;color:var(--ink);font:500 .75rem/1.2 'DM Sans',sans-serif;cursor:pointer}
 .writing-calendar-day.selected{border-color:var(--green);background:#e1f2e8}
 .writing-calendar-day:focus-visible{outline:2px solid var(--green);outline-offset:1px}
-.writing-calendar-dots{display:flex;justify-content:center;gap:4px;height:9px;margin-top:4px}
+.writing-calendar-dots{display:flex;justify-content:center;gap:3px;height:7px;margin-top:2px}
 
 .writing-print{margin:0 0 20px;padding:16px;border:1px solid var(--line);border-radius:14px;background:#fff}
 .writing-print summary{cursor:pointer;font-weight:700}

@@ -980,7 +980,16 @@ function settleSectionTimer(){
   saveSectionTimer()
  }
 }
+function totalActivityMilliseconds(date){
+ const saved=Object.entries(sectionTimerData).filter(([key])=>key.startsWith(date+'|')).reduce((total,[,entry])=>total+(Number(entry.milliseconds)||0),0);
+ return saved+(sectionTimerStarted!==null&&sectionTimerDay===date?Math.max(0,performance.now()-sectionTimerStarted):0)
+}
+function timerDisplay(milliseconds){
+ const seconds=Math.floor(milliseconds/1000),hours=Math.floor(seconds/3600),minutes=Math.floor(seconds/60)%60;
+ return (hours?String(hours)+':'+String(minutes).padStart(2,'0'):String(minutes))+':'+String(seconds%60).padStart(2,'0')
+}
 function renderSectionTimer(){
+ document.querySelector('#totalActivityTime').textContent=timerDisplay(totalActivityMilliseconds(sectionTimerDate()));
  const panel=document.querySelector('#sectionTimer');
  panel.hidden=!sectionTimerView||sectionTimerView==='overview';
  if(panel.hidden)return;

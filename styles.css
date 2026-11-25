@@ -299,3 +299,9 @@ footer a{color:var(--green)}.article-plural{display:block;min-height:16px;color:
 .activity-time-summary dl{display:flex;gap:24px;flex-wrap:wrap;margin:12px 0 0}
 .activity-time-summary dt{color:var(--muted)}
 .activity-time-summary dd{margin:4px 0 0;font-weight:700;font-variant-numeric:tabular-nums}
+
+.learning-controls{position:sticky;top:0;z-index:20;background:var(--paper);padding-top:1px;padding-bottom:1px}
+.learning-controls .main-tabs{position:static;top:auto;margin:0;padding:8px 0 10px}
+.learning-controls .activity-total{margin-bottom:6px}
+.learning-controls .section-timer{margin-bottom:8px}
+@media print{.learning-controls{position:static}}

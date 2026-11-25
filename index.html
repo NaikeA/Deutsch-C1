@@ -12,7 +12,7 @@
   <title>Deutsch auf C1</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="app-icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=64">
+  <link rel="stylesheet" href="styles.css?v=65">
   <link rel="stylesheet" href="verb-count.css?v=16">
   <link rel="stylesheet" href="listening.css?v=19">
   <link rel="stylesheet" href="playback.css?v=24">
@@ -28,6 +28,7 @@
     <p id="today"></p>
   </header>
   <main>
+    <div class="learning-controls">
     <nav class="main-tabs" aria-label="Lernbereiche">
       <button class="main-tab active" data-view="overview">Übersicht</button>
       <button class="main-tab" data-view="vocabulary">Tageswortschatz</button>
@@ -50,10 +51,6 @@
 
     <div class="activity-total" role="region" aria-label="Gesamtzeit aller Aktivitäten heute"><strong>Gesamtzeit heute</strong><output id="totalActivityTime" aria-label="Gesamte Übungszeit heute">0:00</output><span>Alle Aktivitäten</span><button id="finishTotalSession" type="button" class="text-btn" disabled>Gesamt beenden</button></div>
 
-    <div id="activityTimeSummary" class="activity-time-summary" role="status" hidden>
-      <strong>Zusammenfassung der letzten Lernsitzung</strong>
-      <dl><div><dt>Gesamtdauer</dt><dd id="sessionSummaryTotal">0:00</dd></div><div><dt>Übungszeit</dt><dd id="sessionSummaryActive">0:00</dd></div><div><dt>Pausenzeit</dt><dd id="sessionSummaryPause">0:00</dd></div></dl>
-    </div>
     <div id="sectionTimer" class="section-timer" role="region" aria-label="Zeit für diesen Lernbereich" hidden>
       <span><strong id="sectionTimerName"></strong> · Heute</span>
       <output id="sectionTimerTime" aria-label="Verbrachte Zeit">0:00</output>
@@ -61,6 +58,11 @@
       <button id="toggleSectionTimer" type="button">Fortsetzen</button>
       <button id="finishSectionTimer" type="button">Fertig</button>
       <button id="resetSectionTimer" type="button">Zurücksetzen</button>
+    </div>
+    </div>
+    <div id="activityTimeSummary" class="activity-time-summary" role="status" hidden>
+      <strong>Zusammenfassung der letzten Lernsitzung</strong>
+      <dl><div><dt>Gesamtdauer</dt><dd id="sessionSummaryTotal">0:00</dd></div><div><dt>Übungszeit</dt><dd id="sessionSummaryActive">0:00</dd></div><div><dt>Pausenzeit</dt><dd id="sessionSummaryPause">0:00</dd></div></dl>
     </div>
     <div id="selectedTextToolbar" class="selected-text-toolbar" role="region" aria-label="Text vorlesen">
       <button type="button" id="readSelectedText">🔊 Markierten Text vorlesen</button>

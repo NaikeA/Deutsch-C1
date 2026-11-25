@@ -962,14 +962,15 @@ refreshInlineJournals();
 const viewMap={overview:['.intro','.daily-defaults','.site-summary','.grid','.roadmap'],writing:['.writing-studio'],listening:['.listening-studio'],verbs:['.verb-gym'],articles:['.article-gym'],cases:['.case-gym'],prepositions:['.preposition-gym'],declension:['.declension-gym'],correction:['.correction-gym'],notes:['.notes-studio'],'dative-verbs':['.dative-verbs-reference'],vocabulary:['.vocabulary-studio'],lab:['.error-lab'],'lab-endings':['.error-lab'],'lab-spelling':['.error-lab'],'lab-natural':['.error-lab'],'lab-connectors':['.error-lab'],grammar:['.grammar-reference']};
 const allViews=Object.values(viewMap).flatMap(selectors=>selectors.flatMap(s=>[...document.querySelectorAll(s)]));
 
-const SECTION_TIMER_KEY='deutsch-c1-section-timers-v1';
+const SECTION_TIMER_KEY='deutsch-c1-section-timers-v2';
 let sectionTimerData={};
 try{sectionTimerData=JSON.parse(localStorage.getItem(SECTION_TIMER_KEY)||'{}')||{}}catch(error){}
+Object.values(sectionTimerData).forEach(entry=>entry.paused=true);
 let sectionTimerView='',sectionTimerStarted=null,sectionTimerDay='';
 const sectionTimerDate=()=>new Date().toLocaleDateString('sv-SE');
 function sectionTimerEntry(){
  const key=sectionTimerDay+'|'+sectionTimerView;
- return sectionTimerData[key]||(sectionTimerData[key]={milliseconds:0,paused:false,finished:false})
+ return sectionTimerData[key]||(sectionTimerData[key]={milliseconds:0,paused:true,finished:false})
 }
 function saveSectionTimer(){localStorage.setItem(SECTION_TIMER_KEY,JSON.stringify(sectionTimerData))}
 function settleSectionTimer(){
@@ -987,7 +988,7 @@ function renderSectionTimer(){
  const elapsed=entry.milliseconds+(sectionTimerStarted===null?0:Math.max(0,performance.now()-sectionTimerStarted));
  const seconds=Math.floor(elapsed/1000);
  const hours=Math.floor(seconds/3600),minutes=Math.floor(seconds/60)%60;
- document.querySelector('#sectionTimerTime').textContent=(hours?String(hours).padStart(2,'0')+':':'')+String(minutes).padStart(2,'0')+':'+String(seconds%60).padStart(2,'0');
+ document.querySelector('#sectionTimerTime').textContent=(hours?String(hours).padStart(2,'0')+':':'')+(hours?String(minutes).padStart(2,'0'):String(minutes))+':'+String(seconds%60).padStart(2,'0');
  const tab=[...document.querySelectorAll('.main-tab')].find(button=>button.dataset.view===sectionTimerView);
  document.querySelector('#sectionTimerName').textContent=tab?.textContent||'Übung';
  document.querySelector('#sectionTimerStatus').textContent=entry.finished?'Abgeschlossen':entry.paused?'Pausiert':document.hidden?'Pausiert':'Läuft';
@@ -998,8 +999,8 @@ function selectSectionTimer(view){
  sectionTimerView=view==='lab'?'lab-'+activeLab:view;
  sectionTimerDay=sectionTimerDate();
  if(sectionTimerView!=='overview'){
-  const entry=sectionTimerEntry();
-  if(!entry.paused&&!entry.finished&&!document.hidden)sectionTimerStarted=performance.now()
+  sectionTimerEntry().paused=true;
+  saveSectionTimer()
  }
  renderSectionTimer()
 }
@@ -1018,16 +1019,16 @@ document.querySelector('#resetSectionTimer').addEventListener('click',()=>{
  sectionTimerData[sectionTimerDay+'|'+sectionTimerView]={milliseconds:0,paused:true,finished:false};
  saveSectionTimer();renderSectionTimer()
 });
-document.addEventListener('visibilitychange',()=>{
+function pauseSectionTimer(){
  settleSectionTimer();
- if(sectionTimerView&&sectionTimerView!=='overview'&&!document.hidden){
-  if(sectionTimerDay!==sectionTimerDate())sectionTimerDay=sectionTimerDate();
-  const entry=sectionTimerEntry();
-  if(!entry.paused&&!entry.finished)sectionTimerStarted=performance.now()
+ if(sectionTimerView&&sectionTimerView!=='overview'){
+  sectionTimerEntry().paused=true;
+  saveSectionTimer()
  }
  renderSectionTimer()
-});
-window.addEventListener('pagehide',settleSectionTimer);
+}
+document.addEventListener('visibilitychange',pauseSectionTimer);
+window.addEventListener('pagehide',pauseSectionTimer);
 setInterval(()=>{
  if(!sectionTimerView||sectionTimerView==='overview')return;
  if(sectionTimerDay!==sectionTimerDate())selectSectionTimer(sectionTimerView);

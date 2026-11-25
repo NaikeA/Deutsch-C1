@@ -975,7 +975,13 @@ function sectionTimerEntry(){
 function saveSectionTimer(){localStorage.setItem(SECTION_TIMER_KEY,JSON.stringify(sectionTimerData))}
 function settleSectionTimer(){
  if(sectionTimerStarted!==null){
-  sectionTimerEntry().milliseconds+=Math.max(0,performance.now()-sectionTimerStarted);
+  const elapsed=Math.max(0,performance.now()-sectionTimerStarted);
+  sectionTimerEntry().milliseconds+=elapsed;
+  const total=totalSessionEntry(sectionTimerDay);
+  if(total.startedAt!==null){
+   total.activeMilliseconds=(total.activeMilliseconds||0)+elapsed;
+   localStorage.setItem(TOTAL_SESSION_KEY,JSON.stringify(totalSessionData))
+  }
   sectionTimerStarted=null;
   saveSectionTimer()
  }
@@ -992,7 +998,7 @@ function totalSessionEntry(date){
 }
 function startTotalSession(){
  const entry=totalSessionEntry(sectionTimerDate());
- if(entry.startedAt===null)entry.startedAt=Date.now();
+ if(entry.startedAt===null){entry.startedAt=Date.now();entry.activeMilliseconds=0;entry.lastSummary=null}
  localStorage.setItem(TOTAL_SESSION_KEY,JSON.stringify(totalSessionData))
 }
 function totalActivityMilliseconds(date){
@@ -1000,7 +1006,12 @@ function totalActivityMilliseconds(date){
  return entry.milliseconds+(entry.startedAt===null?0:Math.max(0,Date.now()-entry.startedAt))
 }
 document.querySelector('#finishTotalSession').addEventListener('click',()=>{
+ settleSectionTimer();
  const date=sectionTimerDate(),entry=totalSessionEntry(date);
+ if(entry.startedAt===null)return;
+ const duration=Math.max(0,Date.now()-entry.startedAt);
+ const active=Math.min(duration,entry.activeMilliseconds||0);
+ entry.lastSummary={total:duration,active,pause:Math.max(0,duration-active)};
  entry.milliseconds=totalActivityMilliseconds(date);
  entry.startedAt=null;
  localStorage.setItem(TOTAL_SESSION_KEY,JSON.stringify(totalSessionData));
@@ -1017,6 +1028,14 @@ function timerDisplay(milliseconds){
  return (hours?String(hours)+':'+String(minutes).padStart(2,'0'):String(minutes))+':'+String(seconds%60).padStart(2,'0')
 }
 function renderSectionTimer(){
+ const summary=totalSessionEntry(sectionTimerDate()).lastSummary;
+ const summaryPanel=document.querySelector('#activityTimeSummary');
+ summaryPanel.hidden=!summary;
+ if(summary){
+  document.querySelector('#sessionSummaryTotal').textContent=timerDisplay(summary.total);
+  document.querySelector('#sessionSummaryActive').textContent=timerDisplay(summary.active);
+  document.querySelector('#sessionSummaryPause').textContent=timerDisplay(summary.pause)
+ }
  document.querySelector('#totalActivityTime').textContent=timerDisplay(totalActivityMilliseconds(sectionTimerDate()));
  document.querySelector('#finishTotalSession').disabled=totalSessionEntry(sectionTimerDate()).startedAt===null;
  const panel=document.querySelector('#sectionTimer');

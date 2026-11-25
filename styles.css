@@ -293,3 +293,9 @@ footer a{color:var(--green)}.article-plural{display:block;min-height:16px;color:
 .section-timer button:focus-visible{outline:2px solid var(--green)}
 
 .activity-total{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin:0 0 10px;padding:10px 13px;border:1px solid var(--line);border-radius:10px;background:#edf6ef;font-size:.8rem}.activity-total output{font:700 1.2rem/1.2 'DM Sans',sans-serif;font-variant-numeric:tabular-nums;color:var(--green)}.activity-total>span{color:var(--muted)}
+
+.activity-time-summary{margin:0 0 12px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:.85rem}
+.activity-time-summary[hidden]{display:none}
+.activity-time-summary dl{display:flex;gap:24px;flex-wrap:wrap;margin:12px 0 0}
+.activity-time-summary dt{color:var(--muted)}
+.activity-time-summary dd{margin:4px 0 0;font-weight:700;font-variant-numeric:tabular-nums}

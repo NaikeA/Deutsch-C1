@@ -980,16 +980,45 @@ function settleSectionTimer(){
   saveSectionTimer()
  }
 }
-function totalActivityMilliseconds(date){
- const saved=Object.entries(sectionTimerData).filter(([key])=>key.startsWith(date+'|')).reduce((total,[,entry])=>total+(Number(entry.milliseconds)||0),0);
- return saved+(sectionTimerStarted!==null&&sectionTimerDay===date?Math.max(0,performance.now()-sectionTimerStarted):0)
+const TOTAL_SESSION_KEY='deutsch-c1-total-sessions-v1';
+let totalSessionData={};
+try{totalSessionData=JSON.parse(localStorage.getItem(TOTAL_SESSION_KEY)||'{}')||{}}catch(error){}
+function totalSessionEntry(date){
+ if(!totalSessionData[date]){
+  const milliseconds=Object.entries(sectionTimerData).filter(([key])=>key.startsWith(date+'|')).reduce((total,[,entry])=>total+(Number(entry.milliseconds)||0),0);
+  totalSessionData[date]={milliseconds,startedAt:null}
+ }
+ return totalSessionData[date]
 }
+function startTotalSession(){
+ const entry=totalSessionEntry(sectionTimerDate());
+ if(entry.startedAt===null)entry.startedAt=Date.now();
+ localStorage.setItem(TOTAL_SESSION_KEY,JSON.stringify(totalSessionData))
+}
+function totalActivityMilliseconds(date){
+ const entry=totalSessionEntry(date);
+ return entry.milliseconds+(entry.startedAt===null?0:Math.max(0,Date.now()-entry.startedAt))
+}
+document.querySelector('#finishTotalSession').addEventListener('click',()=>{
+ const date=sectionTimerDate(),entry=totalSessionEntry(date);
+ entry.milliseconds=totalActivityMilliseconds(date);
+ entry.startedAt=null;
+ localStorage.setItem(TOTAL_SESSION_KEY,JSON.stringify(totalSessionData));
+ settleSectionTimer();
+ if(sectionTimerView&&sectionTimerView!=='overview'){
+  sectionTimerEntry().finished=true;
+  sectionTimerEntry().paused=true;
+  saveSectionTimer()
+ }
+ renderSectionTimer()
+});
 function timerDisplay(milliseconds){
  const seconds=Math.floor(milliseconds/1000),hours=Math.floor(seconds/3600),minutes=Math.floor(seconds/60)%60;
  return (hours?String(hours)+':'+String(minutes).padStart(2,'0'):String(minutes))+':'+String(seconds%60).padStart(2,'0')
 }
 function renderSectionTimer(){
  document.querySelector('#totalActivityTime').textContent=timerDisplay(totalActivityMilliseconds(sectionTimerDate()));
+ document.querySelector('#finishTotalSession').disabled=totalSessionEntry(sectionTimerDate()).startedAt===null;
  const panel=document.querySelector('#sectionTimer');
  panel.hidden=!sectionTimerView||sectionTimerView==='overview';
  if(panel.hidden)return;
@@ -1017,7 +1046,7 @@ document.querySelector('#toggleSectionTimer').addEventListener('click',()=>{
  settleSectionTimer();
  const entry=sectionTimerEntry();
  entry.paused=!(entry.paused||entry.finished);entry.finished=false;
- if(!entry.paused&&!document.hidden)sectionTimerStarted=performance.now();
+ if(!entry.paused&&!document.hidden){sectionTimerStarted=performance.now();startTotalSession()}
  saveSectionTimer();renderSectionTimer()
 });
 document.querySelector('#finishSectionTimer').addEventListener('click',()=>{
@@ -1039,7 +1068,7 @@ function pauseSectionTimer(){
 document.addEventListener('visibilitychange',pauseSectionTimer);
 window.addEventListener('pagehide',pauseSectionTimer);
 setInterval(()=>{
- if(!sectionTimerView||sectionTimerView==='overview')return;
+ if(!sectionTimerView||sectionTimerView==='overview'){renderSectionTimer();return}
  if(sectionTimerDay!==sectionTimerDate())selectSectionTimer(sectionTimerView);
  else if(sectionTimerStarted!==null){
   settleSectionTimer();

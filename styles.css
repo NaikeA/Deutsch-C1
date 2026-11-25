@@ -284,3 +284,10 @@ footer a{color:var(--green)}.article-plural{display:block;min-height:16px;color:
 .writing-print-options select,.writing-print-options input[type=date],.writing-print-options input[type=month]{padding:9px;border:1px solid var(--line);border-radius:8px;font:inherit}
 .writing-print-options .writing-print-checkbox{display:flex;align-items:center;gap:8px;padding:9px 0}
 .writing-print>p{font-size:.8rem;color:var(--muted)}
+
+.section-timer{display:flex;align-items:center;flex-wrap:wrap;gap:9px;margin:0 0 12px;padding:10px 13px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:.8rem}
+.section-timer[hidden]{display:none}
+.section-timer output{font:700 1.15rem/1.2 'DM Sans',sans-serif;font-variant-numeric:tabular-nums;min-width:55px;color:var(--green)}
+.section-timer #sectionTimerStatus{color:var(--muted);margin-right:auto}
+.section-timer button{width:auto;margin:0;padding:6px 10px;border:1px solid var(--line);border-radius:7px;background:#f5f8f4;color:var(--ink);font:inherit;cursor:pointer}
+.section-timer button:focus-visible{outline:2px solid var(--green)}

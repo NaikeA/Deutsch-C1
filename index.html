@@ -12,7 +12,7 @@
   <title>Deutsch auf C1</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="app-icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=61">
+  <link rel="stylesheet" href="styles.css?v=62">
   <link rel="stylesheet" href="verb-count.css?v=16">
   <link rel="stylesheet" href="listening.css?v=19">
   <link rel="stylesheet" href="playback.css?v=24">
@@ -47,6 +47,15 @@
       <button class="main-tab" data-view="notes">Notizen</button>
       <button class="main-tab" data-view="dative-verbs">Dativverben</button>
     </nav>
+
+    <div id="sectionTimer" class="section-timer" role="region" aria-label="Zeit für diesen Lernbereich" hidden>
+      <span><strong id="sectionTimerName"></strong> · Heute</span>
+      <output id="sectionTimerTime" aria-label="Verbrachte Zeit">00:00</output>
+      <span id="sectionTimerStatus" role="status"></span>
+      <button id="toggleSectionTimer" type="button">Pause</button>
+      <button id="finishSectionTimer" type="button">Fertig</button>
+      <button id="resetSectionTimer" type="button">Zurücksetzen</button>
+    </div>
     <div id="selectedTextToolbar" class="selected-text-toolbar" role="region" aria-label="Text vorlesen">
       <button type="button" id="readSelectedText">🔊 Markierten Text vorlesen</button>
       <button type="button" id="stopSelectedText">■ Stopp</button>
@@ -749,7 +758,7 @@
   <script src="declension.js?v=5"></script>
   <script src="prepositions.js?v=18"></script>
   <script src="grammar-expanded.js?v=5"></script>
-  <script src="app.js?v=101"></script>
+  <script src="app.js?v=102"></script>
   <script src="verb-review.js?v=4"></script>
   <script src="daily-defaults.js?v=2"></script>
 </body>

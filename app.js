@@ -1039,7 +1039,7 @@ function renderSectionTimer(){
  document.querySelector('#totalActivityTime').textContent=timerDisplay(totalActivityMilliseconds(sectionTimerDate()));
  document.querySelector('#finishTotalSession').disabled=totalSessionEntry(sectionTimerDate()).startedAt===null;
  const panel=document.querySelector('#sectionTimer');
- panel.hidden=!sectionTimerView||sectionTimerView==='overview';
+ panel.hidden=!sectionTimerView||['overview','vocabulary','grammar','notes','dative-verbs'].includes(sectionTimerView);
  if(panel.hidden)return;
  const entry=sectionTimerEntry();
  const elapsed=entry.milliseconds+(sectionTimerStarted===null?0:Math.max(0,performance.now()-sectionTimerStarted));

@@ -305,3 +305,8 @@ footer a{color:var(--green)}.article-plural{display:block;min-height:16px;color:
 .learning-controls .activity-total{margin-bottom:6px}
 .learning-controls .section-timer{margin-bottom:8px}
 @media print{.learning-controls{position:static}}
+
+.verb-print-controls{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin:0 0 16px;padding:12px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:.85rem}
+.verb-print-controls select{max-width:100%;padding:8px;border:1px solid var(--line);border-radius:8px;font:inherit}
+.verb-print-controls button{width:auto;margin:0;padding:8px 12px}
+.verb-print-controls [role=status]{color:var(--muted);font-size:.8rem}

@@ -1289,3 +1289,29 @@ document.querySelector('#printWriting').addEventListener('click',()=>{
  frame.srcdoc='<!doctype html><html lang="de"><head><meta charset="utf-8"><title>'+esc(title)+'</title><style>@page{size:A4;margin:18mm}body{font:11pt/1.55 Arial,sans-serif;color:#111}h1{font-size:20pt}h2{font-size:16pt}h3{font-size:12pt;margin-top:18pt}h4{font-size:11pt;margin-bottom:5pt}h1,h2,h3,h4{break-after:avoid}p{overflow-wrap:anywhere}.entry+.entry{break-before:page}.topic,.source{color:#333}.paragraph{margin-top:15pt}table{border-collapse:collapse;width:100%}td,th{border:1px solid #999;padding:5pt}blockquote{border-left:2pt solid #999;padding-left:10pt}</style></head><body><h1>Meine deutschen Texte</h1>'+entries.join('')+'</body></html>';
  document.body.append(frame)
 });
+
+const verbPrintSelect=document.querySelector('#verbPrintSelect');
+[...verbs].sort((a,b)=>a.v.localeCompare(b.v,'de')).forEach(verb=>{
+ const option=document.createElement('option');
+ option.value=verb.v;option.textContent=verb.v;
+ verbPrintSelect.append(option)
+});
+function verbPrintDocument(verb){
+ const people=['ich','du','er / sie / es / man','wir','ihr','sie / Sie'];
+ const rows=people.map((person,index)=>'<tr><th scope="row">'+esc(person)+'</th>'+['pr','pa','pe'].map(tense=>'<td>'+esc(verb[tense]?.[index]||'—')+'</td>').join('')+'</tr>').join('');
+ return '<!doctype html><html lang="de"><head><meta charset="utf-8"><title>'+esc(verb.v)+' – Verbformen</title><style>@page{size:A4;margin:18mm}body{font:12pt/1.5 Arial,sans-serif;color:#111}h1{font-size:24pt}table{border-collapse:collapse;width:100%;margin:20pt 0}th,td{border:1px solid #888;padding:9pt;text-align:left}thead{background:#eee}td{overflow-wrap:anywhere}</style></head><body><h1>'+esc(verb.v)+'</h1><p>'+esc(verbMeanings[verb.v]||'')+'</p><table><thead><tr><th>Person</th><th>Präsens</th><th>Präteritum</th><th>Perfekt</th></tr></thead><tbody>'+rows+'</tbody></table>'+(verb.example?'<p><b>Beispiel</b><br>'+esc(verb.example)+'</p>':'')+'</body></html>'
+}
+document.querySelector('#printSelectedVerb').addEventListener('click',()=>{
+ const verb=verbs.find(item=>item.v===verbPrintSelect.value);
+ const status=document.querySelector('#verbPrintStatus');
+ if(!verb){status.textContent='Bitte wähle zuerst ein Verb.';return}
+ const frame=document.createElement('iframe');
+ frame.title='Druckansicht der Verbformen';
+ frame.style.cssText='position:fixed;left:-10000px;width:1px;height:1px;border:0';
+ frame.onload=()=>{
+  frame.contentWindow.addEventListener('afterprint',()=>frame.remove(),{once:true});
+  frame.contentWindow.focus();frame.contentWindow.print();
+  status.textContent='Druckansicht für „'+verb.v+'“ geöffnet.'
+ };
+ frame.srcdoc=verbPrintDocument(verb);document.body.append(frame)
+});

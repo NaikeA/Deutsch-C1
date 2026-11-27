@@ -12,7 +12,7 @@
   <title>Deutsch auf C1</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="app-icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=65">
+  <link rel="stylesheet" href="styles.css?v=66">
   <link rel="stylesheet" href="verb-count.css?v=16">
   <link rel="stylesheet" href="listening.css?v=19">
   <link rel="stylesheet" href="playback.css?v=24">
@@ -281,6 +281,13 @@
       <div class="verb-head">
         <div><p class="kicker">1–10 VERBEN PRO TAG · 350 ECHTE VERBEN</p><h2>Verben aktiv beherrschen</h2><p>Wähle deine tägliche Anzahl und konjugiere jedes Verb für eine Person. Wechsle danach die Person und wiederhole die Runde.</p></div>
         <div class="entry-date"><label for="verbDate">Übung vom</label><input id="verbDate" type="date"></div>
+      </div>
+
+      <div class="verb-print-controls">
+        <label for="verbPrintSelect">Verb zum Drucken auswählen</label>
+        <select id="verbPrintSelect"><option value="">Bitte wählen …</option></select>
+        <button id="printSelectedVerb" class="outline-btn" type="button">Verbformen drucken / PDF</button>
+        <span id="verbPrintStatus" role="status"></span>
       </div>
       <div class="person-picker" role="group" aria-label="Person auswählen">
         <span>Person</span>
@@ -766,7 +773,7 @@
   <script src="declension.js?v=5"></script>
   <script src="prepositions.js?v=18"></script>
   <script src="grammar-expanded.js?v=5"></script>
-  <script src="app.js?v=107"></script>
+  <script src="app.js?v=108"></script>
   <script src="verb-review.js?v=4"></script>
   <script src="daily-defaults.js?v=2"></script>
 </body>
